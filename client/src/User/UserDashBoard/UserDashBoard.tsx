@@ -1,5 +1,5 @@
 
-import UserNavbar from '../UserNavbar';
+import UserNavbar from '../UserNavbar/UserNavbar';
 
 const UserDashBoard = () => {
    return (
