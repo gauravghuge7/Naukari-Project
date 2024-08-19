@@ -26,6 +26,7 @@ const UserDashBoard = () => {
             { show === "Apptitude" && <Apptitude /> }
             { show === "MockInterview" && <Interview /> }
             { show === "JobPortal" && <JobPortal /> }
+            { show === "" && <JobPortal /> }
             { show === "DataStructuresAlgorithms" && <DSASource /> }
             { show === "DevelopmentProjects" && <Projects /> }
        

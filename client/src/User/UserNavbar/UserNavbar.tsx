@@ -10,7 +10,7 @@ const UserNavbar= () => {
             <div
                className="text-center text-3xl font-bold text-blue-700"
             >
-               Naukari Finder 
+               Naukari Guider 
             </div>
 
             {/*  list of content in navbar */}
