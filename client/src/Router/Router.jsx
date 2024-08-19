@@ -10,7 +10,7 @@ const RouterApp = () => {
       <div>
          
          <Routes>
-            <Route path="/" exact component={UserDashBoard} />
+            <Route path="/" element={UserDashBoard} />
          </Routes>
       </div>
      
