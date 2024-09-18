@@ -8,6 +8,27 @@ const testSchema = new Schema({
       required: true,
    },
 
+   testId: {
+      type: String,
+      required: true,
+   },
+
+   testDate: {
+      type: Date,
+      required: true,
+      default: Date.now
+   },
+
+   testTime: {
+      type: Number,
+      required: true,
+   },
+
+   topics: {
+      type: String,
+      required: true,
+   },
+
    students: [{
       type: Schema.Types.ObjectId,
       ref: 'Student'

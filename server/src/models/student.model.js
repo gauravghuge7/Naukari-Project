@@ -69,6 +69,10 @@ studentSchema.methods = {
             expiresIn: "24h"
          }
       )
+   },
+
+   isStudentPasswordCorrect: async function (studentPassword) {
+      return await bcrypt.compare(studentPassword, this.studentPassword);
    }
 
 

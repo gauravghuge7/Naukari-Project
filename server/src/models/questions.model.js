@@ -17,11 +17,17 @@ const questionSchema = new Schema({
       required: true,
    },
 
+   options: [{
+      type: String,
+      required: true,
+   }],
+
    correctAnswer: {
       type: Boolean,
       required: true,
    }
 
 }, {timestamps: true});
+
 
 export const Question = model("Question", questionSchema);

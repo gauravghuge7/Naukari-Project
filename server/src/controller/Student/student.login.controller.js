@@ -48,9 +48,10 @@ const registerStudent = asyncHandler(async (req, res, next) => {
       }
 
       const student = await Student.create({
-         studentName,
-         studentEmail,
-         studentPassword
+         studentName: studentName.trim(),
+         studentEmail: studentEmail.trim(),
+         studentPassword: studentPassword.trim()
+
       });
 
       return res 

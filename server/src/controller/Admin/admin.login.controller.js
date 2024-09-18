@@ -37,17 +37,44 @@ const options = {
    secure: true
 }
 
+
+// register a admin controller here 
 const registerAdmin = asyncHandler(async (req, res, next) => {
 
    try {
 
       const { adminName, adminEmail, adminPassword } = req.body;
 
-      
+      if(
+         [adminName, adminEmail, adminPassword].some((field) => field.trim() === "")
+      ) {
+         throw new ApiError(400, "Please provide all the required fields");
+      }
 
-      
+      if(!adminName || !adminEmail || !adminPassword) {
+         throw new ApiError(400, "Please provide all the required fields");
+      }
 
-      
+      const existingAdmin = await Admin.findOne({ adminEmail });
+
+      if(existingAdmin) {
+         throw new ApiError(400, "Admin Already Exists");
+      }
+
+      // create a new admin with triming the fields 
+
+      const admin = await Admin.create({
+         
+         adminName: adminName.trim(),
+         adminEmail: adminEmail.trim(),
+         adminPassword: adminPassword.trim()
+      });   
+
+      return res 
+      .status(201)
+      .json(
+         new ApiResponse(201, "Admin Registration Successful", admin)
+      )
 
    } 
    catch (error) {
@@ -75,7 +102,7 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
          throw new ApiError(400, "Admin Not Found");
       }
 
-      const isPasswordCorrect = await bcrypt.compare(adminPassword, admin.adminPassword);
+      const isPasswordCorrect = await admin.isAdminPasswordCorrect(adminPassword);
 
       if(!isPasswordCorrect) {
          throw new ApiError(400, "Invalid Password");

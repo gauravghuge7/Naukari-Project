@@ -52,6 +52,7 @@ adminSchema.methods = {
          }
       )
    },
+
    generateAdminSecretToken: function () {
       return jwt.sign(
          {
@@ -63,6 +64,10 @@ adminSchema.methods = {
             expiresIn: "24h"
          }
       )
+   },
+
+   isAdminPasswordCorrect: async function (adminPassword) {
+      return await bcrypt.compare(adminPassword, this.adminPassword);
    }
 
 }

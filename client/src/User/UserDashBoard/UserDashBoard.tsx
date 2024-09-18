@@ -15,7 +15,7 @@ const UserDashBoard = () => {
    return (
       <div>
          <UserNavbar />
-          
+
          <SoftwareSidebar  setShow={setShow} />
 
          <div className='fixed right-0 top-20 w-[80%] p-2 h-[100%]'>
@@ -29,7 +29,7 @@ const UserDashBoard = () => {
             { show === "" && <JobPortal /> }
             { show === "DataStructuresAlgorithms" && <DSASource /> }
             { show === "DevelopmentProjects" && <Projects /> }
-       
+
 
 
          </div>
