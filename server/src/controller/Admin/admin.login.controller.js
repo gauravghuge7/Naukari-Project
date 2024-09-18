@@ -1,6 +1,6 @@
-import { asyncHandler } from '../utils/asyncHandler.js';
-import { ApiError } from '../utils/ApiError.js';
-import { ApiResponse } from '../utils/ApiResponse.js';
+import { asyncHandler } from '../../utils/asyncHandler.js';
+import { ApiError } from '../../utils/ApiError.js';
+import { ApiResponse } from '../../utils/ApiResponse.js';
 
 const generateAccessAndSecretToken = async (_id) => {
 
@@ -43,23 +43,11 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
 
       const { adminName, adminEmail, adminPassword } = req.body;
 
-      if(!adminName || !adminEmail || !adminPassword) {
-         throw new ApiError(400, "Please provide all the required fields");
-      }
-
-      const admin = await Admin.create({
-         adminName,
-         adminEmail,
-         adminPassword
-      });
+      
 
       
 
-      return res 
-      .status(200)
-      .json(
-         new ApiResponse(200, "Admin registration Successful", admin)
-      )
+      
 
    } 
    catch (error) {
@@ -108,6 +96,9 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
       throw new ApiError(400, error.message, error);
    }
 })
+
+
+
 
 export {
    registerAdmin,
