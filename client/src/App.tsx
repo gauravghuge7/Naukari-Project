@@ -1,13 +1,13 @@
 
 import './App.css'
-import UserDashBoard from './User/UserDashBoard/UserDashBoard'
+import RouterApp from './Router/Router/RouterApp'
 
 function App() {
 
 
   return (
     <>
-      <UserDashBoard />
+      <RouterApp />
       
     </>
   )

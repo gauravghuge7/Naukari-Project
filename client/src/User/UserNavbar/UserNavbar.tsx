@@ -4,7 +4,7 @@ const UserNavbar= () => {
 
       <div className="">
          <nav
-            className="flex justify-around items-center fixed top-0 left-0 w-full h-20 bg-gray-100 shadow-xl z-50"
+            className="flex justify-around items-center absolute top-0 left-0 w-full h-20 bg-gray-100 shadow-xl z-50"
          >
             
             <div
