@@ -14,7 +14,10 @@ RUN npm install    # install dependencies in container
 CMD ["npm", "run", "dev"]
 
 
-EXPOSE 5173
+#  expose the port for outside the container 
+
+EXPOSE 3000 
+
 
 
 
