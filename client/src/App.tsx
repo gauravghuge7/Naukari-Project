@@ -1,14 +1,27 @@
 
+import { Route, Routes } from 'react-router'
 import './App.css'
-import RouterApp from './Router/Router/RouterApp'
+
+import { lazy } from 'react'
+
+const RouterApp = lazy(() => import('./Router/Router/RouterApp'))
+const AdminRoutes = lazy(() => import('./Router/AdminRoutes/AdminRoute/AdminRoutes'))
+const UserRouter = lazy(() => import('./Router/UserRoutes/UserRouter/UserRouter'))
 
 function App() {
 
 
   return (
     <>
-      <RouterApp />
-      
+
+      <Routes> 
+
+        <Route path='/*' element={<RouterApp />} />
+        <Route path='/admin/*' element={<AdminRoutes />} />
+        <Route path='/user/*' element={<UserRouter />} />
+
+
+      </Routes>
     </>
   )
 }
