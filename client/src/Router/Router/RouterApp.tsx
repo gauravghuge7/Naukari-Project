@@ -1,6 +1,6 @@
 
 import { Route, Routes } from 'react-router-dom';
-import { Home } from '../../Components/Home.tsx';
+import { Home } from '../../Components/Home/Home.tsx';
 import HomeLayout from '../../Components/HomeLayout/HomeLayout.tsx';
 import AdminLogin from '../../Admin/AdminLogin/AdminLogin.tsx';
 import StudentSignUp from '../../User/UserLogin/StudentSignUp.tsx';
