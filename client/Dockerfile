@@ -1,26 +1,33 @@
 
-FROM node
+# FROM ubuntu:latest
+
+# RUN apt-get update
+# RUN apt-get install -y curl
+# RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+# RUN apt-get upgrade -y
+# RUN apt-get install -y nodejs 
 
 
-WORKDIR /myapp
+# WORKDIR /app
+
+# COPY . .
 
 
-COPY . .
+# RUN npm install    # install dependencies in container 
 
 
-RUN npm install    # install dependencies in container 
-
-
-CMD ["npm", "run", "dev"]
-
-
-#  expose the port for outside the container 
-
-EXPOSE 3000 
+# CMD ["npm", "run", "dev"]
 
 
 
+FROM node:18-alpine
 
-# RUN npm run dev    # run the app in development mode
+WORKDIR /app
 
+COPY package*.json /app
 
+RUN npm install
+
+COPY . /app
+
+CMD ["npm", "run", "dev"]  

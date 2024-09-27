@@ -11,7 +11,11 @@ dotenv.config(
 
 
 
-const PORT = process.env.PORT || 3000;
+
+
+
+
+const PORT = process.env.PORT || 5000;
 
 // step 1: connect to the database
 // step 2: listen the app on port Process.env.PORT

@@ -1,16 +1,18 @@
 // src/components/Layout.tsx
-import React from 'react';
+import React, { lazy } from 'react';
+
 import { Outlet } from 'react-router-dom';
-import UserNavbar from '../../User/UserNavbar/UserNavbar';
+
+const HomeNavbar = lazy(() => import("../HomeNavBar/HomeNavbar"));
 
 const HomeLayout: React.FC = () => {
    return (
       <div >
          <header>
             {/* Add your header or navigation here */}
-            <UserNavbar />
+            <HomeNavbar />
          </header>
-         <main>
+         <main className='mt-20'>
             <Outlet /> {/* This will render the nested routes */}
          </main>
          <footer className="mt-8 text-gray-500">

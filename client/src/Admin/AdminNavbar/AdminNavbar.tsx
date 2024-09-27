@@ -5,7 +5,7 @@ export const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
 
    const [isOpen, setIsOpen] = useState(false)
    
-
+   
 
    return (
       <div>
@@ -43,8 +43,8 @@ export const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
                      <li className='text-center border border-gray-300'>
                         <a href='/admin/settings'>Settings</a>
                      </li>
-                     <li>
-                        {/* Add your navigation links here */}
+                     <li className='text-center border border-gray-300'>
+                        <a href='/admin/createtest'> Create Test</a>
                      </li>
                   </ul>
                }

@@ -1,6 +1,7 @@
-import { asyncHandler } from '../../utils/asyncHandler.js';
+import { Admin } from '../../models/admin.model.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
+import { asyncHandler } from '../../utils/asyncHandler.js';
 
 const generateAccessAndSecretToken = async (_id) => {
 
@@ -45,6 +46,8 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
 
       const { adminName, adminEmail, adminPassword } = req.body;
 
+      console.log("req.body => ", req.body);
+
       if(
          [adminName, adminEmail, adminPassword].some((field) => field.trim() === "")
       ) {
@@ -61,14 +64,16 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
          throw new ApiError(400, "Admin Already Exists");
       }
 
+      
+
       // create a new admin with triming the fields 
 
       const admin = await Admin.create({
-         
-         adminName: adminName.trim(),
-         adminEmail: adminEmail.trim(),
-         adminPassword: adminPassword.trim()
-      });   
+         adminName,
+         adminEmail,
+         adminPassword
+      })
+      console.log(" after existing the admin");
 
       return res 
       .status(201)
@@ -124,10 +129,4 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
    }
 })
 
-
-
-
-export {
-   registerAdmin,
-   loginAdmin
-}
+export { loginAdmin, registerAdmin };

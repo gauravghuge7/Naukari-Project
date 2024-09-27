@@ -26,7 +26,7 @@ const adminSchema = new Schema({
 
    adminAddress: {
       type: String,
-      required: true
+
    },
 
    adminRefreshToken: {
@@ -46,20 +46,26 @@ adminSchema.methods = {
             _id: this._id,
             adminEmail: this.adminEmail,
          },
+
          process.env.ADMIN_ACCESS_TOKEN,
+
          {
             expiresIn: "24h"
          }
+
       )
    },
 
    generateAdminSecretToken: function () {
+
       return jwt.sign(
          {
             _id: this._id,
             adminEmail: this.adminEmail,
          },
+
          process.env.ADMIN_SECRET_TOKEN,
+
          {
             expiresIn: "24h"
          }
@@ -78,7 +84,7 @@ adminSchema.pre("save", function (next) {
 
    if(this.isModified("adminPassword")){
 
-      const passwordToken = jwt.sign(
+      this.adminPasswordToken = jwt.sign(
          {
             _id: this._id,
             adminEmail: this.adminEmail,
@@ -90,11 +96,11 @@ adminSchema.pre("save", function (next) {
          }
       )
 
-      this.adminPasswordToken = passwordToken
+      
 
       this.adminPassword = bcrypt.hashSync(this.adminPassword, 10);
    }
-   next()
+   next();
 })
 
 
