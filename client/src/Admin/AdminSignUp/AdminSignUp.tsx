@@ -5,9 +5,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const AdminSignUp: React.FC = () => {
+
+
    const [adminName, setAdminName] = useState('');
    const [adminEmail, setAdminEmail] = useState('');
    const [adminPassword, setAdminPassword] = useState('');
+
+   
 
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();

@@ -26,7 +26,7 @@ const studentSchema = new Schema({
 
    studentAddress: {
       type: String,
-      required: true
+
    },
    studentPhone: {
       type: String,
@@ -84,7 +84,7 @@ studentSchema.pre("save", function (next) {
    if(this.isModified("studentPassword")){
 
 
-      const passwordToken = jwt.sign(
+      this.studentPasswordToken  = jwt.sign(
          {
             _id: this._id,
             studentEmail: this.studentEmail,
@@ -96,7 +96,6 @@ studentSchema.pre("save", function (next) {
          }
       )
 
-      this.studentPasswordToken = passwordToken
 
       this.studentPassword = bcrypt.hashSync(this.studentPassword, 10);
    }

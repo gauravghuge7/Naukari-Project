@@ -1,6 +1,8 @@
 // src/components/StudentLogin.tsx
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface LoginFormState {
    studentEmail: string;
@@ -9,6 +11,7 @@ interface LoginFormState {
 }
 
 const StudentLogin: React.FC = () => {
+
    const [formState, setFormState] = useState<LoginFormState>({
       studentEmail: '',
       studentPassword: '',
@@ -27,7 +30,7 @@ const StudentLogin: React.FC = () => {
       }));
    };
 
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = async(e: React.FormEvent) => {
       e.preventDefault();
 
       const { studentEmail, studentPassword } = formState;
@@ -38,12 +41,35 @@ const StudentLogin: React.FC = () => {
          return;
       }
 
-      // Here you would typically handle form submission
-      console.log('Student Email:', studentEmail);
-      console.log('Student Password:', studentPassword);
+      try {
+         const body = {
+            studentEmail,
+            studentPassword
+         };
 
-      // Reset error on successful submit
-      setError(null);
+         const config = {
+            headers: {
+               'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+         }
+
+         // API call to login student
+         const response = await axios.post("/api/student/login", body, config);
+         console.log(response.data);
+
+         if (response.data.success) {
+            toast.success(response.data.message);
+            window.location.href = "/user/profile";
+         } 
+         else {
+            toast.error(response.data.message);
+         }
+      } 
+      catch (error) {
+         console.error("Login error:", error);
+         toast.error(error?.message);
+      }
    };
 
    const togglePasswordVisibility = () => {
@@ -52,6 +78,11 @@ const StudentLogin: React.FC = () => {
 
    return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
+
+         <ToastContainer
+            position="top-right" 
+         />
+
          <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
                {showSignUp ? 'Student Sign Up' : 'Student Login'}

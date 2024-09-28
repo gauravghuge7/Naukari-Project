@@ -1,7 +1,6 @@
-import express from 'express';
 import { Router } from 'express';
-import { registerAdmin, loginAdmin } from '../controller/Admin/admin.login.controller.js';
-import { upload } from './../middleware/multer.middleware.js';
+import { registerAdmin, loginAdmin } from '../../controller/Admin/admin.login.controller.js';
+import { upload } from '../../middleware/multer.middleware.js';
 
 const adminRouter = Router();
 

@@ -22,8 +22,8 @@ const RouterApp = () => {
                <Route path='/' element={<Home />} />
                <Route path='/admin-login' element={<AdminLogin />} />
                <Route path='/admin-signup' element={<AdminSignUp />} />
+
                <Route path='/student-login' element={<StudentLogin />} />
-               
                <Route path='/student-register' element={<StudentSignUp />} />
 
             </Route>

@@ -1,6 +1,8 @@
 // src/components/StudentSignUp.tsx
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface SignUpFormState {
    studentEmail: string;
@@ -11,6 +13,7 @@ interface SignUpFormState {
 }
 
 const StudentSignUp: React.FC = () => {
+
    const [formState, setFormState] = useState<SignUpFormState>({
       studentEmail: '',
       studentPassword: '',
@@ -23,6 +26,15 @@ const StudentSignUp: React.FC = () => {
    const [showPassword, setShowPassword] = useState<boolean>(false);
    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
+   const[otpPopup, setOtpPopup] = useState(false);
+   
+
+   const { studentEmail, studentPassword, confirmPassword, studentPhone, studentName } = formState;
+   
+
+   const [message, setMessage] = useState<string | null>("");
+   const [apiResponse, setApiResponse] = useState<boolean>(false);
+
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target;
       setFormState((prevState) => ({
@@ -31,10 +43,11 @@ const StudentSignUp: React.FC = () => {
       }));
    };
 
-   const handleSubmit = (e: React.FormEvent) => {
+   const sendOtpToEmail = async(e: React.FormEvent) => {
+
       e.preventDefault();
 
-      const { studentEmail, studentPassword, confirmPassword, studentPhone, studentName } = formState;
+      
 
       // Basic validation
       if (!studentEmail || !studentPassword || !confirmPassword || !studentPhone || !studentName) {
@@ -47,14 +60,111 @@ const StudentSignUp: React.FC = () => {
          return;
       }
 
-      // Here you would typically handle form submission
-      console.log('Student Email:', studentEmail);
-      console.log('Student Password:', studentPassword);
-      console.log('Student Phone:', studentPhone);
-      console.log('Student Name:', studentName);
+      try {
 
-      // Reset error on successful submit
-      setError(null);
+         const body = {
+            studentEmail,
+            studentPassword,
+            studentPhone,
+            studentName
+         };
+
+         const config = {
+            headers: {
+               'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+         }
+
+         setApiResponse(true);
+         setMessage("OTP forwarding to this mail" + studentEmail);
+
+         // API call to register student
+         const response = await axios.post("/api/student/sendOtp", body, config);
+
+         console.log(response.data);
+
+         
+         setMessage("");
+         setApiResponse(false);
+
+
+         if (response.data.success === true) {
+
+            toast.success(response.data.message);
+            setMessage("OTP sent successfully");
+            setOtpPopup(true);
+         } 
+         else {
+            setError(response.data.message);
+            toast.error(response.data.message);
+         }
+
+      } 
+      catch (error) {
+         console.error("Registration error:", error);
+         setMessage("");
+         setApiResponse(false);
+         if (error instanceof Error) {
+            toast.error(error.message);
+         } else {
+            toast.error("An unknown error occurred");
+         }
+      }
+
+      
+   };
+
+
+   const verifyOtp = async(e: React.FormEvent) => {
+
+      e.preventDefault();
+
+      try {
+
+         const body = {
+            studentEmail,
+            studentPassword,
+            studentPhone,
+            studentName,
+            otp
+         };
+
+         const config = {
+            headers: {
+               'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+         }
+
+         setMessage("verifying OTP...");
+         // API call to register student
+         const response = await axios.post("/api/student/verifyAndRegister", body, config);
+
+         console.log(response.data);
+         setMessage("");
+
+         
+         if (response.data.success) {
+            toast.success(response.data.message);
+            window.location.href = "/student-login";
+         } 
+         else {
+            toast.error(response.data.message);
+         }
+      } 
+      catch (error) {
+         console.error("Registration error:", error);
+
+         setMessage("");
+         if (error instanceof Error) {
+            toast.error(error.message);
+         } else {
+            toast.error("An unknown error occurred");
+         }
+      }
+
+      
    };
 
    const togglePasswordVisibility = () => {
@@ -65,8 +175,59 @@ const StudentSignUp: React.FC = () => {
       setShowConfirmPassword((prevState) => !prevState);
    };
 
+
+   /**  OTP verification code  */
+
+   const [otp, setOtp] = useState('');
+
+   if(otpPopup) {
+      return (
+         <div className="flex items-center justify-center min-h-screen mt-20 bg-gray-100">
+
+            <ToastContainer
+               position="top-right" 
+            />
+
+            
+
+            <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
+
+               <p>
+                  {message}
+               </p>
+
+               <h2 className="text-2xl font-bold mb-6 text-gray-800">Enter OTP</h2>
+               <div className="mb-4">
+                  <label htmlFor="otp" className="block text-gray-700 text-sm font-medium mb-1">OTP</label>
+                  <input
+                     type="text"
+                     id="otp"
+                     value={otp}
+                     onChange={(e) => setOtp(e.target.value)}
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     placeholder="Enter your OTP"
+                     required
+                  />
+               </div>
+               <button
+                  type="submit"
+                  onClick={verifyOtp}
+                  className="w-full py-3 px-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+               >
+                  Verify
+               </button>
+            </div>
+         </div>
+      )
+   }
+
    return (
       <div className="flex items-center justify-center min-h-screen mt-20 bg-gray-100">
+
+         <ToastContainer
+            position="top-right" 
+         />
+
          <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Student Sign Up</h2>
             {error && (
@@ -75,7 +236,34 @@ const StudentSignUp: React.FC = () => {
                </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+
+         
+
+      
+              
+               {
+               apiResponse && message && (
+                  <div className="mb-4 p-3 bg-green-100 text-green-800 border border-green-300 rounded-md relative">
+                     <p>{message}</p>
+                     <button
+                        onClick={() => setMessage('')}
+                        className="absolute top-1 right-1 text-green-600 hover:text-green-800"
+                        aria-label="Close message"
+                     >
+                        &times;
+                     </button>
+                  </div>
+               )}
+           
+            
+
+            {/* <p> 
+               <button onClick={() => setOtpPopup(true)} className="text-blue-500 hover:text-blue-600 transition duration-300">
+                  Verify OTP
+               </button>
+            </p> */}
+
+            <form onSubmit={sendOtpToEmail}>
                <div className="mb-4">
                   <label htmlFor="studentName" className="block text-gray-700 text-sm font-medium mb-1">Full Name</label>
                   <input
