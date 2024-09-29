@@ -120,7 +120,7 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
       .cookie("adminAccessToken", adminAccessToken, options)
       .cookie("adminSecretToken", adminSecretToken, options)
       .json(
-         new ApiResponse(200, "Login Successful", adminAccessToken)
+         new ApiResponse(200, "Admin Login Successfully ", admin)
       )
    }
    catch (error) {

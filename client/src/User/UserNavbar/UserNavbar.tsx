@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const UserNavbar= () => {
 
@@ -34,10 +35,13 @@ const UserNavbar= () => {
                         </button>
                      </li>
                      <li className='text-center border border-gray-300'>
-                        <a href='/user'>Home</a>
+                        <Link to='/user/dashboard'>Dashboard</Link>
                      </li>
                      <li className='text-center border border-gray-300'>
-                        <a href='/user/profile'>Profile</a>
+                        <Link to='/user/profile'>Profile</Link>
+                     </li>
+                     <li className='text-center border border-gray-300'>
+                        <Link to='/user/test'> Create Test</Link>
                      </li>
                      <li>
                         {/* Add your navigation links here */}

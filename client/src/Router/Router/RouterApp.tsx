@@ -1,39 +1,32 @@
-import {
-  Route,
-  Routes,
-} from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-import AdminLogin from '../../Admin/AdminLogin/AdminLogin.tsx';
-import AdminSignUp from '../../Admin/AdminSignUp/AdminSignUp.tsx';
-import { Home } from '../../Components/Home/Home.tsx';
-import HomeLayout from '../../Components/HomeLayout/HomeLayout.tsx';
-import StudentLogin from '../../User/UserLogin/StudentLogin.tsx';
-import StudentSignUp from '../../User/UserLogin/StudentSignUp.tsx';
+// Lazy-loaded components
+const AdminLogin = React.lazy(() => import('../../Admin/AdminLogin/AdminLogin.tsx'));
+const AdminSignUp = React.lazy(() => import('../../Admin/AdminSignUp/AdminSignUp.tsx'));
+const Home = React.lazy(() => import('../../Components/Home/Home.tsx'));
+const HomeLayout = React.lazy(() => import('../../Components/HomeLayout/HomeLayout.tsx'));
+const StudentLogin = React.lazy(() => import('../../User/UserLogin/StudentLogin.tsx'));
+const StudentSignUp = React.lazy(() => import('../../User/UserLogin/StudentSignUp.tsx'));
 
 const RouterApp = () => {
-   return (
-      
-      <div>
-         <Routes>
+  return (
+    <div>
+      {/* Wrapping lazy-loaded routes in Suspense */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          {/* Main layout route with nested child routes */}
+          <Route path='/' element={<HomeLayout />}>
+            <Route path='/' element={<Home />} />
+            <Route path='/admin-login' element={<AdminLogin />} />
+            <Route path='/admin-signup' element={<AdminSignUp />} />
+            <Route path='/student-login' element={<StudentLogin />} />
+            <Route path='/student-register' element={<StudentSignUp />} />
+          </Route>
+        </Routes>
+      </Suspense>
+    </div>
+  );
+};
 
-            {/* create a Outlet for nested routes */}
-            <Route path='/' element={<HomeLayout />}> 
-
-               <Route path='/' element={<Home />} />
-               <Route path='/admin-login' element={<AdminLogin />} />
-               <Route path='/admin-signup' element={<AdminSignUp />} />
-
-               <Route path='/student-login' element={<StudentLogin />} />
-               <Route path='/student-register' element={<StudentSignUp />} />
-
-            </Route>
-
-            {/* you can also nest routes within routes */}
-
-            
-         </Routes>
-      </div>
-   
-   )
-}
 export default RouterApp;

@@ -1,5 +1,7 @@
 // src/components/AdminLogin.tsx
+import axios from 'axios';
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface LoginFormState {
    adminEmail: string;
@@ -7,6 +9,7 @@ interface LoginFormState {
 }
 
 const AdminLogin: React.FC = () => {
+
    const [formState, setFormState] = useState<LoginFormState>({
       adminEmail: '',
       adminPassword: ''
@@ -14,34 +17,53 @@ const AdminLogin: React.FC = () => {
 
    const [error, setError] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState<boolean>(false);
+   
 
-   // Handle input changes
-   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-   //    const { id, value } = e.target;
-   //    setFormState((prevState) => ({
-   //       ...prevState,
-   //       [id]: value
-   //    }));
-   // };
 
    // Handle form submission
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = async(e: React.FormEvent) => {
       e.preventDefault();
 
-      const { adminEmail, adminPassword } = formState;
+      try {
+         const { adminEmail, adminPassword } = formState;
+   
+         // Basic validation
+         if (!adminEmail || !adminPassword) {
+            setError('Both fields are required.');
+            return;
+         }
+   
+         // API call to login admin 
+   
+         const body = {
+            adminEmail,
+            adminPassword
+         };
+   
+         const config = {
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            withCredentials: true
+         }
+         
+         const response = await axios.post("/api/admin/login", body, config);
+         
+         console.log(response.data);
 
-      // Basic validation
-      if (!adminEmail || !adminPassword) {
-         setError('Both fields are required.');
-         return;
+         if(response.data.success) {
+            toast.success(response.data.message);
+            window.location.href = '/admin';
+         }
+         else {
+            toast.error(response.data.message);
+         }
+      } 
+      catch (error) {
+         console.error("Login error:", error);
+         toast.error(error?.message);   
       }
-
-      // Typically, you would handle form submission here
-      console.log('Admin Email:', adminEmail);
-      console.log('Admin Password:', adminPassword);
-
-      // Reset error on successful submit
-      setError(null);
+      
    };
 
    // Toggle password visibility
@@ -51,6 +73,12 @@ const AdminLogin: React.FC = () => {
 
    return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
+
+
+         <ToastContainer
+            position="top-right" 
+         />
+
          <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Admin Login</h2>
             {error && (

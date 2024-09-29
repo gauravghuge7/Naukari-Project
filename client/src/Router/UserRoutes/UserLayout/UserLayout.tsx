@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import UserNavbar from '../../../User/UserNavbar/UserNavbar'
+const UserNavbar = React.lazy(() => import('../../../User/UserNavbar/UserNavbar'))
 
 const UserLayout: React.FC = () => {
    return (
@@ -14,7 +14,7 @@ const UserLayout: React.FC = () => {
          </header>
          
          {/**   this is changeble content with dynamic routing */}
-         <main>
+         <main className='mt-20 ml-4'>
             <Outlet />
          </main>
 

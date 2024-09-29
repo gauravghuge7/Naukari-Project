@@ -17,6 +17,10 @@ const AdminLayout: React.FC = () => {
          <main className='mt-20'>
             <Outlet />
          </main>
+
+         <footer>
+            
+         </footer>
          
       </div>
    )

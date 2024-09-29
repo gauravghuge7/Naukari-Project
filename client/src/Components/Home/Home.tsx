@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Home: React.FC = () => {
+const Home: React.FC = () => {
    return (
       <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
          <header className="text-center mb-8">
@@ -31,3 +31,6 @@ export const Home: React.FC = () => {
       </div>
    );
 }
+
+
+export default Home;

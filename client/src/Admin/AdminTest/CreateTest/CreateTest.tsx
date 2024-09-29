@@ -1,7 +1,10 @@
 import "./CreateTest.css"
-import React from 'react'
 
-const CreateTest: React.FC = () => {
+
+const CreateTest = ({createTestDialogClose}) => {
+
+   
+
 
 
 
@@ -9,7 +12,12 @@ const CreateTest: React.FC = () => {
       <div className='flex flex-col justify-center items-center align-center'>
 
 
-         <button className='relative top-0 right-0'> Create Test </button>
+         <button 
+            onClick={createTestDialogClose}
+            className='absolute top-0 right-0 p-2  text-black font-bold rounded-sm shadow-md transition duration-300 rotate-45 text-3xl'
+         >
+            +
+         </button>
          
          {/* Create Test Form for creating a test  */}
 

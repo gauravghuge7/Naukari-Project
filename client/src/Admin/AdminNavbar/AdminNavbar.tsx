@@ -38,13 +38,16 @@ export const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
                         <a href='/admin'>Home</a>
                      </li>
                      <li className='text-center border border-gray-300'>
+                        <a href='/admin/profile'>Profile</a>
+                     </li>
+                     <li className='text-center border border-gray-300'>
                         <a href='/admin/dashboard'>Dashboard</a>
                      </li>
                      <li className='text-center border border-gray-300'>
                         <a href='/admin/settings'>Settings</a>
                      </li>
                      <li className='text-center border border-gray-300'>
-                        <a href='/admin/createtest'> Create Test</a>
+                        <a href='/admin/test'> Create Test</a>
                      </li>
                   </ul>
                }
