@@ -62,7 +62,7 @@ const UserNavbar= () => {
             {/*  list of content in navbar */}
             <ul className="flex items-center gap-4 ">
                <li>
-                  <button >Software & IT Jobs</button>
+                  <button > IT </button>
                </li>
                
             </ul>

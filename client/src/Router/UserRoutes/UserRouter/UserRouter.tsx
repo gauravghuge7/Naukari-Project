@@ -6,6 +6,7 @@ const UserLayout = React.lazy(() => import('../UserLayout/UserLayout'));
 const UserDashboard = React.lazy(() => import('../../../User/UserDashBoard/UserDashBoard'));
 const UserProfile = React.lazy(() => import('../../../User/UserProfile/UserProfile'));
 const MyTests = React.lazy(() => import('../../../User/Tests/MyTests/MyTests'));
+const GiveTest = React.lazy(() => import('../../../User/Tests/GiveTest/GiveTest'));
 
 const UserRouter: React.FC = () => {
    return (
@@ -17,7 +18,7 @@ const UserRouter: React.FC = () => {
                   <Route path='/profile' element={<UserProfile />} /> 
                   <Route path='/dashboard' element={<UserDashboard />} /> 
                   <Route path='/test' element={<MyTests />} /> 
-                  <Route path='/giveTest' element={<>Give Test</>} /> 
+                  <Route path='/giveTest' element={<GiveTest />} /> 
                </Route>
             </Routes>
          </Suspense>
