@@ -1,38 +1,27 @@
-FROM ubuntu
+# Use an official Node.js runtime as a parent image
+FROM node:16-alpine
 
-RUN apt-get update
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get upgrade -y
-RUN apt-get install -y nodejs
+# Install Python, make, and g++ for native dependencies
+RUN apk add --no-cache python3 make g++
 
-
-
+# Set the working directory in the container
 WORKDIR /app
 
-COPY . .
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
 
+# Install dependencies, including development dependencies
 RUN npm install
 
+# Rebuild native modules like bcrypt
+RUN npm rebuild bcrypt --build-from-source
+
+# Copy the rest of the application files
+COPY . .
+
+# Expose port 5000 to the outside world
 EXPOSE 5000
 
-ENTRYPOINT [ "node", "./src/index.js" ]
-
-
-
-# FROM ubuntu
-
-# RUN apt-get update
-# RUN apt-get install -y curl
-# RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-# RUN apt-get upgrade -y
-# RUN apt-get install -y nodejs
-
-
-# COPY package.json package.json
-# COPY package-lock.json package-lock.json
-# # COPY main.js main.js
-
-# RUN npm install
-
-# ENTRYPOINT [ "node", "main.js" ]
+# Command to run the application
+CMD ["npm", "run", "dev"]
+      
