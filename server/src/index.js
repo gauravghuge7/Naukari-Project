@@ -1,6 +1,7 @@
-import app from './app.js';
+
 import { connectDB } from './database/db.js';
 import dotenv from 'dotenv';
+import server from './NodeServer/socket.js';
 
 
 dotenv.config(
@@ -22,7 +23,7 @@ const PORT = process.env.PORT || 5000;
 
 connectDB()
 .then(() => {
-   app.listen(PORT, () => {
+   server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}
             check Server Here => http://localhost:${PORT}   
       `);

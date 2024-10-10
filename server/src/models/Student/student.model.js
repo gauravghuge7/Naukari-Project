@@ -29,9 +29,21 @@ const studentSchema = new Schema({
 
    },
    studentPhone: {
-      type: String,
+      type: Number,
       required: true
       
+   },
+
+   studentWhatsappNumber: {
+      type: Number
+   },
+
+   studentBio: {
+      type: String,
+   },
+
+   studentProfilePicture: {
+      type: String,
    },
 
    studentRefreshToken: {

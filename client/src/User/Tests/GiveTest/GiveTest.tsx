@@ -1,107 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
-interface TestGiverProps {
-  // Add props if needed
-}
+const sampleQuestions = [
+  { id: 1, question: "What is the capital of France?", options: ["Paris", "Rome", "Berlin", "Madrid"], answer: "" },
+  { id: 2, question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "" },
+  { id: 3, question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Saturn"], answer: "" },
+  { id: 4, question: "What is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: "" },
+];
 
-const GiveTest: React.FC<TestGiverProps> = () => {
+const GiveTest = () => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState(Array(sampleQuestions.length).fill(""));
 
-   const [test, setTest] = useState<Test>({
-    testName: "Test Name",
-    testDescription: "Test Description",
-    testQuestions: [
-      {
-        question: "Question 1",
-        options: ["Option 1", "Option 2", "Option 3"],
-      },
-      {
-        question: "Question 2",
-        options: ["Option 1", "Option 2", "Option 3"],
-      },
-      {
-        question: "Question 3",
-        options: ["Option 1", "Option 2", "Option 3"],
-      },
-    ],
-   });
+  const handleOptionChange = (questionId, selectedOption) => {
+    setAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      newAnswers[questionId - 1] = selectedOption; // Update the answer for the question
+      return newAnswers;
+    });
+  };
 
-   const [testQuestions, setTestQuestions] = useState([
-      {
-         question: "Question 1",
-         options: ["Option 1", "Option 2", "Option 3"],
-      },
-      {
-         question: "Question 2",
-         options: ["Option 1", "Option 2", "Option 3"],
+  const handleNext = () => {
+    if (currentQuestionIndex < sampleQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  const handleSubmit = () => {
+    // Handle the submission of the test
+    console.log("Test Submitted", answers);
+    alert("Test Submitted!");
+  };
+
+  // Effect to handle tab visibility
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        handleSubmit(); // Automatically submit the test
       }
-   ]);
+    };
 
-   const [currentQuestion, setCurrentQuestion] = useState(0);
-
-   const [userAnswers, setUserAnswers] = useState({});
-
-   const handleNextQuestion = () => {
-      // Logic to handle next question
-   };
-
-   const handlePreviousQuestion = () => {
-      // Logic to handle previous question
-   };
-
-   const handleSubmitTest = () => {
-      // Logic to handle test submission
-   };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [answers]); // Add answers to the dependency array to avoid stale closures
 
   return (
-    <div className="container mx-auto p-4 pt-6 mt-6">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">
-        Test Giver
-      </h2>
-      <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-sm">
-        {testQuestions.map((question, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="text-lg font-bold mb-2 text-gray-800">
-              {question.question}
-            </h3>
-            <ul>
-              {question.options.map((option, optionIndex) => (
-                <li key={optionIndex} className="mb-2">
-                  <input
-                    type="radio"
-                    name={`question-${index}`}
-                    value={option}
-                    onChange={(e) => setUserAnswers({ ...userAnswers, [index]: e.target.value })}
-                  />
-                  <span className="ml-2">{option}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h2 className="text-2xl font-bold mb-4">Give Test</h2>
+      <div className="mb-6">
+        {sampleQuestions.map((question, index) => (
+          <button
+            key={question.id}
+            className={`px-4 py-2 mr-2 rounded ${index === currentQuestionIndex ? "bg-blue-600 text-white" : "bg-gray-300"}`}
+            onClick={() => setCurrentQuestionIndex(index)}
+          >
+            Question {question.id}
+          </button>
         ))}
+      </div>
+
+      <div className="bg-white p-4 rounded shadow-md">
+        <h3 className="text-xl font-semibold mb-2">{sampleQuestions[currentQuestionIndex].question}</h3>
+        <div className="flex flex-col mb-4">
+          {sampleQuestions[currentQuestionIndex].options.map((option) => (
+            <label key={option} className="flex items-center mb-2">
+              <input
+                type="radio"
+                name={`question-${sampleQuestions[currentQuestionIndex].id}`}
+                value={option}
+                checked={answers[currentQuestionIndex] === option}
+                onChange={() => handleOptionChange(sampleQuestions[currentQuestionIndex].id, option)}
+                className="mr-2"
+              />
+              {option}
+            </label>
+          ))}
+        </div>
         <div className="flex justify-between">
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-300"
-            onClick={handlePreviousQuestion}
+            onClick={handlePrev}
+            disabled={currentQuestionIndex === 0}
+            className="bg-gray-400 text-white py-2 px-4 rounded disabled:opacity-50"
           >
             Previous
           </button>
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-300"
-            onClick={handleNextQuestion}
+            onClick={handleNext}
+            disabled={currentQuestionIndex === sampleQuestions.length - 1}
+            className="bg-blue-600 text-white py-2 px-4 rounded disabled:opacity-50"
           >
             Next
           </button>
-          <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-300"
-            onClick={handleSubmitTest}
-          >
-            Submit
-          </button>
         </div>
       </div>
+
+      <button onClick={handleSubmit} className="mt-6 bg-green-600 text-white py-2 px-4 rounded">
+        Submit Test
+      </button>
     </div>
   );
 };
 
 export default GiveTest;
-

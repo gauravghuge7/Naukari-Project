@@ -1,82 +1,49 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa"; // For the hamburger icon
+import UserSidebar from "../UserSidebar/UserSidebar/UserSidebar";
 
-const UserNavbar= () => {
+const UserNavbar = () => {
+   const[isOpen, setIsOpen] = useState(false);
+
+   // Toggle menu for mobile
+   const toggleMenu = () => {
+      setIsOpen(!isOpen);
+   };
 
 
-   const [isOpen, setIsOpen] = useState(false)
 
    return (
-
-      <div className="">
-         <nav
-            className="flex justify-around items-center absolute top-0 left-0 w-full h-20 bg-gray-100 shadow-xl z-50"
-         >
-            
-            <section>
-            <button 
-                  className='text-blue-700 text-3xl rotate-90'
-                  onClick={() => setIsOpen(!isOpen)}
-               >
-                  |||
-
-               </button>
-
-               {
-                  isOpen &&
-
-                  <ul className='flex flex-col gap-2 absolute top-0 mt-20 left-0  h-full w-80 bg-gray-100 shadow-xl'>
-                     <li className='text-end'>
-                        <button 
-                           className='text-blue-700 text-3xl rotate-90 text-end ' 
-                           onClick={() => setIsOpen(!isOpen)}
-                        >
-                           X
-                        </button>
-                     </li>
-                     <li className='text-center border border-gray-300'>
-                        <Link to='/user/dashboard'>Dashboard</Link>
-                     </li>
-                     <li className='text-center border border-gray-300'>
-                        <Link to='/user/profile'>Profile</Link>
-                     </li>
-                     <li className='text-center border border-gray-300'>
-                        <Link to='/user/test'> Create Test</Link>
-                     </li>
-                     <li>
-                        {/* Add your navigation links here */}
-                     </li>
-                     
-                  </ul>
-               }
-            </section>
-
-            <div
-               className="text-center text-3xl font-bold text-blue-700"
-            >
-               Naukari Guider 
-            </div>
+      <div>
 
 
+         <UserSidebar  isOpen={isOpen} setIsOpen={setIsOpen} />
 
-            {/*  list of content in navbar */}
-            <ul className="flex items-center gap-4 ">
-               <li>
-                  <button > IT </button>
-               </li>
-               
-            </ul>
 
-            {/*  Profile section in navbar */}
-
-            <div>
-                  Profile
-            </div>
-         </nav>
+         <nav className="flex justify-between items-center w-full h-20 px-4 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 shadow-xl z-50">
          
-      </div>
-   )
-}
+         {/* Logo */}
+         <div className="text-3xl font-bold text-white">
+            Naukari Guider
+         </div>
 
+
+         {/* Profile */}
+         <div className="text-black font-semibold">
+            <Link to="/" className="hover:text-yellow-300">
+               logout
+            </Link>
+         </div>
+
+         {/* Hamburger Icon for Mobile */}
+         <div className="lg:hidden text-white cursor-pointer" onClick={toggleMenu}>
+            {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+         </div>
+         </nav>
+
+      
+      </div>
+   );
+};
 
 export default UserNavbar;

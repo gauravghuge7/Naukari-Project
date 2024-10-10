@@ -20,6 +20,7 @@ const AdminRoutes: React.FC = () => {
             <Route path='/settings' element={<h1>Admin Settings</h1>} />
             <Route path='/profile' element={<AdminProfile />} />
             <Route path='/test' element={<TestLayout />} />
+            <Route path='/view-test' element={<TestLayout />} />
           </Route>
         </Routes>
       </Suspense>

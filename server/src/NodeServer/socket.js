@@ -1,42 +1,44 @@
-import express from 'express';
-
-import { connectDB } from '../database/db.js';
+// server.js
 import http from 'http';
-import io from 'socket.io';
+import { Server } from 'socket.io'; // Import Socket.io
+import cors from 'cors';
+import app from "../app.js";
 
+// Create an HTTP server
+const server = http.createServer(app);
 
-const app = express();
+// CORS options
+const corsOptions = {
+   origin: '*', // Allow all origins for demonstration; adjust as needed for security
+   methods:"*", // Allow these methods
+   allowedHeaders: "*", // Specify any custom headers
+   credentials: true // Allow credentials (if needed)
+};
 
-// const server = http.createServer(app);
+// Create a Socket.io server with CORS settings
+const io = new Server(server, {
+   cors: corsOptions,
+});
 
+// Listen for incoming connections
+io.on('connection', (socket) => {
+   console.log('A user connected:', socket.id);
 
-const server = http.createServer(app)
+   // Listen for chat messages
+   socket.on('chat message', (msg) => {
+      console.log('Message received: ' + msg);
+      // Broadcast the message to all connected clients
+      io.emit('chat message', msg);
+   });
 
-/// create a socket server 
-const io = io(server);
+   
+   // Handle disconnection
+   socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+   });
+});
 
-/// create the connection id to connect the socket to the database
-let connectionId = null;
-
-/// create a connection to the database
-connectDB()
-.then(() => {
-   /// listen the server
-   server.listen(3000, () => {
-      console.log("Server is running on port 3000");
-   })
-})
-.catch((error) => {
-   console.log("Error while Starting the Express Server",error)
-   process.exit(1)   
-})
-
-
-
-
-
+// Preflight CORS handling for Express
+app.options('*', cors(corsOptions)); // Enable pre-flight across the board
 
 export default server;
-
-
-

@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
 
 interface LoginFormState {
    studentEmail: string;
@@ -68,7 +69,9 @@ const StudentLogin: React.FC = () => {
       } 
       catch (error) {
          console.error("Login error:", error);
-         toast.error(error?.message);
+         const message = extractErrorMessage(error.response.data);
+         toast.error(message);
+         
       }
    };
 

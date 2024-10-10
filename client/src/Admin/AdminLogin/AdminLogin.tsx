@@ -2,6 +2,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
 
 interface LoginFormState {
    adminEmail: string;
@@ -60,8 +61,10 @@ const AdminLogin: React.FC = () => {
          }
       } 
       catch (error) {
-         console.error("Login error:", error);
-         toast.error(error?.message);   
+         console.error("Login error: => ", error);
+         const message =  extractErrorMessage(error.response.data);
+         setError(message);
+         toast.error(message);   
       }
       
    };
