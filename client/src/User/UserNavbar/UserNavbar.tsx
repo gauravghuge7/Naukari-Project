@@ -22,6 +22,12 @@ const UserNavbar = () => {
 
          <nav className="flex justify-between items-center w-full h-20 px-4 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 shadow-xl z-50">
          
+          {/* Hamburger Icon for Mobile */}
+            <div className=" text-white cursor-pointer" onClick={toggleMenu}>
+               {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+            </div>
+
+
          {/* Logo */}
          <div className="text-3xl font-bold text-white">
             Naukari Guider
@@ -35,10 +41,7 @@ const UserNavbar = () => {
             </Link>
          </div>
 
-         {/* Hamburger Icon for Mobile */}
-         <div className="lg:hidden text-white cursor-pointer" onClick={toggleMenu}>
-            {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
-         </div>
+        
          </nav>
 
       

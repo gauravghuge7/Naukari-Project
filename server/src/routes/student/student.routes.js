@@ -6,11 +6,15 @@ import {
 
 } from '../../controller/Student/student.login.controller.js';
 import { upload } from '../../middleware/multer.middleware.js';
+import profileRouter from './student.profile.routes.js';
 
 
 // create a student router to handle all the requests
 const studentRouter = Router();
 
+
+
+studentRouter.use("/profile", profileRouter);
 
 // register a student
 studentRouter.route("/sendOtp").post(

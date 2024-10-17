@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
 
 interface SignUpFormState {
    studentEmail: string;
@@ -13,7 +14,6 @@ interface SignUpFormState {
 }
 
 const StudentSignUp: React.FC = () => {
-
    const [formState, setFormState] = useState<SignUpFormState>({
       studentEmail: '',
       studentPassword: '',
@@ -25,15 +25,11 @@ const StudentSignUp: React.FC = () => {
    const [error, setError] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState<boolean>(false);
    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-
-   const[otpPopup, setOtpPopup] = useState(false);
-   
-
+   const [otpPopup, setOtpPopup] = useState(false);
    const { studentEmail, studentPassword, confirmPassword, studentPhone, studentName } = formState;
-   
-
    const [message, setMessage] = useState<string | null>("");
    const [apiResponse, setApiResponse] = useState<boolean>(false);
+   const [otp, setOtp] = useState('');
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target;
@@ -43,11 +39,8 @@ const StudentSignUp: React.FC = () => {
       }));
    };
 
-   const sendOtpToEmail = async(e: React.FormEvent) => {
-
+   const sendOtpToEmail = async (e: React.FormEvent) => {
       e.preventDefault();
-
-      
 
       // Basic validation
       if (!studentEmail || !studentPassword || !confirmPassword || !studentPhone || !studentName) {
@@ -61,110 +54,57 @@ const StudentSignUp: React.FC = () => {
       }
 
       try {
-
-         const body = {
-            studentEmail,
-            studentPassword,
-            studentPhone,
-            studentName
-         };
-
-         const config = {
-            headers: {
-               'Content-Type': 'multipart/form-data'
-            },
-            withCredentials: true
-         }
+         const body = { studentEmail, studentPassword, studentPhone, studentName };
+         const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
          setApiResponse(true);
-         setMessage("OTP forwarding to this mail" + studentEmail);
+         setMessage("Sending OTP to " + studentEmail + "...");
 
-         // API call to register student
          const response = await axios.post("/api/student/sendOtp", body, config);
-
-         console.log(response.data);
-
-         
          setMessage("");
-         setApiResponse(false);
 
-
-         if (response.data.success === true) {
-
+         if (response.data.success) {
             toast.success(response.data.message);
             setMessage("OTP sent successfully");
             setOtpPopup(true);
-         } 
-         else {
+         } else {
             setError(response.data.message);
             toast.error(response.data.message);
          }
-
-      } 
-      catch (error) {
+      } catch (error) {
          console.error("Registration error:", error);
          setMessage("");
-         setApiResponse(false);
          if (error instanceof Error) {
             toast.error(error.message);
          } else {
             toast.error("An unknown error occurred");
          }
       }
-
-      
    };
 
-
-   const verifyOtp = async(e: React.FormEvent) => {
-
+   const verifyOtp = async (e: React.FormEvent) => {
       e.preventDefault();
 
       try {
+         const body = { studentEmail, studentPassword, studentPhone, studentName, otp };
+         const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
 
-         const body = {
-            studentEmail,
-            studentPassword,
-            studentPhone,
-            studentName,
-            otp
-         };
-
-         const config = {
-            headers: {
-               'Content-Type': 'multipart/form-data'
-            },
-            withCredentials: true
-         }
-
-         setMessage("verifying OTP...");
-         // API call to register student
+         setMessage("Verifying OTP...");
          const response = await axios.post("/api/student/verifyAndRegister", body, config);
-
-         console.log(response.data);
          setMessage("");
 
-         
          if (response.data.success) {
             toast.success(response.data.message);
             window.location.href = "/student-login";
-         } 
-         else {
+         } else {
             toast.error(response.data.message);
          }
-      } 
-      catch (error) {
+      } catch (error) {
          console.error("Registration error:", error);
-
-         setMessage("");
-         if (error instanceof Error) {
-            toast.error(error.message);
-         } else {
-            toast.error("An unknown error occurred");
-         }
+         const message = extractErrorMessage(error.response.data);
+         setMessage(message);
+         toast.error(message);
       }
-
-      
    };
 
    const togglePasswordVisibility = () => {
@@ -175,27 +115,12 @@ const StudentSignUp: React.FC = () => {
       setShowConfirmPassword((prevState) => !prevState);
    };
 
-
-   /**  OTP verification code  */
-
-   const [otp, setOtp] = useState('');
-
-   if(otpPopup) {
+   if (otpPopup) {
       return (
-         <div className="flex items-center justify-center min-h-screen mt-20 bg-gray-100">
-
-            <ToastContainer
-               position="top-right" 
-            />
-
-            
-
+         <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-green-300 to-red-300">
+            <ToastContainer position="top-right" />
             <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
-
-               <p>
-                  {message}
-               </p>
-
+               <p>{message}</p>
                <h2 className="text-2xl font-bold mb-6 text-gray-800">Enter OTP</h2>
                <div className="mb-4">
                   <label htmlFor="otp" className="block text-gray-700 text-sm font-medium mb-1">OTP</label>
@@ -204,7 +129,7 @@ const StudentSignUp: React.FC = () => {
                      id="otp"
                      value={otp}
                      onChange={(e) => setOtp(e.target.value)}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Enter your OTP"
                      required
                   />
@@ -212,22 +137,18 @@ const StudentSignUp: React.FC = () => {
                <button
                   type="submit"
                   onClick={verifyOtp}
-                  className="w-full py-3 px-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+                  className="w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300"
                >
                   Verify
                </button>
             </div>
          </div>
-      )
+      );
    }
 
    return (
-      <div className="flex items-center justify-center min-h-screen mt-20 bg-gray-100">
-
-         <ToastContainer
-            position="top-right" 
-         />
-
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-green-300 to-red-300">
+         <ToastContainer position="top-right" />
          <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Student Sign Up</h2>
             {error && (
@@ -235,34 +156,18 @@ const StudentSignUp: React.FC = () => {
                   {error}
                </div>
             )}
-
-
-         
-
-      
-              
-               {
-               apiResponse && message && (
-                  <div className="mb-4 p-3 bg-green-100 text-green-800 border border-green-300 rounded-md relative">
-                     <p>{message}</p>
-                     <button
-                        onClick={() => setMessage('')}
-                        className="absolute top-1 right-1 text-green-600 hover:text-green-800"
-                        aria-label="Close message"
-                     >
-                        &times;
-                     </button>
-                  </div>
-               )}
-           
-            
-
-            {/* <p> 
-               <button onClick={() => setOtpPopup(true)} className="text-blue-500 hover:text-blue-600 transition duration-300">
-                  Verify OTP
-               </button>
-            </p> */}
-
+            {apiResponse && message && (
+               <div className="mb-4 p-3 bg-green-100 text-green-800 border border-green-300 rounded-md relative">
+                  <p>{message}</p>
+                  <button
+                     onClick={() => setMessage('')}
+                     className="absolute top-1 right-1 text-green-600 hover:text-green-800"
+                     aria-label="Close message"
+                  >
+                     &times;
+                  </button>
+               </div>
+            )}
             <form onSubmit={sendOtpToEmail}>
                <div className="mb-4">
                   <label htmlFor="studentName" className="block text-gray-700 text-sm font-medium mb-1">Full Name</label>
@@ -271,12 +176,11 @@ const StudentSignUp: React.FC = () => {
                      id="studentName"
                      value={formState.studentName}
                      onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Enter your full name"
                      required
                   />
                </div>
-
                <div className="mb-4">
                   <label htmlFor="studentEmail" className="block text-gray-700 text-sm font-medium mb-1">Email</label>
                   <input
@@ -284,12 +188,11 @@ const StudentSignUp: React.FC = () => {
                      id="studentEmail"
                      value={formState.studentEmail}
                      onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Enter your email"
                      required
                   />
                </div>
-
                <div className="mb-4">
                   <label htmlFor="studentPhone" className="block text-gray-700 text-sm font-medium mb-1">Phone Number</label>
                   <input
@@ -297,12 +200,11 @@ const StudentSignUp: React.FC = () => {
                      id="studentPhone"
                      value={formState.studentPhone}
                      onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Enter your phone number"
                      required
                   />
                </div>
-
                <div className="mb-4 relative">
                   <label htmlFor="studentPassword" className="block text-gray-700 text-sm font-medium mb-1">Password</label>
                   <input
@@ -310,7 +212,7 @@ const StudentSignUp: React.FC = () => {
                      id="studentPassword"
                      value={formState.studentPassword}
                      onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Enter your password"
                      required
                   />
@@ -331,7 +233,6 @@ const StudentSignUp: React.FC = () => {
                      )}
                   </button>
                </div>
-
                <div className="mb-6 relative">
                   <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-medium mb-1">Confirm Password</label>
                   <input
@@ -339,7 +240,7 @@ const StudentSignUp: React.FC = () => {
                      id="confirmPassword"
                      value={formState.confirmPassword}
                      onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
                      placeholder="Confirm your password"
                      required
                   />
@@ -360,22 +261,19 @@ const StudentSignUp: React.FC = () => {
                      )}
                   </button>
                </div>
-
                <button
                   type="submit"
-                  className="w-full py-3 px-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+                  className="w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300"
                >
                   Sign Up
                </button>
             </form>
-
-
             <div className="mt-4 text-center">
                <Link
                   to={'/student-login'}
                   className="text-blue-500 hover:text-blue-600 transition duration-300"
                >
-                  {'Already have an account? Login'}
+                  Already have an account? Login
                </Link>
             </div>
          </div>

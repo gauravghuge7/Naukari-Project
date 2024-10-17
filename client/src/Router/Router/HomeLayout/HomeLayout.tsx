@@ -3,7 +3,11 @@ import React, { lazy } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-const HomeNavbar = lazy(() => import("../HomeNavBar/HomeNavbar"));
+
+
+const Footer = lazy(() => import("./../../../Views/Footer/Footer"));
+const HomeNavbar = lazy(() => import("./../../../Components/HomeNavBar/HomeNavbar"));
+
 
 const HomeLayout: React.FC = () => {
    return (
@@ -15,8 +19,8 @@ const HomeLayout: React.FC = () => {
          <main className='mt-20'>
             <Outlet /> {/* This will render the nested routes */}
          </main>
-         <footer className="mt-8 text-gray-500">
-            &copy; {new Date().getFullYear()} Student Test Solver. All rights reserved.
+         <footer className="">
+            <Footer />
          </footer>
       </div>
    );

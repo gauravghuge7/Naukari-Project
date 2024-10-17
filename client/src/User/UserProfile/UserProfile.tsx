@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEdit, FaMobileAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa'; // Importing icons
+import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import axios from 'axios';
 
 const UserProfile = () => {
   const [name, setName] = useState('John Doe');
@@ -14,6 +16,29 @@ const UserProfile = () => {
     setIsEditing(false);
     alert('Profile updated!');
   };
+
+  const fetchProfile = async() => {
+      try {
+
+        const config = {
+          headers: {
+            "content-type": "multipart/formdata"
+          },
+          withCredentials: true
+        }
+        const response = await axios.get("/api/student/profile/fetchprofile", config);
+
+        console.log("response", response.data);
+      } 
+      catch (error) {
+        const message = extractErrorMessage(error.response.data);
+        console.log("Error", message)  
+      }
+  }
+
+  useEffect(() => {
+    fetchProfile();
+  }, [name]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">

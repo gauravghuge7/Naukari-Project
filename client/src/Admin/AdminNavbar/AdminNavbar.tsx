@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../AdminSidebar/AdminSidebar'
 
-export const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
+const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
 
 
-   const [isOpen, setIsOpen] = useState(false)
+   const [isOpen, setIsOpen] = useState(false);
    
-   
+
 
    return (
       <div>
@@ -46,3 +46,5 @@ export const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
       </div>
    )
 }
+
+export default AdminNavbar

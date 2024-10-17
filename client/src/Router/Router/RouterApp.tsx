@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 const AdminLogin = React.lazy(() => import('../../Admin/AdminLogin/AdminLogin.tsx'));
 const AdminSignUp = React.lazy(() => import('../../Admin/AdminSignUp/AdminSignUp.tsx'));
 const Home = React.lazy(() => import('../../Components/Home/Home.tsx'));
-const HomeLayout = React.lazy(() => import('../../Components/HomeLayout/HomeLayout.tsx'));
+const HomeLayout = React.lazy(() => import('./HomeLayout/HomeLayout.tsx'));
 const StudentLogin = React.lazy(() => import('../../User/UserLogin/StudentLogin.tsx'));
 const StudentSignUp = React.lazy(() => import('../../User/UserLogin/StudentSignUp.tsx'));
 

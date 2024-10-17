@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router'
+import Footer from '../../../Views/Footer/Footer'
 const UserNavbar = React.lazy(() => import('../../../User/UserNavbar/UserNavbar'))
 
 const UserLayout: React.FC = () => {
@@ -17,6 +18,10 @@ const UserLayout: React.FC = () => {
          <main className='mt-20 ml-4'>
             <Outlet />
          </main>
+
+         <footer>
+            <Footer />  
+         </footer>
 
          
       </div>

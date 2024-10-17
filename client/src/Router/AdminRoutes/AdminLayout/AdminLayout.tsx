@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { Outlet } from 'react-router'
-import { AdminNavbar } from '../../../Admin/AdminNavbar/AdminNavbar'
+import Footer from '../../../Views/Footer/Footer'
+
+
+const AdminNavbar = lazy(() => import("./../../../Admin/AdminNavbar/AdminNavbar"));
+
 
 const AdminLayout: React.FC = () => {
    
@@ -18,8 +22,8 @@ const AdminLayout: React.FC = () => {
             <Outlet />
          </main>
 
-         <footer>
-            
+         <footer className='relative bottom-0 w-full  mt-[20rem]'>
+               <Footer />
          </footer>
          
       </div>
