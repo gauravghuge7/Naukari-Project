@@ -8,7 +8,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': "http://localhost:5000"
-    }
+    },
+    https: false,  // Ensure HTTPS is disabled
+    host: '0.0.0.0',  // Bind to all interfaces for external access
+    port: 5173,       // Port number
+    open: true        // Optional: Automatically open browser
   },
   plugins: [react()],
 })
