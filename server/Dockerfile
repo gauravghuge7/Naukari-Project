@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Install Python, make, and g++ for native dependencies
 RUN apk add --no-cache python3 make g++
@@ -23,5 +23,5 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "src/index.js"]
       

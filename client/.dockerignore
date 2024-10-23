@@ -9,3 +9,12 @@ docker-compose*
 README.md
 LICENSE
 .vscode
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.env
+.vscode
+dist
