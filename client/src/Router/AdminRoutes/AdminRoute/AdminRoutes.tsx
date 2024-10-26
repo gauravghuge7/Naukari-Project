@@ -1,7 +1,11 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import TestOverview from '../../../Admin/AdminTest/TestOverview/TestOverview';
+import CreateTestOverview from '../../../Admin/AdminTest/CreateTestOverview/CreateTestOverview';
+
 
 // Lazy-loaded components for Admin
+const ViewTests = React.lazy(() => import('../../../Admin/AdminTest/ViewTests/ViewTests'));
 const AdminLayout = React.lazy(() => import('../AdminLayout/AdminLayout'));
 const AdminDashboard = React.lazy(() => import('../../../Admin/AdminDashboard/AdminDashboard'));
 const AdminProfile = React.lazy(() => import('../../../Admin/AdminProfile/AdminProfile'));
@@ -20,7 +24,9 @@ const AdminRoutes: React.FC = () => {
             <Route path='/settings' element={<h1>Admin Settings</h1>} />
             <Route path='/profile' element={<AdminProfile />} />
             <Route path='/test' element={<TestLayout />} />
-            <Route path='/view-test' element={<TestLayout />} />
+            <Route path='/view-test' element={<ViewTests />} />
+            <Route path='/test-overview/:id' element={<TestOverview />} />
+            <Route path='/create-test-overview' element={<CreateTestOverview />} />
           </Route>
         </Routes>
       </Suspense>

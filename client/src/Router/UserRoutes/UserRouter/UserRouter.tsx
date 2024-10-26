@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router';
 
 // Lazy-loaded components
 const AllTests = React.lazy(() => import('../../../User/Tests/AllTests/AllTests'));
-
+const TestOverview = React.lazy(() => import('../../../User/Tests/TestOverview/TestOverView'));
 const UserLayout = React.lazy(() => import('../UserLayout/UserLayout'));
 const UserDashboard = React.lazy(() => import('../../../User/UserDashBoard/UserDashBoard'));
 const UserProfile = React.lazy(() => import('../../../User/UserProfile/UserProfile'));
@@ -24,6 +24,7 @@ const UserRouter: React.FC = () => {
                   <Route path='/myTest' element={<MyTests />} /> 
                   <Route path={`/giveTest/:_id`} element={<GiveTest />} /> 
                   <Route path='/Test' element={<AllTests />} /> 
+                  <Route path='/test-overview/:testId' element={<TestOverview />} /> 
                </Route>
             </Routes>
          </Suspense>

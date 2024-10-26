@@ -2,19 +2,26 @@ import { useRef, useState } from 'react';
 import CreateTest from '../CreateTest/CreateTest';
 
 
+
+interface TestData {
+   testId: string;
+   testName: string;
+   testDescription: string;
+   numQuestions: number;
+}
+
+
+
 const TestLayout = () => {
 
    {/* Create Test Form for creating a test dialog */}
-
    const createTestRef = useRef<HTMLDialogElement>(null);
 
-   const [test, setTest] = useState(
-      {
-         testName: '',
-         testDescription: '',
-         numQuestions: 0,
-      }
-   );
+
+   // State to check if test is created
+   const [testCreated, setTestCreated] = useState<boolean>(false);
+
+   const [test, setTest] = useState<TestData | null>(null);
 
 
    const createTestDialogOpen = () => {
@@ -27,15 +34,19 @@ const TestLayout = () => {
 
 
 
-
-
-
    return (
       <div className='flex flex-col justify-center items-center align-center'>
 
          {/* Create Test Form for creating a test  */}
 
-         {test && (
+         <button 
+            onClick={createTestDialogOpen}
+            className='w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-sm shadow-md transition duration-300'
+         >
+            Create Test
+         </button>
+
+         { testCreated && test && (
 
             <div className='absolute top-40 left-0 p-2 m-4 w-[15rem] h-[30rem]  shadow-md shadow-gray-400 rounded-sm text-black'>
                <h2 className='text-center font-bold'>Test Details</h2>
@@ -53,12 +64,7 @@ const TestLayout = () => {
             </div>
          )}
 
-         <button 
-            onClick={createTestDialogOpen}
-            className='w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-sm shadow-md transition duration-300'
-         >
-            Create Test
-         </button>
+         
 
 
 
@@ -76,6 +82,8 @@ const TestLayout = () => {
                   
                      <CreateTest 
                         createTestDialogClose={createTestDialogClose}
+                        setTestCreated={setTestCreated}
+                        setTest={setTest}
                      />
                   </div>
                </dialog>

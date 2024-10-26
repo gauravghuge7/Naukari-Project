@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 // Sample data for demonstration
@@ -28,9 +29,9 @@ const AllTests = () => {
             <p className="text-gray-600 mb-4">{test.description}</p>
             <div className="flex justify-between">
             
-              <button className="bg-green-600 text-white py-2 px-4 rounded-full hover:bg-green-700 transition-colors">
+              <Link to={`/user/test-overview/${test.id}`} className="bg-green-600 text-white py-2 px-4 rounded-full hover:bg-green-700 transition-colors">
                 Enroll
-              </button>
+              </Link>
             </div>
           </div>
         ))}

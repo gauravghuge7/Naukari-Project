@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FaEdit, FaMobileAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa'; // Importing icons
+import { FaEdit, FaMobileAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
 import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
 import axios, { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 const UserProfile = () => {
   const [name, setName] = useState('John Doe');
@@ -9,36 +10,84 @@ const UserProfile = () => {
   const [mobileNumber, setMobileNumber] = useState('123-456-7890');
   const [whatsappNumber, setWhatsappNumber] = useState('123-456-7890');
   const [bio, setBio] = useState('Hello! I am a software developer.');
-  const [profilePicture, setProfilePicture] = useState('https://via.placeholder.com/150'); // Default profile picture
+  const [profilePicture, setProfilePicture] = useState<File | null>(null); // Now storing the file itself
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleUpdateProfile = () => {
-    setIsEditing(false);
-    alert('Profile updated!');
+  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      };
+
+      const formData = new FormData();
+      formData.append("studentName", name);
+      formData.append("studentEmail", email);
+      formData.append("studentMobile", mobileNumber);
+      formData.append("studentWhatsapp", whatsappNumber);
+      formData.append("studentBio", bio);
+
+      // Add file if it exists
+      if (profilePicture) {
+        formData.append("profilePicture", profilePicture);
+      }
+
+      console.log("formData entries:", Array.from(formData.entries())); // Log to verify formData
+
+      const response = await axios.post("/api/student/profile/updateProfile", formData, config);
+
+      console.log("response", response.data);
+
+      if (response.data.success) {
+        setIsEditing(false);
+        toast.success("Profile updated!");
+      }
+    } catch (error) {
+      const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
+      console.log("Error", message);
+      toast.error(message);
+    }
   };
 
-  const fetchProfile = async() => {
-      try {
+  const fetchProfile = async () => {
+    try {
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data"
+        },
+        withCredentials: true
+      };
+      const response = await axios.get("/api/student/profile/fetchprofile", config);
 
-        const config = {
-          headers: {
-            "content-type": "multipart/formdata"
-          },
-          withCredentials: true
-        }
-        const response = await axios.get("/api/student/profile/fetchprofile", config);
+      console.log("response", response.data);
 
-        console.log("response", response.data);
-      } 
-      catch (error) {
-        const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
-        console.log("Error", message)  
-      }
-  }
+      setName(response.data.data.studentName);
+      setEmail(response.data.data.studentEmail);
+      setMobileNumber(response.data.data.studentPhone);
+      setWhatsappNumber(response.data.data.studentWhatsapp);
+      setBio(response.data.data.studentBio);
+      setProfilePicture(response.data.data.studentProfilePicture);
+    } catch (error) {
+      const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
+      console.log("Error", message);
+      toast.error(message);
+    }
+  };
 
   useEffect(() => {
     fetchProfile();
-  }, [name]);
+  }, []);
+
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePicture(file); // Set the actual file object
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
@@ -48,12 +97,20 @@ const UserProfile = () => {
         </h2>
         <div className="flex flex-col items-center">
           <img
-            src={profilePicture}
+            src={profilePicture ? profilePicture: "https://via.placeholder.com/150"}
             alt={name}
             className="w-32 h-32 rounded-full mb-6 border-2 border-gray-300 shadow-md"
           />
           {isEditing ? (
-            <>
+            <form onSubmit={handleUpdateProfile}>
+              <div className="w-full mb-4">
+                <input
+                  type="file"
+                  className="w-full p-3 text-lg border border-gray-300 rounded focus:outline-none focus:border-gray-500"
+                  onChange={handleProfilePictureChange}
+                />
+              </div>
+
               <div className="w-full mb-4">
                 <input
                   type="text"
@@ -63,6 +120,7 @@ const UserProfile = () => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
+
               <div className="w-full mb-4 flex items-center">
                 <FaEnvelope className="text-gray-500 mr-2" />
                 <input
@@ -73,6 +131,7 @@ const UserProfile = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+
               <div className="w-full mb-4 flex items-center">
                 <FaMobileAlt className="text-gray-500 mr-2" />
                 <input
@@ -83,6 +142,7 @@ const UserProfile = () => {
                   onChange={(e) => setMobileNumber(e.target.value)}
                 />
               </div>
+
               <div className="w-full mb-4 flex items-center">
                 <FaWhatsapp className="text-gray-500 mr-2" />
                 <input
@@ -93,6 +153,7 @@ const UserProfile = () => {
                   onChange={(e) => setWhatsappNumber(e.target.value)}
                 />
               </div>
+
               <textarea
                 placeholder="Bio"
                 className="w-full p-3 mb-4 text-lg border border-gray-300 rounded focus:outline-none focus:border-gray-500"
@@ -100,13 +161,14 @@ const UserProfile = () => {
                 onChange={(e) => setBio(e.target.value)}
                 rows={3}
               />
+
               <button
                 className="w-full bg-gray-800 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-gray-700 transition-colors"
-                onClick={handleUpdateProfile}
+                type="submit"
               >
                 Save Changes
               </button>
-            </>
+            </form>
           ) : (
             <>
               <p className="text-xl text-gray-700 font-semibold mb-2">{name}</p>

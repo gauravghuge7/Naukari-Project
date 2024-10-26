@@ -41,6 +41,16 @@ const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
                   {/* Add your navigation links here */}
                </li>
             </ul>
+
+            <button 
+               className='bg-red-500 text-white px-4 py-2 rounded-sm'
+               onClick={() => {
+                  localStorage.removeItem('adminToken');
+                  window.location.href = '/';
+               }}
+            > 
+               Logout   
+            </button>
          </nav>
          
       </div>
