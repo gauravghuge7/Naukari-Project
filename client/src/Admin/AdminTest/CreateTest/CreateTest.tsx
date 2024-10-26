@@ -1,23 +1,28 @@
 import { useState } from "react";
 import "./CreateTest.css";
+import axios, { AxiosError } from "axios";
+import { extractErrorMessage } from "../../../Components/ResponseError/ResponseError";
+import { toast, ToastContainer } from "react-toastify";
 
 interface TestData {
    testName: string;
    testDescription: string;
    numberOfQuestions: number;
+   testTime: number;
 }
 
 const CreateTest: React.FC<{ 
    createTestDialogClose: () => void, 
-   setTest: (value: TestData) => void, 
+   setTest: (value: object) => void,
    setTestCreated: (value: boolean) => void }> 
-   = ({ createTestDialogClose, setTestCreated }) => 
+   = ({ createTestDialogClose, setTest, setTestCreated }) => 
    {
 
    const [testData, setTestData] = useState<TestData>({
       testName: '',
       testDescription: '',
       numberOfQuestions: 0,
+      testTime: 0,
    });
 
    const [error, setError] = useState('');
@@ -30,29 +35,62 @@ const CreateTest: React.FC<{
       }));
    };
 
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = async(e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!testData.testName || !testData.testDescription || !testData.numberOfQuestions) {
-         setError('All fields are required.');
-         return;
+      try {
+         if (!testData.testName || !testData.testDescription || !testData.numberOfQuestions) {
+            setError('All fields are required.');
+            return;
+         }
+   
+         if (testData.numberOfQuestions < 1) {
+            setError('Number of questions must be at least 1.');
+            return;
+         }
+   
+         const config = {
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+         };
+   
+         const testDataToSubmit = {
+            testName: testData.testName,
+            testDescription: testData.testDescription,
+            numberOfQuestions: testData.numberOfQuestions,
+            testTime: testData.testTime,
+         };
+   
+         const response = await axios.post('/api/admin/test/createTest', testDataToSubmit, config);
+   
+         console.log('Response:', response);
+         
+         if(response.data.success) {
+            toast.success('Test created successfully!');
+            setTestCreated(true);
+            setTest(response.data.data);
+         }
+         
+   
+   
+         // If everything is fine, we can submit the form
+         console.log('Test Data Submitted:', testData);
+         createTestDialogClose(); // Close the modal on successful submission
+      } 
+      catch (error) {
+         console.error('Error submitting test:', error);
+         const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
+         toast.error(message);
+         setError(message);
       }
-
-      if (testData.numberOfQuestions < 1) {
-         setError('Number of questions must be at least 1.');
-         return;
-      }
-
-      setTestCreated(true);
-
-
-      // If everything is fine, we can submit the form
-      console.log('Test Data Submitted:', testData);
-      createTestDialogClose(); // Close the modal on successful submission
    };
 
    return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+
+         <ToastContainer position="top-right" />
          <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             {/* Close Button */}
             
@@ -107,6 +145,22 @@ const CreateTest: React.FC<{
                      name="numberOfQuestions"
                      placeholder="Enter number of questions"
                      value={testData.numberOfQuestions}
+                     onChange={handleInputChange}
+                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  />
+               </div>
+
+               {/* Test Time */}
+               <div>
+                  <label htmlFor="testTime" className="block text-gray-700 font-semibold mb-1">
+                     Test Time
+                  </label>
+                  <input
+                     type="number"
+                     id="testTime"
+                     name="testTime"
+                     placeholder="Enter test time"
+                     value={testData.testTime}
                      onChange={handleInputChange}
                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   />

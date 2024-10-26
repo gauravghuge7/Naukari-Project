@@ -21,7 +21,7 @@ const TestLayout = () => {
    // State to check if test is created
    const [testCreated, setTestCreated] = useState<boolean>(false);
 
-   const [test, setTest] = useState<TestData | null>(null);
+   const [test, setTest] = useState<TestData | undefined>()
 
 
    const createTestDialogOpen = () => {
@@ -48,11 +48,13 @@ const TestLayout = () => {
 
          { testCreated && test && (
 
-            <div className='absolute top-40 left-0 p-2 m-4 w-[15rem] h-[30rem]  shadow-md shadow-gray-400 rounded-sm text-black'>
+            <aside className='top-20 left-0 p-2 m-4 w-[15rem] h-[30rem]  shadow-md shadow-gray-400 rounded-sm text-black'>
                <h2 className='text-center font-bold'>Test Details</h2>
                <p>
                   <span className='text-black font-semibold'>Test Name: </span>
-                  {test.testName}</p>
+                  {test.testName}
+               </p>
+               
                <p>
                   <span className='text-black font-semibold'>Test Description: </span>
                   {test.testDescription}
@@ -61,7 +63,7 @@ const TestLayout = () => {
                   <span className='text-black font-semibold'>Test Questions: </span>
                   {test.numQuestions}
                </p>
-            </div>
+            </aside>
          )}
 
          
@@ -77,7 +79,7 @@ const TestLayout = () => {
                
                <dialog 
                   ref={createTestRef}
-                  className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-screen w-screen m-auto my-auto p-4 opacity-90">
+                  className="absolute inset-0 bg-black bg-opacity-50 overflow-y-auto h-screen w-screen m-auto my-auto p-4 opacity-90">
                   <div className="relative bg-white shadow-lg rounded-md p-4 max-w-sm mx-auto opacity-100">
                   
                      <CreateTest 

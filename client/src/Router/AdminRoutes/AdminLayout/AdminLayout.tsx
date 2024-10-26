@@ -22,7 +22,7 @@ const AdminLayout: React.FC = () => {
             <Outlet />
          </main>
 
-         <footer className='relative bottom-0 w-full  mt-[20rem]'>
+         <footer className='bottom-0 w-full  mt-[22rem]'>
                <Footer />
          </footer>
          
