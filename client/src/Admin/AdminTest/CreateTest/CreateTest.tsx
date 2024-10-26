@@ -1,9 +1,7 @@
 import "./CreateTest.css"
 
 
-const CreateTest = ({createTestDialogClose}) => {
-
-   
+const CreateTest: React.FC<{createTestDialogClose: () => void}> = ({createTestDialogClose}) => {
 
 
 

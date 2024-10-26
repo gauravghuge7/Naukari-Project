@@ -1,8 +1,7 @@
-
 import { Link } from "react-router-dom"; // Importing Link for navigation
 import { FaTachometerAlt, FaClipboardList, FaUser, FaTimes } from "react-icons/fa"; // Importing icons
 
-const AdminSidebar = ({ isOpen, setIsOpen }) => {
+const AdminSidebar: React.FC<{ isOpen: boolean; setIsOpen: (isOpen: boolean) => void }> = ({ isOpen, setIsOpen }) => {
    return (
       <div
          className={`fixed inset-y-0 left-0 mt-20 transform ${

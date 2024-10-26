@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaEdit, FaMobileAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa'; // Importing icons
 import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const UserProfile = () => {
   const [name, setName] = useState('John Doe');
@@ -9,7 +9,7 @@ const UserProfile = () => {
   const [mobileNumber, setMobileNumber] = useState('123-456-7890');
   const [whatsappNumber, setWhatsappNumber] = useState('123-456-7890');
   const [bio, setBio] = useState('Hello! I am a software developer.');
-  const [profilePicture, setProfilePicture] = useState('https://via.placeholder.com/150');
+  const [profilePicture, setProfilePicture] = useState('https://via.placeholder.com/150'); // Default profile picture
   const [isEditing, setIsEditing] = useState(false);
 
   const handleUpdateProfile = () => {
@@ -31,7 +31,7 @@ const UserProfile = () => {
         console.log("response", response.data);
       } 
       catch (error) {
-        const message = extractErrorMessage(error.response.data);
+        const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
         console.log("Error", message)  
       }
   }
@@ -98,7 +98,7 @@ const UserProfile = () => {
                 className="w-full p-3 mb-4 text-lg border border-gray-300 rounded focus:outline-none focus:border-gray-500"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                rows="3"
+                rows={3}
               />
               <button
                 className="w-full bg-gray-800 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-gray-700 transition-colors"

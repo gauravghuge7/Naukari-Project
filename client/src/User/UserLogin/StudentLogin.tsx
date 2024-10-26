@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -65,7 +65,7 @@ const StudentLogin: React.FC = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      const message = extractErrorMessage(error.response.data);
+      const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
       toast.error(message);
     }
   };

@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa"; // Importing an icon for the close button
 
-const UserSidebar = ({ isOpen, setIsOpen }) => {
+const UserSidebar: React.FC<{ isOpen: boolean; setIsOpen: (isOpen: boolean) => void }> = ({ isOpen, setIsOpen }) => {
 
    // Function to handle the closing of the sidebar
    const handleCloseSidebar = () => {

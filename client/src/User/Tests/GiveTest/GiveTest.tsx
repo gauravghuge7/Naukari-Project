@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const sampleQuestions = [
   { id: 1, question: "What is the capital of France?", options: ["Paris", "Rome", "Berlin", "Madrid"], answer: "" },
@@ -11,7 +11,7 @@ const GiveTest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(sampleQuestions.length).fill(""));
 
-  const handleOptionChange = (questionId, selectedOption) => {
+  const handleOptionChange = (questionId: number, selectedOption: string) => {
     setAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
       newAnswers[questionId - 1] = selectedOption; // Update the answer for the question

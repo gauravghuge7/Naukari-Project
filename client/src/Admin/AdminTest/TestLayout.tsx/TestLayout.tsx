@@ -1,4 +1,3 @@
-
 import { useRef, useState } from 'react';
 import CreateTest from '../CreateTest/CreateTest';
 
@@ -7,7 +6,7 @@ const TestLayout = () => {
 
    {/* Create Test Form for creating a test dialog */}
 
-   const createTestRef = useRef(null);
+   const createTestRef = useRef<HTMLDialogElement>(null);
 
    const [test, setTest] = useState(
       {
@@ -19,11 +18,11 @@ const TestLayout = () => {
 
 
    const createTestDialogOpen = () => {
-      createTestRef.current.showModal();
+      createTestRef.current?.showModal();
    };
 
    const createTestDialogClose = () => {
-      createTestRef.current.close();
+      createTestRef.current?.close();
    };
 
 

@@ -2,7 +2,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const AdminSignUp: React.FC = () => {
 
@@ -42,7 +42,7 @@ const AdminSignUp: React.FC = () => {
       } 
       catch (error) {
          console.error("Registration error:", error);
-         toast.error(error?.message);
+         toast.error((error as AxiosError) ?.message);
       }
    };
 

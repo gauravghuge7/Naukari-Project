@@ -1,5 +1,5 @@
 // src/components/AdminLogin.tsx
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
@@ -62,7 +62,7 @@ const AdminLogin: React.FC = () => {
       } 
       catch (error) {
          console.error("Login error: => ", error);
-         const message =  extractErrorMessage(error.response.data);
+         const message =  extractErrorMessage((error as AxiosError )?.response?.data as string);
          setError(message);
          toast.error(message);   
       }
