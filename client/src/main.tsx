@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'https://naukari-backend-production.up.railway.app/',
     headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',      
