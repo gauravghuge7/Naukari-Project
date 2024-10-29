@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const HomeNavbar = () => {
 
@@ -37,6 +38,9 @@ const HomeNavbar = () => {
                Naukari Guider 
             </div>
 
+            <Link to='/about'>
+               <button className='text-blue-700 text-lg'>About</button>
+            </Link>
 
 
             {/*  list of content in navbar */}

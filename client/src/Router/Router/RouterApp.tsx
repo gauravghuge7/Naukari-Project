@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import About from '../../Components/About/About.tsx';
 
 // Lazy-loaded components
 const AdminLogin = React.lazy(() => import('../../Admin/AdminLogin/AdminLogin.tsx'));
@@ -22,6 +23,10 @@ const RouterApp = () => {
             <Route path='/admin-signup' element={<AdminSignUp />} />
             <Route path='/student-login' element={<StudentLogin />} />
             <Route path='/student-register' element={<StudentSignUp />} />
+
+
+            <Route path='/about' element={<About />} />
+
           </Route>
         </Routes>
       </Suspense>
