@@ -12,7 +12,7 @@ const About = () => {
    return (
       <div className='mt-60'>
 
-           this is understanding for pravin 
+         this is understanding for pravin 
 
          
       </div>
