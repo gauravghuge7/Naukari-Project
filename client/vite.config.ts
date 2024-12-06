@@ -7,7 +7,8 @@ export default defineConfig({
 
   server: {
     proxy: {
-      '/api': "https://naukari-backend-production.up.railway.app/"
+      // '/api': "https://naukari-backend-production.up.railway.app/"
+      '/api': "http://localhost:5000/"
     },
     https: false,  // Ensure HTTPS is disabled
     host: '0.0.0.0',  // Bind to all interfaces for external access

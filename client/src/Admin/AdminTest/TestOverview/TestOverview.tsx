@@ -1,68 +1,171 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom"; // Import useParams
+import { ToastContainer } from "react-toastify";
 
-interface TestOverviewProps {
-   testName: string;
-   description: string;
-   totalParticipants: number;
-   duration: string;
-   date: string;
-   passingScore: number;
-   ranking: {
-      user: string;
-      score: number;
-   }[];
+// Interface for the test details data
+interface TestDetails {
+  _id: string;
+  testName: string;
+  testDescription: string;
+  createdAt: string;
+  numberOfQuestions: number;
+  testTime: number;
+  attempts: number;
+  leaderboard: Array<{ studentName: string; score: number }>;
 }
 
 const TestOverview: React.FC = () => {
+  // Use useParams to get the id from the URL
+  const { id } = useParams<{ id : string }>();
 
-   const { testId } = useParams<{ testId: string }>();
+  console.log("id", id);
+  
+  // State to store the fetched test details
+  const [testDetails, setTestDetails] = useState<TestDetails | null>(null);
+  
 
-   const [testDetails, setTestDetails] = useState<TestOverviewProps | null>(null);
+  // Loading and error state
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-   useEffect(() => {
+  const fetchTestDetails = async () => {
 
-      const fetchTestDetails = async () => {
-         try {
-            const response = await axios.get(`/api/tests/${testId}`);
-            setTestDetails(response.data);
-         } 
-         catch (error) {
-            console.error("Error fetching test details:", error);
-         }
-      };
+    try {
+      setLoading(true);
+      setError(null);
 
+      // Use the id from the URL parameters to fetch the test details
+      const response = await axios.get(`/api/admin/test/fetchCurrentTest/${id}`);
+
+      console.log("Test Details:", response);
+
+      if(response.data.success === true) {
+        setTestDetails(response?.data?.data[0]);
+      }
+
+    } 
+    catch (error) {
+      setError("Failed to fetch test details. Please try again later.");
+      console.error("Error fetching test details:", error);
+
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+
+
+  // delete test
+  const deleteTest = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Use the id from the URL parameters to fetch the test details
+      const response = await axios.delete(`/api/admin/test/deleteTest/${id}`);
+
+      console.log("Test Details:", response);
+
+      if(response.data.success === true) {
+        setTestDetails(null);
+        window.location.href = "/admin/view-test";
+      }
+
+    } 
+    catch (error) {
+      setError("Failed to delete test. Please try again later.");
+      console.error("Error deleting test:", error);
+
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    
+    if (id) {
       fetchTestDetails();
-   }, [testId]);
+    }
+  }, [id]); // Re-run the effect if id changes
 
-   if (!testDetails) {
-      return <div>Loading...</div>;
-   }
 
-   const { testName, description, totalParticipants, duration, date, passingScore, ranking } = testDetails;
+  // Show message if no test details are found
+  if (!testDetails) {
+    return <div className="flex justify-center items-center h-screen text-gray-500">No test details available.</div>;
+  }
 
-   return (
-      <div className="p-6 bg-white rounded-lg shadow-lg">
-         <h2 className="text-2xl font-bold mb-4">{testName}</h2>
-         <p className="text-gray-700 mb-4">{description}</p>
-         <div className="mb-4">
-               <p className="text-gray-600">Date: <span className="font-semibold">{date}</span></p>
-               <p className="text-gray-600">Duration: <span className="font-semibold">{duration}</span></p>
-               <p className="text-gray-600">Passing Score: <span className="font-semibold">{passingScore}%</span></p>
-               <p className="text-gray-600">Total Participants: <span className="font-semibold">{totalParticipants}</span></p>
-         </div>
-         <h3 className="text-xl font-semibold mt-6 mb-4">Ranking</h3>
-         <ul>
-               {ranking.map((item, index) => (
-                  <li key={index} className="flex justify-between bg-gray-100 p-2 mb-2 rounded">
-                     <span>{item.user}</span>
-                     <span className="font-bold">{item.score}</span>
-                  </li>
-               ))}
-         </ul>
+  // Destructure the fetched test details
+  const { testName, testDescription, createdAt, numberOfQuestions, testTime, attempts, leaderboard } = testDetails;
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto bg-white">
+
+      {/* Show error message if an error occurred */}
+      <ToastContainer 
+        position="top-center"
+        autoClose={5000}
+      />
+
+      {/* Test Overview Header */}
+      <h1 className="text-3xl font-bold text-gray-800 mb-4">{testName}</h1>
+
+      <p className="text-gray-700 mb-4" title="testDescription">{testDescription}</p>
+
+      {/* Test Details Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 bg-white shadow-md rounded-lg">
+        <div className="bg-gray-100 p-4 rounded shadow">
+          <p className="text-gray-600"><strong>Created At:</strong> {new Date(createdAt)?.toLocaleString()}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded shadow">
+          <p className="text-gray-600"><strong>Number of Questions:</strong> {numberOfQuestions}</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded shadow">
+          <p className="text-gray-600"><strong>Test Duration:</strong> {testTime} minutes</p>
+        </div>
+        <div className="bg-gray-100 p-4 rounded shadow">
+          <p className="text-gray-600"><strong>Number of Attempts:</strong> {attempts}</p>
+        </div>
+
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={deleteTest}
+        >
+          Delete Test
+        </button>
       </div>
-   );
+
+      
+
+      {/* Leaderboard Section */}
+      <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Leaderboard</h2>
+        {leaderboard?.length > 0 ? (
+          <table className="min-w-full bg-white shadow-md rounded-md">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 text-left text-gray-600">Rank</th>
+                <th className="py-2 px-4 text-left text-gray-600">Student Name</th>
+                <th className="py-2 px-4 text-left text-gray-600">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboard.map((entry, index) => (
+                <tr key={index} className="border-t">
+                  <td className="py-2 px-4 text-gray-800">{index + 1}</td>
+                  <td className="py-2 px-4 text-gray-800">{entry.studentName}</td>
+                  <td className="py-2 px-4 text-gray-800">{entry.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-600">No leaderboard data available yet.</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default TestOverview;

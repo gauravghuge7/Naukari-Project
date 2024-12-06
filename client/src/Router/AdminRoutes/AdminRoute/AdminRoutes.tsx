@@ -26,7 +26,7 @@ const AdminRoutes: React.FC = () => {
             <Route path='/test' element={<TestLayout />} />
             <Route path='/view-test' element={<ViewTests />} />
             <Route path='/test-overview/:id' element={<TestOverview />} />
-            <Route path='/create-test-overview' element={<CreateTestOverview />} />
+            <Route path='/create-test-overview/:id' element={<CreateTestOverview />} />
           </Route>
         </Routes>
       </Suspense>

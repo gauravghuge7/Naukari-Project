@@ -14,7 +14,7 @@ const RouterApp = () => {
   return (
     <div>
       {/* Wrapping lazy-loaded routes in Suspense */}
-      <Suspense fallback={<div>Loading...</div>}>
+
         <Routes>
           {/* Main layout route with nested child routes */}
           <Route path='/' element={<HomeLayout />}>
@@ -29,7 +29,7 @@ const RouterApp = () => {
 
           </Route>
         </Routes>
-      </Suspense>
+
     </div>
   );
 };

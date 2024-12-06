@@ -14,7 +14,7 @@ const UserLayout: React.FC = () => {
 
          </header>
          
-         {/**   this is changeble content with dynamic routing */}
+         {/**   this is changeable content with dynamic routing */}
          <main className='mt-20 ml-4'>
             <Outlet />
          </main>

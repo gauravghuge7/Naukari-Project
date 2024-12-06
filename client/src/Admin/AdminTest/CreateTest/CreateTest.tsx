@@ -9,6 +9,7 @@ interface TestData {
    testDescription: string;
    numberOfQuestions: number;
    testTime: number;
+   marks: number;
 }
 
 const CreateTest: React.FC<{ 
@@ -23,9 +24,11 @@ const CreateTest: React.FC<{
       testDescription: '',
       numberOfQuestions: 0,
       testTime: 0,
+      marks: 0,
    });
 
    const [error, setError] = useState('');
+
 
    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -61,6 +64,7 @@ const CreateTest: React.FC<{
             testDescription: testData.testDescription,
             numberOfQuestions: testData.numberOfQuestions,
             testTime: testData.testTime,
+            marks: testData.marks,
          };
    
          const response = await axios.post('/api/admin/test/createTest', testDataToSubmit, config);
@@ -71,6 +75,11 @@ const CreateTest: React.FC<{
             toast.success('Test created successfully!');
             setTestCreated(true);
             setTest(response.data.data);
+            
+            window.location.href =`/admin/create-test-overview/${response.data.data._id}`;    
+
+            
+            
          }
          
    
@@ -96,6 +105,7 @@ const CreateTest: React.FC<{
             
 
             {/* Form Title */}
+            
             <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">
                Create New Test
             </h3>
@@ -161,6 +171,22 @@ const CreateTest: React.FC<{
                      name="testTime"
                      placeholder="Enter test time"
                      value={testData.testTime}
+                     onChange={handleInputChange}
+                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                  />
+               </div>
+
+               {/* Test Time */}
+               <div>
+                  <label htmlFor="marks" className="block text-gray-700 font-semibold mb-1">
+                     Test Marks
+                  </label>
+                  <input
+                     type="marks"
+                     id="marks"
+                     name="marks"
+                     placeholder="Enter test time"
+                     value={testData.marks}
                      onChange={handleInputChange}
                      className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
                   />

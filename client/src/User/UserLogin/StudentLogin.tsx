@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react'; // Import Auth0 React SDK
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import Toast styles
@@ -8,19 +9,20 @@ import { extractErrorMessage } from '../../Components/ResponseError/ResponseErro
 interface LoginFormState {
   studentEmail: string;
   studentPassword: string;
-  studentPhone?: string; // Optional for sign-up
 }
 
 const StudentLogin: React.FC = () => {
   const [formState, setFormState] = useState<LoginFormState>({
     studentEmail: '',
-    studentPassword: '',
-    studentPhone: ''
+    studentPassword: ''
   });
 
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showSignUp, setShowSignUp] = useState<boolean>(false); // Toggle between login and sign-up
+
+  // Auth0 methods
+  const { loginWithPopup, user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -34,29 +36,23 @@ const StudentLogin: React.FC = () => {
     e.preventDefault();
     const { studentEmail, studentPassword } = formState;
 
-    // Basic validation
     if (!studentEmail || !studentPassword) {
       setError('Both email and password are required.');
       return;
     }
 
     try {
-      const body = {
-        studentEmail,
-        studentPassword
-      };
+      const body = { studentEmail, studentPassword };
 
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json'
         },
         withCredentials: true
       };
 
       // API call to login student
       const response = await axios.post('/api/student/login', body, config);
-      console.log(response.data);
-
       if (response.data.success) {
         toast.success(response.data.message);
         window.location.href = '/user/profile';
@@ -70,9 +66,53 @@ const StudentLogin: React.FC = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      // Show Google login popup
+      await loginWithPopup({
+        connection: 'google-oauth2'
+      });
+
+      const claims = await getIdTokenClaims();
+      const email = claims?.email;
+
+      if (email) {
+        // Send the email to the backend for login or registration
+      
+          const body = { 
+            studentEmail: email, 
+            studentPassword: user?.name
+
+          };
+
+          const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        };
+
+        const response = await axios.post('/api/student/login', body, config);
+        if (response.data.success) {
+          toast.success('Logged in with Google successfully!');
+          window.location.href = '/user/profile';
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error('Failed to log in with Google.');
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-green-300 to-red-300">
@@ -84,7 +124,7 @@ const StudentLogin: React.FC = () => {
           <div className="space-y-4">
             <h2 className="text-3xl font-bold text-gray-800">Welcome Back!</h2>
             <p className="text-gray-700">
-              Please log in to your account to access your student portal. 
+              Please log in to your account to access your student portal.
               If you don’t have an account, you can create one easily!
             </p>
             <p className="text-gray-700">
@@ -141,17 +181,8 @@ const StudentLogin: React.FC = () => {
                 type="button"
                 onClick={togglePasswordVisibility}
                 className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l9 9 9-9-9-9-9 9z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 12l9 9 9-9-9-9-9 9z" />
-                  </svg>
-                )}
+                {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
 
@@ -162,6 +193,15 @@ const StudentLogin: React.FC = () => {
               {showSignUp ? 'Sign Up' : 'Login'}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full py-3 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+            >
+              Login with Google
+            </button>
+          </div>
 
           <div className="mt-6 text-center">
             <Link

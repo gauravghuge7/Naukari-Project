@@ -1,141 +1,196 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams,  Link } from "react-router-dom";
+import axios from "axios";
 
 interface TestData {
+   _id: string;
    testName: string;
    testDescription: string;
+   createdAt: string;
    numberOfQuestions: number;
+   testTime: number;
+   questions?: Question[];
+}
+
+interface Question {
+   _id: string;
+   question: string;
 }
 
 const CreateTestOverview: React.FC = () => {
-   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [testData, setTestData] = useState<TestData>({
-      testName: '',
-      testDescription: '',
-      numberOfQuestions: 0,
-   });
-   const [error, setError] = useState('');
+   const { id } = useParams<{ id: string }>();
 
-   const handleOpenModal = () => {
-      setIsModalOpen(true);
+   const [testData, setTestData] = useState<TestData | null>(null);
+   const [loading, setLoading] = useState<boolean>(true);
+   const [error, setError] = useState<string | null>(null);
+
+   const [question, setQuestion] = useState<string>("");
+   const [addingQuestion, setAddingQuestion] = useState<boolean>(false);
+   const [addError, setAddError] = useState<string | null>(null);
+
+   
+
+   useEffect(() => {
+      if (id) {
+         fetchTestData(id);
+      }
+   }, [id]);
+
+   const fetchTestData = async (testId: string) => {
+      try {
+         setLoading(true);
+         setError(null);
+         const response = await axios.get<TestData>(`/api/admin/test/fetchCurrentTest/${testId}`);
+         console.log("Test Data:", response.data);
+         setTestData(response.data?.data[0]);
+      } catch (err) {
+         setError("Failed to fetch test data. Please try again later." + err);
+      } finally {
+         setLoading(false);
+      }
    };
 
-   const handleCloseModal = () => {
-      setIsModalOpen(false);
-      setError('');
-      setTestData({ testName: '', testDescription: '', numberOfQuestions: 0 });
-   };
-
-   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setTestData((prev) => ({
-         ...prev,
-         [name]: name === 'numberOfQuestions' ? Number(value) : value,
-      }));
-   };
-
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleAddQuestion = async (e: React.FormEvent) => {
       e.preventDefault();
+      if (!question.trim()) return;
 
-      if (!testData.testName || !testData.testDescription || !testData.numberOfQuestions) {
-         setError('All fields are required.');
+      if(testData?.numberOfQuestions >= testData?.questions?.length) {
+         setError("Please add all the questions before completing the test.");
+         alert("only add the question that define at creating test");
          return;
       }
+      try {
+         setAddingQuestion(true);
+         setAddError(null);
 
-      if (testData.numberOfQuestions < 1) {
-         setError('Number of questions must be at least 1.');
-         return;
+         const response = await axios.post(`/api/admin/test/addQuestionsInTest/${id}`, {
+         question,
+         });
+
+         console.log("Question added:", response.data);
+
+         setQuestion(""); // Clear the input
+         fetchTestData(id!); // Refresh test details
+      } catch (err) {
+         setAddError("Failed to add question. Please try again." + err);
+      } finally {
+         setAddingQuestion(false);
       }
-
-      // If everything is fine, we can submit the form
-      console.log('Test Data Submitted:', testData);
-      handleCloseModal();
    };
+
+
+   const handleCompleteTest = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!testData) return;
+
+      if(testData.numberOfQuestions !== testData.questions?.length) {
+         setError("Please add all the questions before completing the test.");
+         alert("Please add all the questions before completing the test.");
+         return;
+      }
+
+      try {
+         setLoading(true);
+         setError(null);
+
+         const response = await axios.post(`/api/admin/test/completeTest/${id}`, {
+         });
+
+         console.log("Question added:", response.data);
+
+         setQuestion(""); // Clear the input
+         fetchTestData(id!); // Refresh test details
+
+         if(response.data.success === true) {
+            setTestData(null);
+            window.location.href = `/admin/test-overview/${id}`;
+         }
+      } 
+      catch (err) {
+         setAddError("Failed to add question. Please try again." + err);
+      } 
+      finally {
+         setAddingQuestion(false);
+      }
+   };
+   
+
 
    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-         <button
-         onClick={handleOpenModal}
-         className="bg-indigo-600 text-white font-bold py-2 px-6 rounded-full hover:bg-indigo-500 transition-colors"
-         >
-         Create Test
-         </button>
-
-         {isModalOpen && (
-         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-               <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Create New Test</h2>
-               
-               {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-               <form onSubmit={handleSubmit} className="space-y-4">
-               {/* Test Name */}
-               <div>
-                  <label htmlFor="testName" className="block text-gray-700 font-semibold mb-2">
-                     Test Name
-                  </label>
-                  <input
-                     type="text"
-                     id="testName"
-                     name="testName"
-                     placeholder="Enter test name"
-                     value={testData.testName}
-                     onChange={handleInputChange}
-                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                  />
-               </div>
-
-               {/* Test Description */}
-               <div>
-                  <label htmlFor="testDescription" className="block text-gray-700 font-semibold mb-2">
-                     Test Description
-                  </label>
-                  <textarea
-                     id="testDescription"
-                     name="testDescription"
-                     placeholder="Enter test description"
-                     value={testData.testDescription}
-                     onChange={handleInputChange}
-                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                     rows={4}
-                  />
-               </div>
-
-               {/* Number of Questions */}
-               <div>
-                  <label htmlFor="numberOfQuestions" className="block text-gray-700 font-semibold mb-2">
-                     Number of Questions
-                  </label>
-                  <input
-                     type="number"
-                     id="numberOfQuestions"
-                     name="numberOfQuestions"
-                     placeholder="Enter number of questions"
-                     value={testData.numberOfQuestions}
-                     onChange={handleInputChange}
-                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                  />
-               </div>
-
-               {/* Submit Button */}
-               <button
-                  type="submit"
-                  className="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors"
-               >
-                  Submit
-               </button>
-               <button
-                  onClick={handleCloseModal}
-                  type="button"
-                  className="w-full bg-gray-300 text-gray-700 font-bold py-2 rounded-lg mt-2 hover:bg-gray-400 transition-colors"
-               >
-                  Cancel
-               </button>
-               </form>
-            </div>
+      <div className="p-6 max-w-3xl mx-auto">
+         <h1 className="text-2xl font-bold text-gray-800 mb-4">Test Overview</h1>
+         {testData ? (
+         <div className="bg-white shadow-md rounded-lg p-6">
+            <p className="text-gray-700 mb-2">
+               <strong>ID:</strong> {testData._id}
+            </p>
+            <p className="text-gray-700 mb-2">
+               <strong>Name:</strong> {testData.testName}
+            </p>
+            <p className="text-gray-700 mb-2">
+               <strong>Description:</strong> {testData.testDescription}
+            </p>
+            <p className="text-gray-700">
+               <strong>Created At:</strong> {new Date(testData.createdAt).toLocaleString()}
+            </p>
+            <p className="text-gray-700">
+               <strong>Number of Questions:</strong> {testData.numberOfQuestions}
+            </p>
          </div>
+         ) : (
+         <div className="text-gray-700">No test data available.</div>
          )}
 
-         
+         <div className="mt-6">
+         <h2 className="text-lg font-bold text-gray-800 mb-4">Questions</h2>
+         {testData?.questions && testData.questions.length > 0 ? (
+            <ul className="list-disc pl-6">
+               {testData.questions.map((q) => (
+               <li key={q._id} className="text-gray-700 mb-2">
+                  {q.question}
+               </li>
+               ))}
+            </ul>
+         ) : (
+            <p className="text-gray-700">No questions added yet.</p>
+         )}
+         </div>
+
+         <form onSubmit={handleAddQuestion} className="mt-6">
+
+            <h2 className="text-lg font-bold text-gray-800 mb-4">Add a New Question</h2>
+
+            <textarea
+               value={question}
+               onChange={(e) => setQuestion(e.target.value)}
+               placeholder="Enter your question here"
+               className="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none mb-4"
+               rows={4}
+            />
+
+            <button
+               type="submit"
+               disabled={addingQuestion}
+               className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition ${
+                  addingQuestion ? "opacity-50 cursor-not-allowed" : ""
+               }`}
+            >
+               {addingQuestion ? "Adding..." : "Add Question"}
+            </button>
+
+            {addError && <p className="text-red-500 mt-2">{addError}</p>}
+
+         </form>
+
+         <div className="mt-6">
+         <button
+            onClick={handleCompleteTest}
+            className={`px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition`}
+         >
+            Complete Test
+         </button>
+     
+         </div>
       </div>
    );
 };

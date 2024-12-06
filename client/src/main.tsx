@@ -5,10 +5,11 @@ import './index.css'
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter } from 'react-router-dom'
 import axios from 'axios';
-
+import { Auth0Provider } from '@auth0/auth0-react';
 
 axios.create({
-    baseURL: 'https://naukari-backend-production.up.railway.app/',
+    // baseURL: 'https://naukari-backend-production.up.railway.app/',
+    baseURL: 'http://localhost:5000/',
     headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',      
@@ -22,9 +23,19 @@ axios.create({
 
 
 createRoot(document.getElementById('root')!).render(
-  
+
     <BrowserRouter>
 
-        <App />
+        <Auth0Provider
+            domain="dev-rzrow7mfr07o2mr2.us.auth0.com"
+            clientId="v5iHwgbIZwV1GdeZk8zu7c5dMAYuhHRB"
+            authorizationParams={{
+            redirect_uri: window.location.origin
+            }}
+        >
+            <App />
+            
+        </Auth0Provider>
+        
     </BrowserRouter>
 )

@@ -18,7 +18,7 @@ const AdminLayout: React.FC = () => {
 
          </header>
 
-         <main className='mt-20'>
+         <main className='mt-20 ml-20'>
             <Outlet />
          </main>
 
