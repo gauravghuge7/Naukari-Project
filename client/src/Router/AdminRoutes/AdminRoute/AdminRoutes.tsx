@@ -1,21 +1,30 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import TestOverview from '../../../Admin/AdminTest/TestOverview/TestOverview';
 import CreateTestOverview from '../../../Admin/AdminTest/CreateTestOverview/CreateTestOverview';
+import AdminDashboard from '../../../Admin/AdminDashboard/AdminDashboard';
+import AdminProfile from '../../../Admin/AdminProfile/AdminProfile';
+import TestLayout from '../../../Admin/AdminTest/TestLayout.tsx/TestLayout';
+import ViewTests from '../../../Admin/AdminTest/ViewTests/ViewTests';
+import AdminLayout from '../AdminLayout/AdminLayout';
 
 
-// Lazy-loaded components for Admin
-const ViewTests = React.lazy(() => import('../../../Admin/AdminTest/ViewTests/ViewTests'));
-const AdminLayout = React.lazy(() => import('../AdminLayout/AdminLayout'));
-const AdminDashboard = React.lazy(() => import('../../../Admin/AdminDashboard/AdminDashboard'));
-const AdminProfile = React.lazy(() => import('../../../Admin/AdminProfile/AdminProfile'));
-const TestLayout = React.lazy(() => import('../../../Admin/AdminTest/TestLayout.tsx/TestLayout'));
+// // Lazy-loaded components for Admin
+// const ViewTests = React.lazy(() => import('../../../Admin/AdminTest/ViewTests/ViewTests'));
+// const AdminLayout = React.lazy(() => import('../AdminLayout/AdminLayout'));
+// const AdminDashboard = React.lazy(() => import('../../../Admin/AdminDashboard/AdminDashboard'));
+// const AdminProfile = React.lazy(() => import('../../../Admin/AdminProfile/AdminProfile'));
+// const TestLayout = React.lazy(() => import('../../../Admin/AdminTest/TestLayout.tsx/TestLayout'));
+
+
+
+
 
 const AdminRoutes: React.FC = () => {
   return (
     <div>
-      {/* Wrapping routes in Suspense for lazy loading */}
-      <Suspense fallback={<div>Loading...</div>}>
+
+
         <Routes>
           {/* Admin layout with nested routes */}
           <Route path='/' element={<AdminLayout />}>
@@ -29,7 +38,7 @@ const AdminRoutes: React.FC = () => {
             <Route path='/create-test-overview/:id' element={<CreateTestOverview />} />
           </Route>
         </Routes>
-      </Suspense>
+
     </div>
   );
 };
