@@ -53,6 +53,8 @@ const AdminLogin: React.FC = () => {
          console.log(response.data);
 
          if(response.data.success) {
+
+            localStorage.setItem("NaukariAdmin", "admin");
             toast.success(response.data.message);
             window.location.href = '/admin';
          }
@@ -72,6 +74,14 @@ const AdminLogin: React.FC = () => {
    // Toggle password visibility
    const togglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
+   };
+
+   // set the test credentials
+   const setTestCredentials = () => {
+      setFormState({
+         adminEmail: 'gaurav@admin.com',
+         adminPassword: 'gaurav'
+      });
    };
 
    return (
@@ -135,6 +145,13 @@ const AdminLogin: React.FC = () => {
                   </button>
                </div>
                
+
+               <div
+                  className="w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300 mb-4"
+                  onClick={setTestCredentials}
+               >
+                  Use Test Credentials
+               </div>
 
                <button
                   type="submit"

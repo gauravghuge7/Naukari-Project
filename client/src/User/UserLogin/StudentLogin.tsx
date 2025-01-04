@@ -54,6 +54,7 @@ const StudentLogin: React.FC = () => {
       // API call to login student
       const response = await axios.post('/api/student/login', body, config);
       if (response.data.success) {
+        localStorage.setItem('NaukariUser', 'user');
         toast.success(response.data.message);
         window.location.href = '/user/profile';
       } else {
@@ -109,6 +110,14 @@ const StudentLogin: React.FC = () => {
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
+
+  const setTestCredentials = () => {
+
+    setFormState({
+      studentEmail : "ghugegaurav43@gmail.com",
+      studentPassword: "gaurav"
+    })
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -185,6 +194,14 @@ const StudentLogin: React.FC = () => {
                 {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 px-4 bg-pink-500 text-white font-semibold rounded-md shadow-md hover:bg-pink-600 transition duration-300"
+              onClick={setTestCredentials}
+            >
+              Use Test Credentials
+            </button>
 
             <button
               type="submit"

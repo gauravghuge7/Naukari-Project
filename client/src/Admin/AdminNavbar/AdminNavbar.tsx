@@ -45,7 +45,7 @@ const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
             <button 
                className='bg-red-500 text-white px-4 py-2 rounded-sm'
                onClick={() => {
-                  localStorage.removeItem('adminToken');
+                  localStorage.removeItem('NaukariAdmin');
                   window.location.href = '/';
                }}
             > 

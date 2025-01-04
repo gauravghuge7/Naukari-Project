@@ -1,5 +1,5 @@
 // src/components/Layout.tsx
-import React, { lazy } from 'react';
+import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 import HomeNavbar from '../../../Components/HomeNavBar/HomeNavbar';

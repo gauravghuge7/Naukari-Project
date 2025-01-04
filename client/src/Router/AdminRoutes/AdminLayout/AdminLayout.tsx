@@ -1,9 +1,9 @@
-import React, { lazy } from 'react'
+import React from 'react'
 import { Outlet } from 'react-router'
 import Footer from '../../../Views/Footer/Footer'
+import AdminNavbar from '../../../Admin/AdminNavbar/AdminNavbar'
 
 
-const AdminNavbar = lazy(() => import("./../../../Admin/AdminNavbar/AdminNavbar"));
 
 
 const AdminLayout: React.FC = () => {
@@ -18,7 +18,7 @@ const AdminLayout: React.FC = () => {
 
          </header>
 
-         <main className='mt-20 ml-20'>
+         <main>
             <Outlet />
          </main>
 

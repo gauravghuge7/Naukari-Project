@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./CreateTest.css";
+
 import axios, { AxiosError } from "axios";
 import { extractErrorMessage } from "../../../Components/ResponseError/ResponseError";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,7 +12,7 @@ interface TestData {
    marks: number;
 }
 
-const CreateTest: React.FC<{ 
+const CreateTestUsingAi: React.FC<{ 
    createTestDialogClose: () => void, 
    setTest: (value: object) => void,
    setTestCreated: (value: boolean) => void }> 
@@ -96,20 +96,19 @@ const CreateTest: React.FC<{
       }
    };
 
+
    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="">
 
 
-         <ToastContainer position="top-right" />
+         
 
          <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            {/* Close Button */}
-            
-
+   
             {/* Form Title */}
             
             <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">
-               Create New Test
+               Create New Test Using AI
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -131,6 +130,21 @@ const CreateTest: React.FC<{
                </div>
 
                {/* Test Description */}
+               <div>
+                  <label htmlFor="testDescription" className="block text-gray-700 font-semibold mb-1">
+                     Test Description
+                  </label>
+                  <textarea
+                     id="testDescription"
+                     name="testDescription"
+                     placeholder="Enter test description"
+                     value={testData.testDescription}
+                     onChange={handleInputChange}
+                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+                     rows={4}
+                  />
+               </div>
+
                <div>
                   <label htmlFor="testDescription" className="block text-gray-700 font-semibold mb-1">
                      Test Description
@@ -178,6 +192,8 @@ const CreateTest: React.FC<{
                   />
                </div>
 
+              
+
                {/* Test Time */}
                <div>
                   <label htmlFor="marks" className="block text-gray-700 font-semibold mb-1">
@@ -224,4 +240,4 @@ const CreateTest: React.FC<{
    );
 };
 
-export default CreateTest;
+export default CreateTestUsingAi;

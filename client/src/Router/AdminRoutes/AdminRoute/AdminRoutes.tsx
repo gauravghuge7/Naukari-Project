@@ -7,6 +7,7 @@ import AdminProfile from '../../../Admin/AdminProfile/AdminProfile';
 import TestLayout from '../../../Admin/AdminTest/TestLayout.tsx/TestLayout';
 import ViewTests from '../../../Admin/AdminTest/ViewTests/ViewTests';
 import AdminLayout from '../AdminLayout/AdminLayout';
+import AdminProtection from './AdminProtection';
 
 
 // // Lazy-loaded components for Admin
@@ -26,6 +27,9 @@ const AdminRoutes: React.FC = () => {
 
 
         <Routes>
+
+          {/* Protected Routes for Admin */}
+          <Route path='/' element={<AdminProtection />}>
           {/* Admin layout with nested routes */}
           <Route path='/' element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
@@ -37,6 +41,9 @@ const AdminRoutes: React.FC = () => {
             <Route path='/test-overview/:id' element={<TestOverview />} />
             <Route path='/create-test-overview/:id' element={<CreateTestOverview />} />
           </Route>
+
+          </Route>
+
         </Routes>
 
     </div>

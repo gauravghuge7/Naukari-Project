@@ -7,6 +7,8 @@ import MyTests from '../../../User/Tests/MyTests/MyTests';
 import GiveTest from '../../../User/Tests/GiveTest/GiveTest';
 import AllTests from '../../../User/Tests/AllTests/AllTests';
 import TestOverview from '../../../Admin/AdminTest/TestOverview/TestOverview';
+import UserMessages from '../../../User/UserMessages/UserMessages';
+import UserProtection from './UserProtection';
 
 
 // Lazy-loaded components
@@ -23,15 +25,30 @@ const UserRouter: React.FC = () => {
    return (
       <div>
 
-
             <Routes>
-               <Route path='/' element={<UserLayout />} >
-                  <Route path='/profile' element={<UserProfile />} /> 
-                  <Route path='/dashboard' element={<UserDashboard />} /> 
-                  <Route path='/myTest' element={<MyTests />} /> 
-                  <Route path={`/giveTest/:_id`} element={<GiveTest />} /> 
-                  <Route path='/Test' element={<AllTests />} /> 
-                  <Route path='/test-overview/:testId' element={<TestOverview />} /> 
+
+
+
+               {/* Add the user Protected Routes here  */}
+
+               <Route path='/' element={<UserProtection />} >
+                  <Route path='/' element={<UserLayout />} >
+                     <Route path='/profile' element={<UserProfile />} /> 
+                     <Route path='/dashboard' element={<UserDashboard />} /> 
+                     <Route path='/myTest' element={<MyTests />} /> 
+                     <Route path={`/giveTest/:_id`} element={<GiveTest />} /> 
+                     <Route path='/Test' element={<AllTests />} /> 
+                     <Route path='/test-overview/:testId' element={<TestOverview />} /> 
+
+
+
+                     {/* Socket connections  */}
+
+                     <Route path='/message' element={<UserMessages />} />
+
+                     
+                  </Route>
+
                </Route>
             </Routes>
 

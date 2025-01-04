@@ -63,6 +63,16 @@ const UserSidebar: React.FC<{ isOpen: boolean; setIsOpen: (isOpen: boolean) => v
                   </Link>
                </li>
 
+               <li className="mb-2">
+                  <Link
+                     to="/user/message"
+                     className="block py-2 px-4 rounded hover:bg-gray-700 transition"
+                     onClick={handleCloseSidebar} // Optionally close sidebar on link click
+                  >
+                     Messages
+                  </Link>
+               </li>
+
             </ul>
          </nav>
       </div>

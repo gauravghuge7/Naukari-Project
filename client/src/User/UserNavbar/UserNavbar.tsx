@@ -29,14 +29,21 @@ const UserNavbar = () => {
 
 
          {/* Logo */}
-         <div className="text-3xl font-bold text-white">
+         <Link
+            to={"/"}
+            className="text-3xl font-bold text-white"
+         >
             Naukari Guider
-         </div>
+         </Link>
 
 
          {/* Profile */}
          <div className="text-black font-semibold">
-            <Link to="/" className="hover:text-yellow-300">
+            <Link 
+               to={"/"}
+               className="hover:text-yellow-300"
+               onClick={() =>  localStorage.removeItem("NaukariUser")}
+            >
                logout
             </Link>
          </div>
