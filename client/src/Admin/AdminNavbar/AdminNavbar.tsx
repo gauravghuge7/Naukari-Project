@@ -16,7 +16,7 @@ const AdminNavbar: React.FC<JSX.IntrinsicElements['div']> = () => {
 
 
          {/** Admin Navbar  */}
-         <nav className='flex justify-around items-center absolute top-0 left-0 w-full h-20 bg-gray-100 shadow-xl z-50'>
+         <nav className='flex justify-around items-center top-0 left-0 w-full h-20 bg-gray-100 shadow-xl z-50'>
             <section>
                <button 
                   className='text-blue-700 text-3xl rotate-90'
