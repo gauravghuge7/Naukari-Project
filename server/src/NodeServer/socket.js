@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 // CORS options
 const corsOptions = {
-   origin: "http://localhost:5173", 
+   origin: process.env.CLIENT_URL,
    methods:"*", 
    allowedHeaders: "*", // Specify any custom headers
    credentials: true // Allow credentials (if needed)
