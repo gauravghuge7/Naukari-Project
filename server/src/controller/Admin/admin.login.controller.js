@@ -33,10 +33,13 @@ const generateAccessAndSecretToken = async (_id) => {
 }
 
 
+// common options for all users
 const options = {
-   httpOny: true,
-   secure: true
-}
+   httpOnly: true,
+   secure: process.env.NODE_ENV === 'production',
+   sameSite: 'None',
+   maxAge: 7 * 24 * 60 * 60 * 1000,
+};
 
 
 // register a admin controller here 
