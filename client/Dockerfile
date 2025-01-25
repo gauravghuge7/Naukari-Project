@@ -21,4 +21,4 @@ RUN npm prune --production && \
     rm -rf /tmp/* /var/cache/apk/*
 
 # Run the Vite development server, ensuring it binds to 0.0.0.0 for external access
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "dev"]
