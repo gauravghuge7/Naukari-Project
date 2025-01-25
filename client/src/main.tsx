@@ -6,13 +6,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter } from 'react-router-dom'
 import axios from 'axios';
 import { Auth0Provider } from '@auth0/auth0-react';
-// import {io} from "socket.io-client";
+import {io} from "socket.io-client";
 import { store } from './Redux/Store/Store.ts';
 import { Provider } from 'react-redux';
 
-
 const url = import.meta.env.VITE_SERVER_URL;
 
+export const  socket = io(url)
+console.log("Connection Successful Sockets", io)
 
 axios.defaults.baseURL = url;
 axios.defaults.withCredentials = true;
