@@ -17,9 +17,6 @@ EXPOSE 5173
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Remove development dependencies and clean cache (optional, depends on your setup)
-RUN npm prune --production && \
-    rm -rf /tmp/* /var/cache/apk/*
 
 # Run the Vite development server, ensuring it binds to 0.0.0.0 for external access
 CMD ["npm", "run", "dev"]
