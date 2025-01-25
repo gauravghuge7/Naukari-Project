@@ -8,10 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm Install
+RUN npm install
 
-# Install Peer Dependencies
-RUN npm Install 
 
 # Expose the Vite development server port
 EXPOSE 5173
