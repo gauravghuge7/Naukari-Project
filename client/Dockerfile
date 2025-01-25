@@ -7,6 +7,9 @@ WORKDIR /app
 # Install dependencies, ensuring that only necessary production dependencies are installed
 COPY package*.json ./
 
+
+COPY . .
+
 # Install production dependencies only
 RUN npm install
 
