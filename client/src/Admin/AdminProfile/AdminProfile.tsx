@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import { extractErrorMessage } from '../../components/ResponseError/ResponseError';
 import axios, { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 

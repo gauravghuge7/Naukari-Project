@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import axios, { AxiosError } from "axios";
-import { extractErrorMessage } from "../../../Components/ResponseError/ResponseError";
+import { extractErrorMessage } from "../../../components/ResponseError/ResponseError";
 import { toast, ToastContainer } from "react-toastify";
 
 interface TestData {

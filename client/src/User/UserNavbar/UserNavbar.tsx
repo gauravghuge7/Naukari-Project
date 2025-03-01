@@ -1,57 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa"; // For the hamburger icon
-import UserSidebar from "../UserSidebar/UserSidebar/UserSidebar";
+import { FaBars, FaTimes, FaBook, FaClipboardList, FaFileAlt } from "react-icons/fa";
+import UserSidebar from "../UserSidebar/UserSidebar";
 
 const UserNavbar = () => {
-   const[isOpen, setIsOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-   // Toggle menu for mobile
+   useEffect(() => {
+      const user = localStorage.getItem("NaukariUser");
+      setIsLoggedIn(!!user);
+   }, []);
+
    const toggleMenu = () => {
       setIsOpen(!isOpen);
    };
 
-
-
    return (
       <div>
+         {isLoggedIn && <UserSidebar isOpen={isOpen} setIsOpen={setIsOpen} />}
 
-
-         <UserSidebar  isOpen={isOpen} setIsOpen={setIsOpen} />
-
-
-         <nav className="flex justify-between items-center w-full h-20 px-4 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 shadow-xl z-50">
-         
-          {/* Hamburger Icon for Mobile */}
-            <div className=" text-white cursor-pointer" onClick={toggleMenu}>
-               {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+         <nav className="flex flex-wrap justify-between items-center w-full h-16 px-4 bg-black shadow-xl z-50 border-b border-gray-700">
+            {/* Left Section */}
+            <div className="text-white cursor-pointer text-sm">
+               {isLoggedIn ? (
+                  <div onClick={toggleMenu}>{isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}</div>
+               ) : (
+                  <div className="flex gap-3">
+                     <Link to="/student-login" className="text-white hover:text-gray-400">Login</Link>
+                     <Link to="/student-register" className="text-white hover:text-gray-400">Signup</Link>
+                  </div>
+               )}
             </div>
 
-
-         {/* Logo */}
-         <Link
-            to={"/"}
-            className="text-3xl font-bold text-white"
-         >
-            Naukari Guider
-         </Link>
-
-
-         {/* Profile */}
-         <div className="text-black font-semibold">
-            <Link 
-               to={"/"}
-               className="hover:text-yellow-300"
-               onClick={() =>  localStorage.removeItem("NaukariUser")}
-            >
-               logout
+            {/* Logo */}
+            <Link to="/" className="text-xl md:text-2xl font-bold text-white tracking-wide order-1 md:order-none">
+               Student Career Portal
             </Link>
-         </div>
 
-        
+            {/* Navigation Links */}
+            <div className={`${
+               isLoggedIn ? 'flex' : 'hidden'
+            } flex-col md:flex-row gap-4 md:gap-6 text-white text-sm font-medium mt-4 md:mt-0 w-full md:w-auto order-3 md:order-2`}>
+               <Link to="/user/study-plan" className="flex items-center gap-1 hover:text-gray-400">
+                  <FaBook size={14} /> Study Plan
+               </Link>
+               <Link to="/user/create-quiz" className="flex items-center gap-1 hover:text-gray-400">
+                  <FaClipboardList size={14} /> Create Quiz
+               </Link>
+               <Link to="/user/create-sheet" className="flex items-center gap-1 hover:text-gray-400">
+                  <FaFileAlt size={14} /> Create Sheet
+               </Link>
+            </div>
+
+            {/* Right Section */}
+            {isLoggedIn && (
+               <div className="text-white text-sm font-medium order-2 md:order-3">
+                  <Link
+                     to="/"
+                     className="hover:text-gray-400"
+                     onClick={() => {
+                        localStorage.removeItem("NaukariUser");
+                        setIsLoggedIn(false);
+                     }}
+                  >
+                     Logout
+                  </Link>
+               </div>
+            )}
          </nav>
-
-      
       </div>
    );
 };

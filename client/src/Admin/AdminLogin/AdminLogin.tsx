@@ -2,7 +2,7 @@
 import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import { extractErrorMessage } from '../../components/ResponseError/ResponseError';
 
 interface LoginFormState {
    adminEmail: string;

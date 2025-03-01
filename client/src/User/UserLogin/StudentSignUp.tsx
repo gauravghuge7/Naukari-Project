@@ -1,7 +1,7 @@
 // src/components/StudentSignUp.tsx
 import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
 
@@ -30,6 +30,7 @@ const StudentSignUp: React.FC = () => {
    const [message, setMessage] = useState<string | null>("");
    const [apiResponse, setApiResponse] = useState<boolean>(false);
    const [otp, setOtp] = useState('');
+   const navigate = useNavigate(); // Added for navigation
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target;
@@ -41,28 +42,21 @@ const StudentSignUp: React.FC = () => {
 
    const sendOtpToEmail = async (e: React.FormEvent) => {
       e.preventDefault();
-
-      // Basic validation
       if (!studentEmail || !studentPassword || !confirmPassword || !studentPhone || !studentName) {
          setError('All fields are required.');
          return;
       }
-
       if (studentPassword !== confirmPassword) {
          setError('Passwords do not match.');
          return;
       }
-
       try {
          const body = { studentEmail, studentPassword, studentPhone, studentName };
          const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
-
          setApiResponse(true);
          setMessage("Sending OTP to " + studentEmail + "...");
-
          const response = await axios.post("/api/student/sendOtp", body, config);
          setMessage("");
-
          if (response.data.success) {
             toast.success(response.data.message);
             setMessage("OTP sent successfully");
@@ -74,25 +68,18 @@ const StudentSignUp: React.FC = () => {
       } catch (error) {
          console.error("Registration error:", error);
          setMessage("");
-         if (error instanceof Error) {
-            toast.error(error.message);
-         } else {
-            toast.error("An unknown error occurred");
-         }
+         toast.error(error instanceof Error ? error.message : "An unknown error occurred");
       }
    };
 
    const verifyOtp = async (e: React.FormEvent) => {
       e.preventDefault();
-
       try {
          const body = { studentEmail, studentPassword, studentPhone, studentName, otp };
          const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
-
          setMessage("Verifying OTP...");
          const response = await axios.post("/api/student/verifyAndRegister", body, config);
          setMessage("");
-
          if (response.data.success) {
             toast.success(response.data.message);
             window.location.href = "/student-login";
@@ -107,29 +94,25 @@ const StudentSignUp: React.FC = () => {
       }
    };
 
-   const togglePasswordVisibility = () => {
-      setShowPassword((prevState) => !prevState);
-   };
-
-   const toggleConfirmPasswordVisibility = () => {
-      setShowConfirmPassword((prevState) => !prevState);
-   };
+   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
+   const handleBack = () => navigate(-1); // Navigate back to the previous page
 
    if (otpPopup) {
       return (
-         <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-green-300 to-red-300">
-            <ToastContainer position="top-right" />
-            <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
-               <p>{message}</p>
-               <h2 className="text-2xl font-bold mb-6 text-gray-800">Enter OTP</h2>
-               <div className="mb-4">
-                  <label htmlFor="otp" className="block text-gray-700 text-sm font-medium mb-1">OTP</label>
+         <div className="min-h-screen flex items-center justify-center bg-black">
+            <ToastContainer position="top-right" theme="dark" />
+            <div className="w-full max-w-md p-8 bg-black rounded-xl shadow-2xl border border-gray-900 transform transition-all duration-300 hover:scale-105">
+               <h2 className="text-3xl font-extrabold text-white mb-6 text-center">Verify OTP</h2>
+               {message && <p className="text-green-400 text-center mb-4 animate-pulse">{message}</p>}
+               <div className="mb-6">
+                  <label htmlFor="otp" className="block text-gray-200 text-sm font-medium mb-2">Enter OTP</label>
                   <input
                      type="text"
                      id="otp"
                      value={otp}
                      onChange={(e) => setOtp(e.target.value)}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                     className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
                      placeholder="Enter your OTP"
                      required
                   />
@@ -137,9 +120,9 @@ const StudentSignUp: React.FC = () => {
                <button
                   type="submit"
                   onClick={verifyOtp}
-                  className="w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300"
+                  className="w-full py-3 bg-green-500 text-black rounded-lg font-semibold hover:bg-green-600 transition duration-300 shadow-md"
                >
-                  Verify
+                  Verify OTP
                </button>
             </div>
          </div>
@@ -147,134 +130,155 @@ const StudentSignUp: React.FC = () => {
    }
 
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 via-green-300 to-red-300">
-         <ToastContainer position="top-right" />
-         <div className="w-full max-w-md p-8 bg-white shadow-md rounded-lg border border-gray-200">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Student Sign Up</h2>
-            {error && (
-               <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-300 rounded-md">
-                  {error}
-               </div>
-            )}
-            {apiResponse && message && (
-               <div className="mb-4 p-3 bg-green-100 text-green-800 border border-green-300 rounded-md relative">
-                  <p>{message}</p>
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+         <ToastContainer position="top-right" theme="dark" />
+         <div className="w-full max-w-4xl flex flex-col md:flex-row bg-black rounded-xl shadow-2xl border border-gray-900 overflow-hidden">
+            {/* Left Side: Signup Form */}
+            <div className="w-full md:w-1/2 p-8">
+               <h2 className="text-3xl font-extrabold text-white mb-6 text-center">Student Sign Up</h2>
+               {error && (
+                  <div className="mb-4 p-3 bg-red-950 text-red-300 border border-red-900 rounded-lg text-center animate-bounce">
+                     {error}
+                  </div>
+               )}
+               {apiResponse && message && (
+                  <div className="mb-4 p-3 bg-green-950 text-green-300 border border-green-900 rounded-lg relative flex items-center justify-between">
+                     <p>{message}</p>
+                     <button
+                        onClick={() => setMessage('')}
+                        className="text-green-400 hover:text-green-600"
+                        aria-label="Close message"
+                     >
+                        ×
+                     </button>
+                  </div>
+               )}
+               <form onSubmit={sendOtpToEmail}>
+                  <div className="mb-5">
+                     <label htmlFor="studentName" className="block text-gray-200 text-sm font-medium mb-2">Full Name</label>
+                     <input
+                        type="text"
+                        id="studentName"
+                        value={studentName}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+                        placeholder="Enter your full name"
+                        required
+                     />
+                  </div>
+                  <div className="mb-5">
+                     <label htmlFor="studentEmail" className="block text-gray-200 text-sm font-medium mb-2">Email</label>
+                     <input
+                        type="email"
+                        id="studentEmail"
+                        value={studentEmail}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+                        placeholder="Enter your email"
+                        required
+                     />
+                  </div>
+                  <div className="mb-5">
+                     <label htmlFor="studentPhone" className="block text-gray-200 text-sm font-medium mb-2">Phone Number</label>
+                     <input
+                        type="tel"
+                        id="studentPhone"
+                        value={studentPhone}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+                        placeholder="Enter your phone number"
+                        required
+                     />
+                  </div>
+                  <div className="mb-5 relative">
+                     <label htmlFor="studentPassword" className="block text-gray-200 text-sm font-medium mb-2">Password</label>
+                     <input
+                        type={showPassword ? 'text' : 'password'}
+                        id="studentPassword"
+                        value={studentPassword}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+                        placeholder="Enter your password"
+                        required
+                     />
+                     <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute inset-y-0 right-0 flex items-center px-3 mt-6 text-gray-400 hover:text-gray-200"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                     >
+                        {showPassword ? 'Hide' : 'Show'}
+                     </button>
+                  </div>
+                  <div className="mb-6 relative">
+                     <label htmlFor="confirmPassword" className="block text-gray-200 text-sm font-medium mb-2">Confirm Password</label>
+                     <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        id="confirmPassword"
+                        value={confirmPassword}
+                        onChange={handleChange}
+                        className="w-full p-3 bg-gray-950 border border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+                        placeholder="Confirm your password"
+                        required
+                     />
+                     <button
+                        type="button"
+                        onClick={toggleConfirmPasswordVisibility}
+                        className="absolute inset-y-0 right-0 flex items-center px-3 mt-6 text-gray-400 hover:text-gray-200"
+                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                     >
+                        {showConfirmPassword ? 'Hide' : 'Show'}
+                     </button>
+                  </div>
                   <button
-                     onClick={() => setMessage('')}
-                     className="absolute top-1 right-1 text-green-600 hover:text-green-800"
-                     aria-label="Close message"
+                     type="submit"
+                     className="w-full py-3 bg-green-500 text-black rounded-lg font-semibold hover:bg-green-600 transition duration-300 shadow-md"
                   >
-                     &times;
+                     Sign Up
                   </button>
-               </div>
-            )}
-            <form onSubmit={sendOtpToEmail}>
-               <div className="mb-4">
-                  <label htmlFor="studentName" className="block text-gray-700 text-sm font-medium mb-1">Full Name</label>
-                  <input
-                     type="text"
-                     id="studentName"
-                     value={formState.studentName}
-                     onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                     placeholder="Enter your full name"
-                     required
-                  />
-               </div>
-               <div className="mb-4">
-                  <label htmlFor="studentEmail" className="block text-gray-700 text-sm font-medium mb-1">Email</label>
-                  <input
-                     type="email"
-                     id="studentEmail"
-                     value={formState.studentEmail}
-                     onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                     placeholder="Enter your email"
-                     required
-                  />
-               </div>
-               <div className="mb-4">
-                  <label htmlFor="studentPhone" className="block text-gray-700 text-sm font-medium mb-1">Phone Number</label>
-                  <input
-                     type="tel"
-                     id="studentPhone"
-                     value={formState.studentPhone}
-                     onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                     placeholder="Enter your phone number"
-                     required
-                  />
-               </div>
-               <div className="mb-4 relative">
-                  <label htmlFor="studentPassword" className="block text-gray-700 text-sm font-medium mb-1">Password</label>
-                  <input
-                     type={showPassword ? 'text' : 'password'}
-                     id="studentPassword"
-                     value={formState.studentPassword}
-                     onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                     placeholder="Enter your password"
-                     required
-                  />
-                  <button
-                     type="button"
-                     onClick={togglePasswordVisibility}
-                     className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
-                     aria-label={showPassword ? 'Hide password' : 'Show password'}
+               </form>
+               <div className="mt-4 text-center">
+                  <Link
+                     to="/student-login"
+                     className="text-green-400 hover:text-green-500 transition duration-300 font-medium"
                   >
-                     {showPassword ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l9 9 9-9-9-9-9 9z" />
-                        </svg>
-                     ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 12l9 9 9-9-9-9-9 9z" />
-                        </svg>
-                     )}
-                  </button>
+                     Already have an account? Login
+                  </Link>
                </div>
-               <div className="mb-6 relative">
-                  <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-medium mb-1">Confirm Password</label>
-                  <input
-                     type={showConfirmPassword ? 'text' : 'password'}
-                     id="confirmPassword"
-                     value={formState.confirmPassword}
-                     onChange={handleChange}
-                     className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                     placeholder="Confirm your password"
-                     required
-                  />
-                  <button
-                     type="button"
-                     onClick={toggleConfirmPasswordVisibility}
-                     className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
-                     aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                  >
-                     {showConfirmPassword ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l9 9 9-9-9-9-9 9z" />
-                        </svg>
-                     ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 12l9 9 9-9-9-9-9 9z" />
-                        </svg>
-                     )}
-                  </button>
-               </div>
+            </div>
+
+            {/* Right Side: Content or Image with Back Button */}
+            <div className="w-full md:w-1/2 bg-black p-8 flex flex-col justify-between items-center text-white border-l border-gray-900 relative">
                <button
-                  type="submit"
-                  className="w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition duration-300"
+                  onClick={handleBack}
+                  className="absolute top-4 right-4 p-2 bg-gray-950 text-white rounded-full hover:bg-gray-900 transition duration-200 shadow-md"
+                  aria-label="Go back"
                >
-                  Sign Up
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     className="w-5 h-5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                     />
+                  </svg>
                </button>
-            </form>
-            <div className="mt-4 text-center">
-               <Link
-                  to={'/student-login'}
-                  className="text-blue-500 hover:text-blue-600 transition duration-300"
-               >
-                  Already have an account? Login
-               </Link>
+               <div className="flex flex-col justify-center items-center flex-grow">
+                  <h3 className="text-2xl font-bold mb-4">Welcome to Your Journey</h3>
+                  <p className="text-gray-200 text-center mb-6">
+                     Sign up to unlock a world of opportunities. Connect with peers, access resources, and start building your future today!
+                  </p>
+                  {/* Replace with an image if preferred */}
+                  <div className="w-full h-64 bg-gray-950 rounded-lg flex items-center justify-center text-gray-400">
+                     <span>Image Placeholder (e.g., Student Illustration)</span>
+                  </div>
+               </div>
             </div>
          </div>
       </div>

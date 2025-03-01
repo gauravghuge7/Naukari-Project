@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaEdit, FaMobileAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
-import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import { extractErrorMessage } from '../../components/ResponseError/ResponseError';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 

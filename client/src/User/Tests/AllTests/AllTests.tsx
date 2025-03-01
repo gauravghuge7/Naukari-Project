@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { extractErrorMessage } from "../../../Components/ResponseError/ResponseError";
+import { extractErrorMessage } from "../../../components/ResponseError/ResponseError";
 
 
 interface Test {
