@@ -1,7 +1,7 @@
 
 import { connectDB } from './database/db.js';
 import dotenv from 'dotenv';
-import server from './NodeServer/socket.js';
+import server from './socket/socket.js';
 
 
 dotenv.config(

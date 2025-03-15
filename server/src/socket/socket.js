@@ -10,8 +10,6 @@ const server = http.createServer(app);
 // CORS options
 const corsOptions = {
    origin: process.env.CLIENT_URL,
-   methods:"*", 
-   allowedHeaders: "*", // Specify any custom headers
    credentials: true // Allow credentials (if needed)
 };
 
@@ -42,8 +40,6 @@ io.on('connection', (socket) => {
 });
 
 
-// Preflight CORS handling for Express
-app.options('*', cors(corsOptions)); // Enable pre-flight across the board
 
 
 
