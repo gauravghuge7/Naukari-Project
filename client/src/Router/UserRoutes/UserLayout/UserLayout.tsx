@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 import Footer from '../../../Views/Footer/Footer'
-const UserNavbar = React.lazy(() => import('../../../User/UserNavbar/UserNavbar'))
+const UserNavbar = React.lazy(() => import('../../../User/layout/UserNavbar'))
 
 const UserLayout: React.FC = () => {
    return (

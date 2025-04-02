@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/ApiError.js"
 import jwt from "jsonwebtoken"
 import { asyncHandler } from "../utils/asyncHandler.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
 
 const isStudentLogin = asyncHandler(async(req, res, next) => {
 
@@ -9,16 +10,21 @@ const isStudentLogin = asyncHandler(async(req, res, next) => {
       console.log("req.cookies => ", req.cookies)
       const studentAccessToken = req.cookies.studentAccessToken;
 
-      console.log("req.cookies => ", req.cookies)
 
       if (!studentAccessToken) {
-         throw new ApiError(400, "student access token not found")
+         
+         return res
+         .status(401)
+         .clearCookie("studentAccessToken")
+         .clearCookie("studentSecretToken")
+         .json(
+            new ApiResponse(401, "student access token not found")
+         )
       }
 
       const decoded = await jwt.verify(studentAccessToken, process.env.STUDENT_ACCESS_TOKEN);
 
       req.user = decoded;
-
       next();
 
    } 

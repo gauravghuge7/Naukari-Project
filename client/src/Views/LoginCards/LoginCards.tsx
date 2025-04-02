@@ -19,21 +19,7 @@ const LoginCards = () => {
           Welcome to Your Study Hub
         </h1>
 
-        {/* Login Buttons Section */}
-        <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-8 justify-center mb-16 fade-in transition duration-1000">
-          <button
-            className="w-64 py-3 px-6 bg-yellow-500 text-black font-semibold rounded-xl shadow-lg hover:bg-yellow-600 transform hover:scale-105 transition duration-300 ease-in-out"
-            onClick={() => navigate('/admin-login')}
-          >
-            Admin Login
-          </button>
-          <button
-            className="w-64 py-3 px-6 bg-green-500 text-black font-semibold rounded-xl shadow-lg hover:bg-green-600 transform hover:scale-105 transition duration-300 ease-in-out"
-            onClick={() => navigate('/student-login')}
-          >
-            Student Login
-          </button>
-        </div>
+        
 
         {/* Cards Section with Slide-in Animation */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 fade-in transition duration-1000">

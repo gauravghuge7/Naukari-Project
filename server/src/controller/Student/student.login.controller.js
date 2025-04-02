@@ -42,8 +42,7 @@ const generateAccessAndSecretToken = async (_id) => {
 const options = {
    httpOnly: true,
    secure: process.env.NODE_ENV === 'production',
-   sameSite: 'None',
-   maxAge: 7 * 24 * 60 * 60 * 1000,
+   maxAge: 1 * 24 * 60 * 60 * 1000,
 };
 
 
@@ -194,6 +193,9 @@ const loginStudent = asyncHandler(async (req, res, next) => {
 
       const {studentAccessToken, studentSecretToken} = await generateAccessAndSecretToken(student._id);
 
+
+      console.log("options => ", options);
+      console.log("process.env.NODE_ENV => ", process.env.NODE_ENV);
       
 
       return res 
@@ -213,9 +215,35 @@ const loginStudent = asyncHandler(async (req, res, next) => {
 })
 
 
+const logoutStudent = asyncHandler(async (req, res, next) => {
+   try {
+      
+      const { _id } = req.user;
+
+      if(!_id) {
+         throw new ApiError(400, "Please provide all the required fields");
+      }
+
+      
+
+      return res 
+      .status(200)
+      .clearCookie("studentAccessToken")
+      .clearCookie("studentSecretToken")
+      .json(
+         new ApiResponse(200, "Student Logged Out Successfully")
+      );
+   } 
+   catch (error) {
+      console.log(error.message);
+      throw new ApiError(400, error.message, error);
+   }
+})
+
 
 export {
    registerStudent,
    sendOtp,
-   loginStudent
+   loginStudent,
+   logoutStudent
 }

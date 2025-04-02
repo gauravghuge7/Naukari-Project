@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import { extractErrorMessage } from './../../components/ResponseError/ResponseError';
 
 interface LoginFormState {
   studentEmail: string;

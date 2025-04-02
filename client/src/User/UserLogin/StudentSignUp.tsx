@@ -56,19 +56,20 @@ const StudentSignUp: React.FC = () => {
          setApiResponse(true);
          setMessage("Sending OTP to " + studentEmail + "...");
          const response = await axios.post("/api/student/sendOtp", body, config);
+         console.log(response);
          setMessage("");
          if (response.data.success) {
             toast.success(response.data.message);
             setMessage("OTP sent successfully");
             setOtpPopup(true);
-         } else {
-            setError(response.data.message);
-            toast.error(response.data.message);
-         }
-      } catch (error) {
+         } 
+      } 
+      catch (error) {
          console.error("Registration error:", error);
          setMessage("");
-         toast.error(error instanceof Error ? error.message : "An unknown error occurred");
+         const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
+         setMessage(message);
+         toast.error(message);
       }
    };
 

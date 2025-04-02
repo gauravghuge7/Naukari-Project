@@ -15,8 +15,9 @@ import StudentLogin from '../../../User/UserLogin/StudentLogin';
 import StudentSignUp from '../../../User/UserLogin/StudentSignUp';
 import About from '../../../components/About/About';
 import NotFound from '../../../components/NotFound/NotFound';
-import CreateStudyPlanView from '../../../User/StudyPlan/CreateStudyPlanView';
-
+import CreateStudyPlanView from '../../../User/plans/CreatePlanView';
+import CreatePlan from './../../../User/plans/CreatePlan';
+import AddTask from './../../../User/plans/AddTask';
 
 
 
@@ -38,9 +39,6 @@ const UserRouter: React.FC = () => {
                   <Route path='/admin-signup' element={<AdminSignUp />} />
                   
                   <Route path='/about' element={<About />} />
-
-
-
                   <Route path='/user/createStudyPlanView' element={<CreateStudyPlanView />} />
 
 
@@ -57,8 +55,13 @@ const UserRouter: React.FC = () => {
                      <Route path='Test' element={<AllTests />} /> 
                      <Route path='test-overview/:testId' element={<TestOverview />} /> 
 
-                     {/* Socket connections  */}
 
+
+                     <Route path='createStudyPlan' element={<CreateStudyPlanView />} /> 
+                     <Route path='createPlan' element={<CreatePlan />} /> 
+                     <Route path='addTasks/:planId' element={<AddTask />} /> 
+
+                     {/* Socket connections  */}
 
                   </Route>
 

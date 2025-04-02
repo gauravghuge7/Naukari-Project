@@ -16,13 +16,7 @@ const studyPlans = [
     effort: 'High Intensity',
     path: '/create-study-plan',
   },
-  {
-    duration: '3 Weeks',
-    description: 'Balanced short-term preparation',
-    details: 'A structured approach with moderate pacing. Great for exam prep or skill-building.',
-    effort: 'Moderate Intensity',
-    path: '/create-study-plan',
-  },
+
   {
     duration: '1 Month',
     description: 'Comprehensive monthly plan',
@@ -30,13 +24,7 @@ const studyPlans = [
     effort: 'Moderate Intensity',
     path: '/create-study-plan',
   },
-  {
-    duration: '2 Months',
-    description: 'In-depth study coverage',
-    details: 'Deep dive into complex topics. Features detailed schedules and progress tracking.',
-    effort: 'Moderate Intensity',
-    path: '/create-study-plan',
-  },
+
   {
     duration: '3 Months',
     description: 'Long-term structured learning',
@@ -44,20 +32,19 @@ const studyPlans = [
     effort: 'Steady Pace',
     path: '/create-study-plan',
   },
+
+
+];
+
+const dailyTasks = [
   {
-    duration: '4 Months',
-    description: 'Extended preparation plan',
-    details: 'Thorough preparation for major exams or certifications. Includes revision cycles.',
-    effort: 'Steady Pace',
-    path: '/create-study-plan',
+    title: 'Daily Focus',
+    description: 'Start your day productively',
+    details: '30-60 minutes of focused work on priority tasks',
+    intensity: 'Light',
+    path: '/user/createPlan',
   },
-  {
-    duration: '6 Months',
-    description: 'Complete mastery roadmap',
-    details: 'Mastery-focused with extensive coverage. Perfect for long-term goals or career prep.',
-    effort: 'Steady Pace',
-    path: '/create-study-plan',
-  },
+
 ];
 
 const CreateStudyPlanView: React.FC = () => {
@@ -72,9 +59,47 @@ const CreateStudyPlanView: React.FC = () => {
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-7xl">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-12 text-center tracking-tight">
-          Design Your Study Journey
+          Design Your Work Journey
         </h1>
 
+        {/* Daily Tasks Section */}
+        <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-16 mb-8 text-center tracking-tight">
+          Create Daily Tasks
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8" >
+          {dailyTasks.map((task, index) => (
+            <Link
+              key={index}
+              to={task.path}
+              className="group bg-gray-900 border border-gray-800 rounded-xl shadow-xl p-6 text-white transform transition-all duration-300 hover:scale-105 hover:bg-gray-850 hover:border-purple-500"
+            >
+              <h3 className="text-2xl font-bold mb-3 text-purple-400 group-hover:text-purple-300 transition duration-300">
+                {task.title}
+              </h3>
+              <p className="text-gray-200 text-md font-medium mb-2">{task.description}</p>
+              <p className="text-gray-300 text-sm mb-3">{task.details}</p>
+              <div className="flex items-center text-gray-400 text-sm mb-3">
+                <svg
+                  className="w-5 h-5 mr-2 text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Intensity: <span className="ml-1 text-gray-200">{task.intensity}</span>
+              </div>
+              <div className="flex justify-end">
+                <button className="py-1.5 px-4 bg-purple-500 text-white rounded-lg font-semibold shadow-md group-hover:bg-purple-600 group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+                  Create Task
+                </button>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+
+        {/* Study Plans Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {studyPlans.map((plan, index) => (
             <Link
@@ -106,6 +131,8 @@ const CreateStudyPlanView: React.FC = () => {
             </Link>
           ))}
         </div>
+
+        
 
         <div className="mt-12 text-center">
           <Link

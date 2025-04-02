@@ -24,8 +24,6 @@ io.on('connection', (socket) => {
 
    console.log('A user connected:', socket.id);
 
-   console.log("Sockets ", socket)
-
    // Listen for chat messages
    socket.on('chat message', (msg) => {
       console.log('Message received: ' + msg);
