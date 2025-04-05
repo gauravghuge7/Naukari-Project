@@ -13,14 +13,15 @@ const createPlan = asyncHandler(async (req, res, next) => {
 
    try {
 
-      const { planTitle, planDescription, planStatus, planDuration, planPriority, planEffort } = req.body;
+      const { planTitle, planDescription, planStatus, planDuration, planPriority, planEffort, planType, planStartDate, planEndDate } = req.body;
 
       console.log("req.body => ", req.body);
 
-      if(!planTitle || !planDescription || !planStatus || !planDuration || !planPriority || !planEffort) {
-         throw new ApiError(400, "Please provide all the required fields");
+      if(!planTitle || !planDescription || !planStatus || !planDuration || !planPriority || !planEffort || !planType || !planEndDate || !planStartDate) {
+         throw new ApiError(400, "Please provide all the required fields"); 
       }
 
+      
       const plan = await Plan.create({
         student: req.user._id,
         planTitle: planTitle.trim(),
@@ -28,7 +29,10 @@ const createPlan = asyncHandler(async (req, res, next) => {
         planStatus: planStatus.trim(),
         planDuration: planDuration,
         planPriority: planPriority,
-        planEffort: planEffort.trim()
+        planType: planType.trim(),
+        planEffort: planEffort.trim(),
+        planStartDate,
+        planEndDate
       });
 
 
@@ -111,11 +115,12 @@ const getPlanDetails = asyncHandler(async (req, res, next) => {
 const addTasksToPlan = asyncHandler(async (req, res, next) => {
     try {
 
-        const { taskTitle, taskDescription, taskStatus, taskDuration, taskPriority } = req.body;
+        const { taskTitle, taskDescription, taskStatus, taskDuration, taskPriority, taskDate } = req.body;
+        console.log("taskDate => ", taskDate)
 
         const { planId } = req.params;
 
-        if(!planId || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority) {
+        if(!planId || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority || !taskDate) {
             throw new ApiError(400, "Please provide all the required fields");
         }
 
@@ -131,7 +136,8 @@ const addTasksToPlan = asyncHandler(async (req, res, next) => {
             taskDescription: taskDescription.trim(),
             taskStatus: taskStatus.trim(),
             taskDuration: taskDuration,
-            taskPriority: taskPriority
+            taskPriority: taskPriority, 
+            taskDate
         });
 
         return res 
@@ -146,6 +152,114 @@ const addTasksToPlan = asyncHandler(async (req, res, next) => {
         throw new ApiError(400, error.message, error);
     }
 
+})
+
+const updateTask = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { taskTitle, taskDescription, taskStatus, taskDuration, taskPriority, _id, taskDate } = req.body;
+        const { planId } = req.params;
+
+        console.log("Req.body => ", req.body)
+
+
+        if(!planId || !_id || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority || !taskDate) {
+            throw new ApiError(400, "Please provide all the required fields");
+        }
+
+        const isplan = await Plan.findById(planId);
+
+        if(!isplan) {
+            throw new ApiError(400, "Plan Not Found");
+        }
+
+        const task = await Task.findByIdAndUpdate(_id, {
+            taskTitle: taskTitle.trim(),
+            taskDescription: taskDescription.trim(),
+            taskStatus: taskStatus.trim(),
+            taskDuration: taskDuration,
+            taskPriority: taskPriority
+        });
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(200, "Task Updated Successfully", task)
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
+})
+
+const deleteTask = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { taskId } = req.body;
+        const { planId } = req.params;
+
+        console.log("taskId => ", taskId)
+        console.log("planId => ", planId)
+
+        if(!planId || !taskId) {
+            throw new ApiError(400, "Please provide all the required fields");
+        }
+
+        const isplan = await Plan.findById(planId);
+
+        if(!isplan) {
+            throw new ApiError(400, "Plan Not Found");
+        }
+
+        const task = await Task.findByIdAndDelete(taskId);
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(200, "Task Deleted Successfully", task)
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
+})
+
+const updateTaskStatus = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { taskId, taskStatus } = req.body;
+
+        const { planId } = req.params;
+
+        if(!planId || !taskId || !taskStatus) {
+            throw new ApiError(400, "Please provide all the required fields");
+        }
+
+        const plan = await Plan.findById(planId);
+
+        if(!plan) {
+            throw new ApiError(400, "Plan Not Found");
+        }
+
+        const task = await Task.findByIdAndUpdate(taskId, {
+            taskStatus: taskStatus.trim()
+        });
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(200, "Task Status Updated Successfully", task)
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
 })
 
 const getTasksByPlan = asyncHandler(async (req, res, next) => {
@@ -193,6 +307,9 @@ export {
    addTasksToPlan, 
    getAllPlans,
    getPlanDetails,
-   getTasksByPlan
+   getTasksByPlan, 
+   updateTask, 
+   updateTaskStatus, 
+   deleteTask
 
 }

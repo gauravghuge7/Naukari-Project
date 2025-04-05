@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaBook, FaClipboardList, FaFileAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaBook, FaPlus } from "react-icons/fa";
 import UserSidebar from "./UserSidebar";
-import axios from "axios";
 
 const UserNavbar = () => {
    const [isOpen, setIsOpen] = useState(false);
@@ -18,21 +17,30 @@ const UserNavbar = () => {
       setIsOpen(!isOpen);
    };
 
-   const handleLogout = async() => {
-
+   const handleLogout = async () => {
       try {
-         
-         // const response = await axios.get('/api/student/logout');
-         // console.log("response => ", response);
-
-
          localStorage.removeItem("NaukariUser");
-         setIsLoggedIn(false);   
-      } 
-      catch (error) {
-         console.log(error);   
+         setIsLoggedIn(false);
+      } catch (error) {
+         console.log(error);
       }
-   }
+   };
+
+   // Navigation Links Array
+   const navLinks = [
+      {
+         label: "Create Test",
+         to: "/user/createTest",
+         icon: <FaPlus size={12} />,
+         className: "bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg shadow",
+      },
+      {
+         label: "Create Goal Plan",
+         to: "/user/createStudyPlan",
+         icon: <FaPlus size={12} />,
+         className: "bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg shadow",
+      },
+   ];
 
    return (
       <div>
@@ -49,13 +57,13 @@ const UserNavbar = () => {
                   <div className="flex space-x-4">
                      <button
                         className="w-28 sm:w-36 py-1 px-3 sm:py-2 sm:px-4 bg-yellow-500 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-600 transform hover:scale-105 transition duration-300 ease-in-out"
-                        onClick={() => navigate('/admin-login')}
+                        onClick={() => navigate("/admin-login")}
                      >
                         Admin Login
                      </button>
                      <button
                         className="w-28 sm:w-36 py-1 px-3 sm:py-2 sm:px-4 bg-green-500 text-black font-semibold rounded-lg shadow-md hover:bg-green-600 transform hover:scale-105 transition duration-300 ease-in-out"
-                        onClick={() => navigate('/student-login')}
+                        onClick={() => navigate("/student-login")}
                      >
                         Student Login
                      </button>
@@ -64,18 +72,28 @@ const UserNavbar = () => {
             </div>
 
             {/* Logo (Centered) */}
-            <Link to="/" className="text-xl md:text-2xl font-bold text-white tracking-wide">
+            <Link
+               to="/"
+               className="text-xl md:text-2xl font-bold text-white tracking-wide"
+            >
                Trend Goal Portal
             </Link>
 
             {/* Navigation Links (Right) */}
-            <div className={`${
-               isLoggedIn ? 'flex' : 'hidden'
-            } flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-white text-sm font-medium`}>
-               <Link to="/user/createStudyPlan" className="flex items-center gap-1 hover:text-gray-400">
-                  <FaBook size={14} /> Study Plan
-               </Link>
-               
+            <div
+               className={`${
+                  isLoggedIn ? "flex" : "hidden"
+               } flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-white text-sm font-medium`}
+            >
+               {navLinks.map((link, index) => (
+                  <Link
+                     key={index}
+                     to={link.to}
+                     className={`flex items-center gap-1 ${link.className}`}
+                  >
+                     {link.icon} {link.label}
+                  </Link>
+               ))}
             </div>
 
             {/* Logout (Far Right) */}

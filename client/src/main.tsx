@@ -9,6 +9,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import {io} from "socket.io-client";
 import { store } from './Redux/Store/Store.ts';
 import { Provider } from 'react-redux';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const url = import.meta.env.VITE_SERVER_URL;
 

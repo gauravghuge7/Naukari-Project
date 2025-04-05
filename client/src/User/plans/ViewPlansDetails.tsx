@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskLists from "./TaskLists";
+import MyCalendar from "./MyCalendar"; // Make sure this component exists
 
 interface Plan {
   _id: string;
@@ -14,11 +15,29 @@ interface Plan {
   createdAt: string;
 }
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ activeTab: string; setActiveTab: (tab: string) => void }> = ({
+  activeTab,
+  setActiveTab,
+}) => {
   const navigate = useNavigate();
+  const tabs = ["overview", "tasks", "progress", "dashboard", "calendar"];
+
   return (
     <nav className="bg-gray-900 text-white p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold">Plan Details</h1>
+      <div className="flex space-x-4">
+        <h1 className="text-xl font-bold mr-6">Plan Details</h1>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`capitalize px-3 py-1 rounded hover:bg-gray-800 transition ${
+              activeTab === tab ? "bg-blue-600" : "bg-gray-700"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
       <button
         onClick={() => navigate(-1)}
         className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
@@ -41,7 +60,8 @@ const ViewPlansDetails: React.FC = () => {
       const response = await axios.get<{ data: Plan }>(
         `/api/student/task/getPlanDetails/${planId}`
       );
-      console.log("response => ", response);
+
+      console.log("response => ", response)
 
       setPlan(response.data.data?.plan);
     } catch (err) {
@@ -50,9 +70,8 @@ const ViewPlansDetails: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-    
     fetchPlanDetails();
   }, [planId]);
 
@@ -62,29 +81,9 @@ const ViewPlansDetails: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-black text-white">
-      <Navbar />
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="mb-4 flex space-x-4 border-b border-gray-700 pb-2">
-          <button
-            onClick={() => setActiveTab("overview")}
-            className={`px-4 py-2 ${activeTab === "overview" ? "border-b-2 border-blue-500" : ""}`}
-          >
-            Overview
-          </button>
-          <button
-            onClick={() => setActiveTab("tasks")}
-            className={`px-4 py-2 ${activeTab === "tasks" ? "border-b-2 border-blue-500" : ""}`}
-          >
-            Tasks
-          </button>
-          <button
-            onClick={() => setActiveTab("progress")}
-            className={`px-4 py-2 ${activeTab === "progress" ? "border-b-2 border-blue-500" : ""}`}
-          >
-            Progress
-          </button>
-        </div>
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
+      <div className="max-w-4xl mx-auto p-6">
         {activeTab === "overview" && (
           <div>
             <h2 className="text-2xl font-bold mb-2">{plan.planTitle}</h2>
@@ -97,15 +96,28 @@ const ViewPlansDetails: React.FC = () => {
         )}
 
         {activeTab === "tasks" && (
-          <div>
-            <TaskLists planId={plan._id} />
-          </div>
+          <TaskLists planId={plan._id} />
         )}
 
         {activeTab === "progress" && (
           <div>
             <h2 className="text-xl font-bold mb-2">Progress</h2>
             <p className="text-gray-400">Tracking progress of the plan.</p>
+          </div>
+        )}
+
+        {activeTab === "dashboard" && (
+          <div>
+            <h2 className="text-xl font-bold mb-2">Dashboard</h2>
+            <p className="text-gray-400">Here you can show charts, summary, task breakdown, etc.</p>
+            {/* Placeholder for dashboard features */}
+          </div>
+        )}
+
+        {activeTab === "calendar" && (
+          <div>
+            <h2 className="text-xl font-bold mb-4">Calendar View</h2>
+            <MyCalendar />
           </div>
         )}
       </div>

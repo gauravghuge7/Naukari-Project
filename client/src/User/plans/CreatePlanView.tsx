@@ -7,33 +7,22 @@ const studyPlans = [
     description: 'Quick and focused study plan',
     details: 'Ideal for last-minute revisions or short-term goals. Covers key topics with daily targets.',
     effort: 'High Intensity',
-    path: '/create-study-plan',
+    path: '/user/weekview',
   },
-  {
-    duration: '2 Weeks',
-    description: 'Short-term intensive learning',
-    details: 'Perfect for cramming or mastering a single subject. Includes practice tests and reviews.',
-    effort: 'High Intensity',
-    path: '/create-study-plan',
-  },
-
   {
     duration: '1 Month',
     description: 'Comprehensive monthly plan',
     details: 'Covers multiple subjects with weekly milestones. Includes breaks and assessments.',
     effort: 'Moderate Intensity',
-    path: '/create-study-plan',
+    path: '/user/monthly',
   },
-
   {
-    duration: '3 Months',
-    description: 'Long-term structured learning',
-    details: 'Builds strong foundations with consistent study habits. Ideal for semester planning.',
-    effort: 'Steady Pace',
-    path: '/create-study-plan',
+    duration: 'Freestyle',
+    description: 'Fully custom range planning',
+    details: 'Pick any start and end date. Customize each day with your own structure and tasks.',
+    effort: 'Flexible Intensity',
+    path: '/user/freestyle',
   },
-
-
 ];
 
 const dailyTasks = [
@@ -44,7 +33,6 @@ const dailyTasks = [
     intensity: 'Light',
     path: '/user/createPlan',
   },
-
 ];
 
 const CreateStudyPlanView: React.FC = () => {
@@ -66,7 +54,7 @@ const CreateStudyPlanView: React.FC = () => {
         <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-16 mb-8 text-center tracking-tight">
           Create Daily Tasks
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8" >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {dailyTasks.map((task, index) => (
             <Link
               key={index}
@@ -98,8 +86,10 @@ const CreateStudyPlanView: React.FC = () => {
           ))}
         </div>
 
-
         {/* Study Plans Section */}
+        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-8 text-center tracking-tight">
+          Choose Your Planning Type
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {studyPlans.map((plan, index) => (
             <Link
@@ -131,8 +121,6 @@ const CreateStudyPlanView: React.FC = () => {
             </Link>
           ))}
         </div>
-
-        
 
         <div className="mt-12 text-center">
           <Link

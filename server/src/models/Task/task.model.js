@@ -30,6 +30,11 @@ const taskSchema = new mongoose.Schema({
         min: 1,
     },
 
+    taskDate: {
+        type: Date,
+        required: true
+    },
+
     plan: {
         type: Schema.Types.ObjectId,
         ref: "Plan"

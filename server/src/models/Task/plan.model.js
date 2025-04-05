@@ -24,11 +24,27 @@ const planSchema = new mongoose.Schema({
         required: true,
         min: 1,
     },
+
+    planStartDate: {
+        type: Date,
+        // required: true
+    },
+
+    planEndDate: {
+        type: Date,
+        // required: true
+    },
     
     planPriority: {
         type: Number,
         required: true,
         min: 1,
+    },
+
+    planType: {
+        type: String,
+        required: true,
+        enum: ['Weekly', 'Monthly', 'Freestyle'],
     },
 
     planEffort: {
