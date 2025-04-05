@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { extractErrorMessage } from '../../Components/ResponseError/ResponseError';
+import { extractErrorMessage } from '../../components/ResponseError/ResponseError';
 
 interface SignUpFormState {
    studentEmail: string;
