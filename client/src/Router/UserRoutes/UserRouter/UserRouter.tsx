@@ -18,6 +18,8 @@ import NotFound from '../../../components/NotFound/NotFound';
 import CreateStudyPlanView from '../../../User/plans/CreatePlanView';
 import CreatePlan from './../../../User/plans/CreatePlan';
 import AddTask from './../../../User/plans/AddTask';
+import MyPlans from '../../../User/plans/MyPlans';
+import ViewPlansDetails from '../../../User/plans/ViewPlansDetails';
 
 
 
@@ -29,14 +31,16 @@ const UserRouter: React.FC = () => {
                <Route path='/student-login' element={<StudentLogin />} />
                <Route path='/student-register' element={<StudentSignUp />} />
 
+               
+               <Route path='/admin-login' element={<AdminLogin />} />
+               <Route path='/admin-signup' element={<AdminSignUp />} />
 
                {/* Main layout route with nested child routes */}
                <Route path='/' element={<UserLayout />}>
 
                
                   <Route path='/' element={<Home />} />
-                  <Route path='/admin-login' element={<AdminLogin />} />
-                  <Route path='/admin-signup' element={<AdminSignUp />} />
+                  
                   
                   <Route path='/about' element={<About />} />
                   <Route path='/user/createStudyPlanView' element={<CreateStudyPlanView />} />
@@ -59,6 +63,8 @@ const UserRouter: React.FC = () => {
 
                      <Route path='createStudyPlan' element={<CreateStudyPlanView />} /> 
                      <Route path='createPlan' element={<CreatePlan />} /> 
+                     <Route path='myPlans' element={<MyPlans />} /> 
+                     <Route path='viewPlantasks/:planId' element={<ViewPlansDetails />} /> 
                      <Route path='addTasks/:planId' element={<AddTask />} /> 
 
                      {/* Socket connections  */}

@@ -27,9 +27,10 @@ const AddTask = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/tasks", task, {
+      const response = await axios.post(`/api/student/task/addTasks/${planId}`, task, {
         headers: { "Content-Type": "application/json" },
       });
+      console.log(response);
       if (response.status === 201) {
         toast.success("Task created successfully!");
         setTask({ ...task, taskTitle: "", taskDescription: "" }); // Reset form

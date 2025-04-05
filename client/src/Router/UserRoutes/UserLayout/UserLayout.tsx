@@ -1,6 +1,5 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import Footer from '../../../Views/Footer/Footer'
 const UserNavbar = React.lazy(() => import('../../../User/layout/UserNavbar'))
 
 const UserLayout: React.FC = () => {
@@ -20,7 +19,7 @@ const UserLayout: React.FC = () => {
          </main>
 
          <footer>
-            <Footer />  
+            
          </footer>
 
          

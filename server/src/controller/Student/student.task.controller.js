@@ -1,4 +1,5 @@
 
+import mongoose from "mongoose";
 import { ApiError } from "../../utils/ApiError.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
@@ -53,7 +54,7 @@ const getAllPlans = asyncHandler(async (req, res, next) => {
         const {_id} = req.user;
 
         const plans = await Plan.find({
-            _id: _id
+            student: _id
         })
 
         return res  
@@ -71,10 +72,48 @@ const getAllPlans = asyncHandler(async (req, res, next) => {
 })
 
 
+const getPlanDetails = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { planId } = req.params;
+
+        if(!planId) {
+            throw new ApiError(400, "Please provide all the required fields");
+        }
+
+        const plan = await Plan.findById(planId);
+
+        console.log("plan => ", plan)
+
+        if(!plan) {
+            throw new ApiError(400, "Plan Not Found");
+        }
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200, 
+                    "Plan Details Fetched Successfully", 
+                    {
+                        plan
+                    }
+                )
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
+})
+
 const addTasksToPlan = asyncHandler(async (req, res, next) => {
     try {
 
-        const { planId, taskTitle, taskDescription, taskStatus, taskDuration, taskPriority } = req.body;
+        const { taskTitle, taskDescription, taskStatus, taskDuration, taskPriority } = req.body;
+
+        const { planId } = req.params;
 
         if(!planId || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority) {
             throw new ApiError(400, "Please provide all the required fields");
@@ -91,8 +130,8 @@ const addTasksToPlan = asyncHandler(async (req, res, next) => {
             taskTitle: taskTitle.trim(),
             taskDescription: taskDescription.trim(),
             taskStatus: taskStatus.trim(),
-            taskDuration: taskDuration.trim(),
-            taskPriority: taskPriority.trim()
+            taskDuration: taskDuration,
+            taskPriority: taskPriority
         });
 
         return res 
@@ -109,10 +148,51 @@ const addTasksToPlan = asyncHandler(async (req, res, next) => {
 
 })
 
+const getTasksByPlan = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { planId } = req.params;
+
+        if(!planId) {
+            throw new ApiError(400, "Please provide all the required fields");
+        }
+
+        console.log("planId => ", planId)
+
+        const task = await Task.findOne({ plan: planId })
+
+        console.log("task => ", task)
+
+        const tasks = await Task.aggregate([
+            { $match: { plan: new mongoose.Types.ObjectId(planId) } },
+            
+        ])
+
+        console.log("tasks => ", tasks)
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(200, "Tasks Fetched Successfully", {
+                    tasks
+                })
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
+})
+
+
 
 
 export {
    createPlan,
    addTasksToPlan, 
-   getAllPlans
+   getAllPlans,
+   getPlanDetails,
+   getTasksByPlan
+
 }

@@ -65,7 +65,7 @@ const UserNavbar = () => {
 
             {/* Logo (Centered) */}
             <Link to="/" className="text-xl md:text-2xl font-bold text-white tracking-wide">
-               User Portal
+               Trend Goal Portal
             </Link>
 
             {/* Navigation Links (Right) */}
@@ -75,12 +75,7 @@ const UserNavbar = () => {
                <Link to="/user/createStudyPlan" className="flex items-center gap-1 hover:text-gray-400">
                   <FaBook size={14} /> Study Plan
                </Link>
-               <Link to="/user/create-quiz" className="flex items-center gap-1 hover:text-gray-400">
-                  <FaClipboardList size={14} /> Create Quiz
-               </Link>
-               <Link to="/user/create-sheet" className="flex items-center gap-1 hover:text-gray-400">
-                  <FaFileAlt size={14} /> Create Sheet
-               </Link>
+               
             </div>
 
             {/* Logout (Far Right) */}
