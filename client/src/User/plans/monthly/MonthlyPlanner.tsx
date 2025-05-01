@@ -43,7 +43,9 @@ const MonthlyPlanner = () => {
     days.push(day);
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -67,10 +69,12 @@ const MonthlyPlanner = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <h1 className="text-3xl font-bold mb-6">Monthly Planning: {format(today, 'MMMM yyyy')}</h1>
+    <div className="min-h-screen bg-black text-white px-4 py-6 sm:px-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center sm:text-left">
+        Monthly Planning: {format(today, 'MMMM yyyy')}
+      </h1>
 
-      <div className="mb-4 text-right">
+      <div className="mb-4 text-center sm:text-right">
         <button
           onClick={() => setShowModal(true)}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
@@ -79,27 +83,29 @@ const MonthlyPlanner = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-4 text-center">
-        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-          <div key={d} className="font-semibold text-gray-300">{d}</div>
-        ))}
-        {days.map((day, idx) => (
-          <button
-            key={idx}
-            disabled={!planId}
-            onClick={() => navigate(`/user/monthlyPlan/${planId}/${day.toISOString()}`)}
-            className={`p-3 rounded-xl ${
-              isToday(day) ? 'bg-purple-600 text-white' : 'bg-gray-900 text-gray-300'
-            } ${!isSameMonth(day, today) ? 'opacity-50' : 'hover:bg-gray-700'} transition`}
-          >
-            {format(day, 'd')}
-          </button>
-        ))}
+      <div className="overflow-x-auto">
+        <div className="grid grid-cols-7 gap-2 sm:gap-4 min-w-[600px] text-center">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
+            <div key={d} className="font-semibold text-gray-300">{d}</div>
+          ))}
+          {days.map((day, idx) => (
+            <button
+              key={idx}
+              disabled={!planId}
+              onClick={() => navigate(`/user/monthlyPlan/${planId}/${day.toISOString()}`)}
+              className={`p-2 sm:p-3 rounded-xl text-sm sm:text-base ${
+                isToday(day) ? 'bg-purple-600 text-white' : 'bg-gray-900 text-gray-300'
+              } ${!isSameMonth(day, today) ? 'opacity-50' : 'hover:bg-gray-700'} transition`}
+            >
+              {format(day, 'd')}
+            </button>
+          ))}
+        </div>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-2xl border border-gray-700">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 px-4">
+          <div className="relative bg-gray-900 p-6 rounded-xl w-full max-w-2xl border border-gray-700 overflow-y-auto max-h-[90vh]">
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 text-white text-2xl font-bold"
@@ -108,7 +114,6 @@ const MonthlyPlanner = () => {
             </button>
             <h2 className="text-2xl font-bold mb-6 text-center">Create Monthly Plan</h2>
             <form onSubmit={handleCreatePlan} className="space-y-4">
-
               <div>
                 <label className="block mb-1 font-medium">Plan Title *</label>
                 <input
@@ -194,3 +199,4 @@ const MonthlyPlanner = () => {
 };
 
 export default MonthlyPlanner;
+ 

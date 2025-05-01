@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { extractErrorMessage } from './../../components/ResponseError/ResponseError';
+import { extractErrorMessage } from '../../components/ResponseError/ResponseError';
 
 interface LoginFormState {
   studentEmail: string;
@@ -61,31 +61,6 @@ const StudentLogin: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await loginWithPopup({ connection: 'google-oauth2' });
-      const claims = await getIdTokenClaims();
-      const email = claims?.email;
-
-      if (email) {
-        const body = { studentEmail: email, studentPassword: user?.name };
-        const config = {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        };
-        const response = await axios.post('/api/student/login', body, config);
-        if (response.data.success) {
-          toast.success('Logged in with Google successfully!');
-          window.location.href = '/user/profile';
-        } else {
-          toast.error(response.data.message);
-        }
-      }
-    } catch (error) {
-      console.error('Google login error:', error);
-      toast.error('Failed to log in with Google.');
-    }
-  };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
@@ -206,14 +181,14 @@ const StudentLogin: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <button
               onClick={handleGoogleLogin}
               className="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transform hover:scale-105 transition duration-300"
             >
               Login with Google
             </button>
-          </div>
+          </div> */}
 
           <div className="mt-6 text-center">
             <Link

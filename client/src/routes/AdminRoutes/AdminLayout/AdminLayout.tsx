@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import Footer from '../../../Views/Footer/Footer'
-import AdminNavbar from '../../../Admin/AdminNavbar/AdminNavbar'
+import Footer from '../../../views/Footer/Footer'
+import AdminNavbar from '../../../admin/AdminNavbar/AdminNavbar'
 
 
 

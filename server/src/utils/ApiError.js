@@ -1,29 +1,40 @@
 
+
+// this page is using the error handling method
+
+
+
 class ApiError extends Error {
 
    constructor(
       statusCode,
-      message,
-      error,
-      data=[],
-      stack=""
-   
-   ){
+      message="something went wrong",
+      stack="",
+      error=[]
+  ) 
+  {
       super(message);
+
       this.statusCode = statusCode;
-      this.error = error;
-      this.data = data;
+      this.success =  false;
+
+      this.error = message;
+   
+   
       
 
       if(stack) {
-         this.stack = stack;
+          this.stack = stack;
       }
+
       else {
-         Error.captureStackTrace(this, this.constructor);
+          Error.captureStackTrace(this, this.constructor);
       }
-   }
+
+   } 
 }
+
 
 export {
    ApiError
-}
+}  

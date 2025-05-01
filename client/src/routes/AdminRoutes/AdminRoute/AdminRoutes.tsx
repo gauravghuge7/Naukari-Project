@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import TestOverview from '../../../Admin/AdminTest/TestOverview/TestOverview';
-import CreateTestOverview from '../../../Admin/AdminTest/CreateTestOverview/CreateTestOverview';
-import AdminDashboard from '../../../Admin/AdminDashboard/AdminDashboard';
-import AdminProfile from '../../../Admin/AdminProfile/AdminProfile';
-import TestLayout from '../../../Admin/AdminTest/TestLayout.tsx/TestLayout';
-import ViewTests from '../../../Admin/AdminTest/ViewTests/ViewTests';
+import TestOverview from '../../../admin/AdminTest/TestOverview/TestOverview';
+import CreateTestOverview from '../../../admin/AdminTest/CreateTestOverview/CreateTestOverview';
+import AdminDashboard from '../../../admin/AdminDashboard/AdminDashboard';
+import AdminProfile from '../../../admin/AdminProfile/AdminProfile';
+import TestLayout from '../../../admin/AdminTest/TestLayout.tsx/TestLayout';
+import ViewTests from '../../../admin/AdminTest/ViewTests/ViewTests';
 import AdminLayout from '../AdminLayout/AdminLayout';
 import AdminProtection from './AdminProtection';
 

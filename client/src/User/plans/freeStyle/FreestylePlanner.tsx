@@ -1,23 +1,22 @@
 import {
-  startOfWeek,
-  endOfWeek,
   addDays,
-  format,
-  isSameMonth,
-  isToday,
   differenceInDays,
+  format,
+  isToday,
 } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import AddTask from './AddTask';
 
 const FreestylePlanner = () => {
   const navigate = useNavigate();
+
   const [planId, setPlanId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
   const [formData, setFormData] = useState({
     planTitle: '',
@@ -86,6 +85,13 @@ const FreestylePlanner = () => {
         >
           Create Freestyle Plan
         </button>
+
+        <button
+          onClick={() => navigate(`/`)}
+          className="px-4 py-2 m-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+        >
+          View Plan Dashboard  
+        </button>
       </div>
 
       <div className="grid grid-cols-7 gap-4 text-center">
@@ -96,7 +102,10 @@ const FreestylePlanner = () => {
           <button
             key={idx}
             disabled={!planId}
-            onClick={() => navigate(`/user/freestylePlan/${planId}/${day.toISOString()}`)}
+            onClick={() => {
+              setSelectedDay(day);
+              setShowTaskModal(true);
+            }}
             className={`p-3 rounded-xl ${
               isToday(day) ? 'bg-purple-600 text-white' : 'bg-gray-900 text-gray-300'
             } hover:bg-gray-700 transition`}
@@ -106,6 +115,7 @@ const FreestylePlanner = () => {
         ))}
       </div>
 
+      {/* Plan Creation Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <div className="bg-gray-900 p-6 rounded-xl w-full max-w-2xl border border-gray-700 relative">
@@ -219,6 +229,22 @@ const FreestylePlanner = () => {
                 Create Plan
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Task Modal */}
+      {showTaskModal && selectedDay && planId && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-xl border border-gray-700 relative">
+            <button
+              onClick={() => setShowTaskModal(false)}
+              className="absolute top-4 right-4 text-white text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-4 text-center">Add Task for {format(selectedDay, 'PPP')}</h2>
+            <AddTask planId={planId} day={selectedDay.toISOString()} />
           </div>
         </div>
       )}

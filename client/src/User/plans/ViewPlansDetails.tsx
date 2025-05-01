@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskLists from "./TaskLists";
-import MyCalendar from "./MyCalendar"; // Make sure this component exists
+import MyCalendar from "./MyCalendar";
 
 interface Plan {
   _id: string;
@@ -23,24 +23,26 @@ const Navbar: React.FC<{ activeTab: string; setActiveTab: (tab: string) => void 
   const tabs = ["overview", "tasks", "progress", "dashboard", "calendar"];
 
   return (
-    <nav className="bg-gray-900 text-white p-4 flex justify-between items-center">
-      <div className="flex space-x-4">
-        <h1 className="text-xl font-bold mr-6">Plan Details</h1>
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`capitalize px-3 py-1 rounded hover:bg-gray-800 transition ${
-              activeTab === tab ? "bg-blue-600" : "bg-gray-700"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+    <nav className="bg-gray-900 text-white p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+      <div className="flex flex-wrap gap-2 items-center">
+        <h1 className="text-xl font-bold mr-4">Plan Details</h1>
+        <div className="flex flex-wrap gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`capitalize px-3 py-1 rounded hover:bg-gray-800 transition ${
+                activeTab === tab ? "bg-blue-600" : "bg-gray-700"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
       <button
         onClick={() => navigate(-1)}
-        className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
       >
         Back
       </button>
@@ -60,9 +62,7 @@ const ViewPlansDetails: React.FC = () => {
       const response = await axios.get<{ data: Plan }>(
         `/api/student/task/getPlanDetails/${planId}`
       );
-
-      console.log("response => ", response)
-
+      console.log("response => ", response);
       setPlan(response.data.data?.plan);
     } catch (err) {
       setError("Failed to fetch plan details");
@@ -83,7 +83,7 @@ const ViewPlansDetails: React.FC = () => {
     <div className="w-full min-h-screen bg-black text-white">
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {activeTab === "overview" && (
           <div>
             <h2 className="text-2xl font-bold mb-2">{plan.planTitle}</h2>
@@ -110,7 +110,6 @@ const ViewPlansDetails: React.FC = () => {
           <div>
             <h2 className="text-xl font-bold mb-2">Dashboard</h2>
             <p className="text-gray-400">Here you can show charts, summary, task breakdown, etc.</p>
-            {/* Placeholder for dashboard features */}
           </div>
         )}
 

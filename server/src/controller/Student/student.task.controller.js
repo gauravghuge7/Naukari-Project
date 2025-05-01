@@ -299,6 +299,215 @@ const getTasksByPlan = asyncHandler(async (req, res, next) => {
     }
 })
 
+const getDailyTasks = asyncHandler(async (req, res, next) => {
+    try {
+        
+        const { date } = req.query || new Date();
+
+        const tasks = await Task.aggregate([
+            {
+                $match: {
+                    taskDate: date
+                }
+            }
+        ])
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200, 
+                    "Daily Tasks Fetched Successfully", 
+                    {
+                        tasks
+                    }
+                )
+            )
+
+    } 
+    catch (error) {
+        console.log("Error => ", error);
+        throw new ApiError(500, error.message);    
+    }
+})
+
+const getDailyDashboard = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { date } = req.query || new Date();
+
+        const tasks = await Task.aggregate([
+            {
+                $match: {
+                    taskDate: date
+                }
+            },
+            {
+                $addFields: {
+                    allTasks: {
+                        $size: "$$ROOT"
+                    }
+                }
+            },
+            {
+                $group: {
+                    taskStatus: "$taskStatus",
+                    totalTasks: { $sum: "$allTasks" },
+                    completedTasks: {
+                        $sum: {
+                            $cond: {
+                                if: {
+                                    $eq: ["$taskStatus", "Completed"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            {
+                $group: {
+                    uncompletedTasks: {
+                        $sum: {
+                            $cond: {
+                                if: {
+                                    $eq: ["$taskStatus", "To Do"]
+                                }
+                            }
+                        } 
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: "$taskDate",
+                    allTasks: 1,
+                    totalTasks: 1,
+                    completedTasks: 1,
+                }
+            }
+        ])
+
+        return res  
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200, 
+                    "Daily Dashboard Fetched Successfully", 
+                    {
+                        tasks
+                    }
+                )
+            )
+        
+    } 
+    catch (error) {
+        console.log("Error => ", error);
+        throw new ApiError(500, error.message);    
+    }
+})
+
+
+const getPlanDashboard = asyncHandler(async (req, res, next) => {
+    try {
+        
+        const { planId } = req.params;
+
+        const tasks = await Task.aggregate([
+            {
+                $match: {
+                    plan: new mongoose.Types.ObjectId(planId)
+                }
+            },
+            {
+                $addFields: {
+                    allTasks: {
+                        $size: "$$ROOT"
+                    }
+                }
+            }
+        ])
+    } 
+    catch (error) {
+        console.log("Error => ", error);
+        throw new ApiError(500, error.message);
+    }
+})
+
+
+/***
+ * 
+ *  get the current day details 
+ *  
+ */
+
+const fetchCurrentDayDetails = asyncHandler(async (req, res) => {
+    try {
+      const { date } = req.query;
+  
+      if (!date) {
+        throw new ApiError(400, "Date query parameter is required");
+      }
+  
+      const selectedDate = new Date(date);
+      const startOfDay = new Date(selectedDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(selectedDate);
+      endOfDay.setHours(23, 59, 59, 999);
+  
+      const plans = await Plan.aggregate([
+        {
+          $match: {
+            student: new mongoose.Types.ObjectId(req.user._id),
+            planStartDate: { $lte: endOfDay },
+            planEndDate: { $gte: startOfDay },
+          },
+        },
+        {
+          $lookup: {
+            from: "tasks",
+            localField: "_id",
+            foreignField: "plan",
+            as: "tasks",
+            pipeline: [
+              {
+                $match: {
+                  taskDate: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            planTitle: 1,
+            planDescription: 1,
+            planStatus: 1,
+            planDuration: 1,
+            planStartDate: 1,
+            planEndDate: 1,
+            tasks: 1,
+          },
+        },
+      ]);
+  
+      return res.status(200).json(
+        new ApiResponse(200, "Today's detailed fetched successfully", {
+          plans,
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching day details:", error.message);
+      throw new ApiError(500, error.message);
+    }
+  });
+  
+
+
 
 
 
@@ -310,6 +519,16 @@ export {
    getTasksByPlan, 
    updateTask, 
    updateTaskStatus, 
-   deleteTask
+<<<<<<< HEAD
+   deleteTask,
+   fetchCurrentDayDetails
+   
+=======
+   deleteTask, 
+   getDailyTasks, 
+   getDailyDashboard,   
+   getPlanDashboard
 
+
+>>>>>>> 321035d98afec2290c1d55bff7603355e6f9885c
 }

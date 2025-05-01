@@ -1,18 +1,18 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import UserLayout from '../UserLayout/UserLayout';
-import UserProfile from '../../../User/UserProfile/UserProfile';
-import UserDashboard from '../../../User/UserDashBoard/UserDashBoard';
-import MyTests from '../../../User/Tests/MyTests/MyTests';
-import GiveTest from '../../../User/Tests/GiveTest/GiveTest';
-import AllTests from '../../../User/Tests/AllTests/AllTests';
-import TestOverview from '../../../Admin/AdminTest/TestOverview/TestOverview';
+import UserProfile from '../../../user/UserProfile/UserProfile';
+import UserDashboard from '../../../user/UserDashBoard/UserDashBoard';
+import MyTests from '../../../user/Tests/MyTests/MyTests';
+import GiveTest from '../../../user/Tests/GiveTest/GiveTest';
+import AllTests from '../../../user/Tests/AllTests/AllTests';
+import TestOverview from '../../../admin/AdminTest/TestOverview/TestOverview';
 import UserProtection from './UserProtection';
-import Home from '../../../Views/Home/Home';
-import AdminLogin from '../../../Admin/AdminLogin/AdminLogin';
-import AdminSignUp from '../../../Admin/AdminSignUp/AdminSignUp';
-import StudentLogin from '../../../User/UserLogin/StudentLogin';
-import StudentSignUp from '../../../User/UserLogin/StudentSignUp';
+import Home from '../../../views/Home/Home';
+import AdminLogin from '../../../admin/AdminLogin/AdminLogin';
+import AdminSignUp from '../../../admin/AdminSignUp/AdminSignUp';
+import StudentLogin from '../../../user/UserLogin/StudentLogin';
+import StudentSignUp from '../../../user/UserLogin/StudentSignUp';
 import About from '../../../components/About/About';
 import NotFound from '../../../components/NotFound/NotFound';
 import CreateStudyPlanView from '../../../User/plans/CreatePlanView';
@@ -21,10 +21,11 @@ import AddTask from './../../../User/plans/AddTask';
 import MyPlans from '../../../User/plans/MyPlans';
 import ViewPlansDetails from '../../../User/plans/ViewPlansDetails';
 import CreateTestOverview from '../../../Admin/AdminTest/CreateTestOverview/CreateTestOverview';
-import WeekViewSelector from '../../../User/plans/WeekViewSelector';
+import WeekViewSelector from '../../../User/plans/weekly/WeekViewSelector';
 import CreateWeeklyPlan from '../../../User/plans/CreateWeeklyPlan';
 import MonthlyPlanner from '../../../User/plans/monthly/MonthlyPlanner';
 import FreestylePlanner from '../../../User/plans/freeStyle/FreestylePlanner';
+import DailyView from '../../../User/plans/dailyView/DailyView';
 
 
 
@@ -51,7 +52,6 @@ const UserRouter: React.FC = () => {
 
 
                   {/* Add the user Protected Routes here  */}
-
                   <Route path='/user' element={<UserProtection />} >
 
                      {/* Profile anbd Overall Dashboard  */}
@@ -79,11 +79,13 @@ const UserRouter: React.FC = () => {
 
                      {/* Create A Free Plan */}
                      <Route path='createPlan' element={<CreatePlan />} /> 
+                     <Route path='freestyle' element={<FreestylePlanner />} /> 
                      <Route path='viewPlantasks/:planId' element={<ViewPlansDetails />} /> 
                      <Route path='addTasks/:planId' element={<AddTask />} /> 
 
 
                      <Route path='myPlans' element={<MyPlans />} /> 
+                     <Route path='dailyTarget/:date' element={<DailyView />} /> 
                      {/* Socket connections  */}
 
                   </Route>

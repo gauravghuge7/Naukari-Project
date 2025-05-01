@@ -1,22 +1,19 @@
+
+
+// This is the response object
 class ApiResponse {
 
-   constructor(
-      statusCode,
-      message,
-      data,
-      anything
-   ) {
+   constructor(status, message, data, anythingElse) {
 
-      this.statusCode = statusCode;
-      this.data = data;
-      this.anything = anything;
-      this.success = true;
+      this.status = status;
       this.message = message;
-      this.error = null;
+      this.data = data;
+      this.success = status < 400;
+      this.anythingElse = anythingElse;
+
+
    }
-
 }
 
-export {
-   ApiResponse
-}
+export { ApiResponse };
+

@@ -22,7 +22,9 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ isOpen, setIsOpen }) => {
     { to: "/user/profile", label: "Profile" },
     { to: "/user/myTest", label: "My Tests" },
     { to: "/user/myPlans", label: "My Plans" },
-    { to: "/user/createPlan", label: "Create Preparation Plan" },
+    { to: `/user/dailyTarget/${new Date()}`, label: "My Daily Target" },
+    { to: "/user/myCalendar", label: "My Calendar" },
+    { to: "/user/createStudyPlan", label: "Create Preparation Plan" },
 
   ];
 

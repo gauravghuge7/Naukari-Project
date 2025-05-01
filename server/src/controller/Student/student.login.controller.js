@@ -99,8 +99,8 @@ const sendOtp = asyncHandler(async (req, res, next) => {
 
    }
    catch(e) {
-      console.log("Error =>  ", e);
-      throw new ApiError(400, e.message, e);
+      console.log("Error => ", e);
+      throw new ApiError(400, e.message);
    }
 
 })

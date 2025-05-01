@@ -2,8 +2,8 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 
-import AdminRoutes from './Router/AdminRoutes/AdminRoute/AdminRoutes'
-import UserRouter from './Router/UserRoutes/UserRouter/UserRouter'
+import AdminRoutes from './routes/AdminRoutes/AdminRoute/AdminRoutes'
+import UserRouter from './routes/UserRoutes/UserRouter/UserRouter'
 import NotFound from './components/NotFound/NotFound'
 
 

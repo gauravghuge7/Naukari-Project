@@ -29,13 +29,7 @@ const UserNavbar = () => {
    // Navigation Links Array
    const navLinks = [
       {
-         label: "Create Test",
-         to: "/user/createTest",
-         icon: <FaPlus size={12} />,
-         className: "bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg shadow",
-      },
-      {
-         label: "Create Goal Plan",
+         label: "Goal",
          to: "/user/createStudyPlan",
          icon: <FaPlus size={12} />,
          className: "bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg shadow",
@@ -56,13 +50,7 @@ const UserNavbar = () => {
                ) : (
                   <div className="flex space-x-4">
                      <button
-                        className="w-28 sm:w-36 py-1 px-3 sm:py-2 sm:px-4 bg-yellow-500 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-600 transform hover:scale-105 transition duration-300 ease-in-out"
-                        onClick={() => navigate("/admin-login")}
-                     >
-                        Admin Login
-                     </button>
-                     <button
-                        className="w-28 sm:w-36 py-1 px-3 sm:py-2 sm:px-4 bg-green-500 text-black font-semibold rounded-lg shadow-md hover:bg-green-600 transform hover:scale-105 transition duration-300 ease-in-out"
+                        className="w-auto sm:w-36 py-1 px-3 sm:py-2 sm:px-4 bg-green-500 text-black font-semibold rounded-lg shadow-md hover:bg-green-600 transform hover:scale-105 transition duration-300 ease-in-out"
                         onClick={() => navigate("/student-login")}
                      >
                         Student Login
@@ -76,7 +64,7 @@ const UserNavbar = () => {
                to="/"
                className="text-xl md:text-2xl font-bold text-white tracking-wide"
             >
-               Trend Goal Portal
+               Goal Tracker
             </Link>
 
             {/* Navigation Links (Right) */}

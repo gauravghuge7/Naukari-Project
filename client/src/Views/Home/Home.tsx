@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import LoginCards from '../LoginCards/LoginCards';
 import PlansFeature from './PlansFreature';
-import Footer from './../Footer/Footer';
+import Footer from '../Footer/Footer';
 
 const Home: React.FC = () => {
   // Animations on load (using slide-in and fade-in effect)
