@@ -39,12 +39,14 @@ const generateAccessAndSecretToken = async (_id) => {
 }
 
 // common options for all users
+
 const options = {
    httpOnly: true,
-   secure: process.env.NODE_ENV === 'production',
+   // secure: process.env.NODE_ENV === 'production',
+   secure: true,
+   sameSite: 'None',
    maxAge: 1 * 24 * 60 * 60 * 1000,
 };
-
 
 
 const sendOtp = asyncHandler(async (req, res, next) => {
