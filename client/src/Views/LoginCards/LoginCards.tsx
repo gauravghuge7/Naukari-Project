@@ -1,9 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
 
 const LoginCards = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="relative min-h-screen w-full bg-black flex items-center justify-center overflow-hidden">
       {/* Decorative Shapes */}

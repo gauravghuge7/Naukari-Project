@@ -21,6 +21,7 @@ import MonthlyPlanner from './../../../user/plans/monthly/MonthlyPlanner';
 import FreestylePlanner from '../../../user/plans/freeStyle/FreestylePlanner';
 import ViewPlansDetails from '../../../user/plans/planView/ViewPlansDetails';
 import DailyView from '../../../user/plans/dailyView/DailyView';
+import TestPortalRedirect from '../../../views/TestPortal/TestPortalRedirect';
 
 
 
@@ -53,6 +54,7 @@ const UserRouter: React.FC = () => {
                      <Route path='profile' element={<UserProfile />} /> 
                      <Route path='dashboard' element={<UserDashboard />} /> 
                      <Route path='myCalendar' element={<MyCalendar />} /> 
+                     <Route path='myTest' element={<TestPortalRedirect />} /> 
                      
 
 

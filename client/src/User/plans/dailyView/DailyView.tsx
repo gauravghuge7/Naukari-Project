@@ -5,7 +5,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "./../../../components/ui/card";
 import {
   PieChart,
   Pie,
@@ -139,8 +139,10 @@ const DailyView: React.FC = () => {
                 fill="#8884d8"
                 label
               >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                {chartData.map((_, index) => (
+                  <div>
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  </div>
                 ))}
               </Pie>
               <Tooltip />
@@ -200,7 +202,7 @@ const DailyView: React.FC = () => {
                         fill="#8884d8"
                         label
                       >
-                        {planChartData.map((entry, index) => (
+                        {planChartData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>

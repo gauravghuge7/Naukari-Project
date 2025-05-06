@@ -63,7 +63,7 @@ const ViewPlansDetails: React.FC = () => {
 
   const fetchPlanDetails = async () => {
     try {
-      const response = await axios.get<{ data: Plan }>(
+      const response = await axios.get<{ data: { plan: Plan } }>(
         `/api/student/task/getPlanDetails/${planId}`
       );
       console.log("response => ", response);

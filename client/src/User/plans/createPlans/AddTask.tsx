@@ -20,7 +20,7 @@ const AddTask = () => {
     plan: planId,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     setTask({ ...task, [e.target.name]: e.target.value });
   };
 
@@ -53,7 +53,7 @@ const AddTask = () => {
           </div>
           <div>
             <Label>Task Status</Label>
-            <Select name="taskStatus" value={task.taskStatus} onChange={handleChange}>
+            <Select value={task.taskStatus} onValueChange={(value) => setTask({ ...task, taskStatus: value })}>
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="Completed">Completed</option>

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaBook, FaPlus } from "react-icons/fa";
+import { FaBars, FaTimes, FaPlus } from "react-icons/fa";
 import UserSidebar from "./UserSidebar";
 
-const UserNavbar = () => {
-   const [isOpen, setIsOpen] = useState(false);
-   const [isLoggedIn, setIsLoggedIn] = useState(false);
+const UserNavbar: React.FC = () => {
+   const [isOpen, setIsOpen] = useState<boolean>(false);
+   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -26,7 +26,6 @@ const UserNavbar = () => {
       }
    };
 
-   // Navigation Links Array
    const navLinks = [
       {
          label: "Goal",

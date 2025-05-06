@@ -55,7 +55,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ plan }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get<{ data: Task[] }>(`/api/student/task/getTasksByPlan/${plan._id}`);
+      const response = await axios.get<{ data: { tasks: Task[] } }>(`/api/student/task/getTasksByPlan/${plan._id}`);
       setTasks(response.data.data.tasks || []);
     } catch (err) {
       setError("Failed to fetch tasks.");

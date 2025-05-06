@@ -20,7 +20,7 @@ const StudentLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showSignUp, setShowSignUp] = useState<boolean>(false);
 
-  const { loginWithPopup, user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0();
+  const { isLoading } = useAuth0();
   const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
