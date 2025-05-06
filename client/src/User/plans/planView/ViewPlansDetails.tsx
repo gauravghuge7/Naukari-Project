@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskLists from "./TaskLists";
-import MyCalendar from "./MyCalendar";
 
 interface Plan {
   _id: string;
@@ -13,6 +12,11 @@ interface Plan {
   planPriority: number;
   planEffort: "Low" | "Medium" | "High";
   createdAt: string;
+  updatedAt: string;
+  student: string;
+  planType: string;
+  planStartDate: string;
+  planEndDate: string;
 }
 
 const Navbar: React.FC<{ activeTab: string; setActiveTab: (tab: string) => void }> = ({
@@ -63,7 +67,7 @@ const ViewPlansDetails: React.FC = () => {
         `/api/student/task/getPlanDetails/${planId}`
       );
       console.log("response => ", response);
-      setPlan(response.data.data?.plan);
+      setPlan(response.data.data?.plan );
     } catch (err) {
       setError("Failed to fetch plan details");
     } finally {
@@ -85,18 +89,73 @@ const ViewPlansDetails: React.FC = () => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {activeTab === "overview" && (
-          <div>
-            <h2 className="text-2xl font-bold mb-2">{plan.planTitle}</h2>
-            <p className="text-gray-400">{plan.planDescription}</p>
-            <p className="mt-3">Status: <span className="font-bold">{plan.planStatus}</span></p>
-            <p>Duration: {plan.planDuration} days</p>
-            <p>Priority: {plan.planPriority}</p>
-            <p>Effort: {plan.planEffort}</p>
+          <div className="bg-gray-900 rounded-xl shadow-2xl p-6 max-w-md w-full hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-shadow duration-300 border border-gray-700">
+          <h2 className="text-2xl font-bold text-white mb-3">{plan.planTitle}</h2>
+          <p className="text-gray-400 italic mb-4">{plan.planDescription}</p>
+          <hr className="border-gray-600 mb-4" />
+          <div className="space-y-3">
+            <p className="text-gray-200">
+              Status: <span className="font-semibold text-red-400">{plan.planStatus}</span>
+            </p>
+            <p className="text-gray-200">
+              Duration: <span className="font-medium">{plan.planDuration} days</span>
+            </p>
+            <p className="text-gray-200">
+              Priority: <span className="font-medium text-blue-400">{plan.planPriority}</span>
+            </p>
+            <p className="text-gray-200">
+              Effort: <span className="font-medium text-green-400">{plan.planEffort}</span>
+            </p>
+            <hr className="border-gray-600 my-2" />
+            <p className="text-gray-200">
+              Start Date: <span className="font-medium">
+                {new Date(plan.planStartDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </p>
+            <p className="text-gray-200">
+              End Date: <span className="font-medium">
+                {new Date(plan.planEndDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </p>
+            <hr className="border-gray-600 my-2" />
+            <p className="text-gray-200">
+              Plan Type: <span className="font-medium">{plan.planType}</span>
+            </p>
+            <p className="text-gray-200">
+              Created: <span className="font-medium">
+                {new Date(plan.createdAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </p>
+            <p className="text-gray-200">
+              Updated: <span className="font-medium">
+                {new Date(plan.updatedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
+            </p>
+            <p className="text-gray-200">
+              Student ID: <span className="font-medium text-gray-400">{plan.student}</span>
+            </p>
+          </div>
           </div>
         )}
 
         {activeTab === "tasks" && (
-          <TaskLists planId={plan._id} />
+          <TaskLists plan={plan} />
         )}
 
         {activeTab === "progress" && (
@@ -116,7 +175,7 @@ const ViewPlansDetails: React.FC = () => {
         {activeTab === "calendar" && (
           <div>
             <h2 className="text-xl font-bold mb-4">Calendar View</h2>
-            <MyCalendar />
+            {/* <MyCalendar planId={plan._id} /> */}
           </div>
         )}
       </div>

@@ -31,7 +31,7 @@ const dailyTasks = [
     description: 'Start your day productively',
     details: '30-60 minutes of focused work on priority tasks',
     intensity: 'Light',
-    path: '/user/createPlan',
+    path: '/user/freestyle',
   },
 ];
 

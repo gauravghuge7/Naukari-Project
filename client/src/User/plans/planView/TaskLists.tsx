@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
-import { useParams } from "react-router";
-
+import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 interface Task {
   _id: string;
   taskTitle: string;
@@ -13,24 +14,49 @@ interface Task {
   taskDate: string;
 }
 
-interface TaskListsProps {
-  planId: string;
+interface Plan {
+  _id: string;
+  planTitle: string;
+  planDescription?: string;
+  planStatus: "To Do" | "In Progress" | "Completed";
+  planDuration: number;
+  planPriority: number;
+  planEffort: "Low" | "Medium" | "High";
+  createdAt: string;
+  updatedAt: string;
+  student: string;
+  planType: string;
+  planStartDate: string;
+  planEndDate: string;
 }
 
-const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
+interface TaskListsProps {
+  plan: Plan;
+}
+
+
+const TaskLists: React.FC<TaskListsProps> = ({ plan }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState<Partial<Task>>({});
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  const plan =  useParams<{ planId: string  }>();
+  const [newTask, setNewTask] = useState({
+    taskTitle: '',
+    taskDescription: '',
+    taskStatus: 'To Do',
+    taskDuration: 30,
+    taskPriority: 1,
+    taskDate: '',
+  });
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get<{ data: Task[] }>(`/api/student/task/getTasksByPlan/${planId}`);
-      setTasks(response.data.data?.tasks || []);
+      const response = await axios.get<{ data: Task[] }>(`/api/student/task/getTasksByPlan/${plan._id}`);
+      setTasks(response.data.data.tasks || []);
     } catch (err) {
       setError("Failed to fetch tasks.");
     } finally {
@@ -40,7 +66,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
 
   const updateTaskStatus = async (taskId: string, newStatus: Task["taskStatus"]) => {
     try {
-      await axios.put(`/api/student/task/updateTaskStatus/${planId}`, {
+      await axios.put(`/api/student/task/updateTaskStatus/${plan._id}`, {
         taskId,
         taskStatus: newStatus,
       });
@@ -58,7 +84,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
   const deleteTask = async (taskId: string) => {
     if (!confirm("Are you sure you want to delete this task?")) return;
     try {
-      await axios.delete(`/api/student/task/deleteTask/${planId}`, { data: { taskId } });
+      await axios.delete(`/api/student/task/deleteTask/${plan._id}`, { data: { taskId } });
       setTasks((prev) => prev.filter((task) => task._id !== taskId));
       setSelectedTask(null);
     } catch (err) {
@@ -78,20 +104,48 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
 
   const submitUpdate = async () => {
     try {
-      await axios.put(`/api/student/task/updateTask/${selectedTask?._id}`, form);
-      setTasks((prev) =>
-        prev.map((task) => (task._id === selectedTask?._id ? { ...task, ...form } : task))
-      );
+      await axios.put(`/api/student/task/updateTask/${plan._id}`, form);
+      setTasks((prev) => prev.map((task) => task._id === selectedTask?._id ? { ...task, ...form } : task));
       setSelectedTask(null);
       setEditMode(false);
-    } catch (err) {
+    } catch {
       setError("Failed to update task.");
+    }
+  };
+
+
+
+  const handleTaskAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      const taskWithDate = { ...newTask, taskDate: newTask.taskDate };
+      Object.entries(taskWithDate).forEach(([key, value]) =>
+        formData.append(key, String(value))
+      );
+
+      const res = await axios.post(`/api/student/task/addTasks/${plan._id}`, formData);
+      if (res.status === 201) {
+        toast.success('Task added');
+        fetchTasks();
+        setShowAddModal(false);
+        setNewTask({
+          taskTitle: '',
+          taskDescription: '',
+          taskStatus: 'To Do',
+          taskDuration: 30,
+          taskPriority: 1,
+          taskDate: '',
+        });
+      }
+    } catch {
+      toast.error('Add failed');
     }
   };
 
   useEffect(() => {
     fetchTasks();
-  }, [planId]);
+  }, [plan._id]);
 
   const groupedTasks = tasks.reduce((acc, task) => {
     const dateKey = format(parseISO(task.taskDate), "yyyy-MM-dd");
@@ -106,7 +160,15 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
 
   return (
     <div className="bg-gray-900 p-6 rounded-xl shadow-lg text-white space-y-6">
-      <h2 className="text-2xl font-bold mb-4">Calendar Tasks</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Calendar Tasks</h2>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded"
+        >
+          + Add Task
+        </button>
+      </div>
 
       {Object.entries(groupedTasks).map(([date, tasksOnDate]) => (
         <div key={date} className="bg-gray-800 rounded-lg p-4 shadow-md">
@@ -120,7 +182,12 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
                 key={task._id}
                 className="flex justify-between items-center bg-gray-700 px-4 py-2 rounded hover:bg-gray-600"
               >
-                <div onClick={() => setSelectedTask(task)} className="cursor-pointer w-full">
+                <div onClick={() => setSelectedTask(task)} className="cursor-pointer w-full flex items-center gap-2">
+                  {task.taskStatus === "Completed" ? (
+                    <span className="text-green-400">✔️</span>
+                  ) : (
+                    <span className="w-4" />
+                  )}
                   <p className="font-medium">{task.taskTitle}</p>
                 </div>
 
@@ -153,7 +220,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
         </div>
       ))}
 
-      {/* Task Modal - View or Edit */}
+      {/* View/Edit Task Modal (unchanged) */}
       {selectedTask && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-lg">
@@ -247,6 +314,80 @@ const TaskLists: React.FC<TaskListsProps> = ({ planId }) => {
               </>
             )}
           </div>
+        </div>
+      )}
+
+
+
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <form
+            onSubmit={handleTaskAdd}
+            className="bg-gray-800 p-6 rounded-lg w-full max-w-md shadow-lg"
+          >
+            <h3 className="text-xl text-white font-bold mb-4">Add New Task</h3>
+
+            <input
+              type="text"
+              placeholder="Title"
+              required
+              className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded"
+              value={newTask.taskTitle}
+              onChange={(e) => setNewTask({ ...newTask, taskTitle: e.target.value })}
+            />
+
+            <textarea
+              placeholder="Description"
+              className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded"
+              value={newTask.taskDescription}
+              onChange={(e) => setNewTask({ ...newTask, taskDescription: e.target.value })}
+            />
+
+            <DatePicker
+              selected={newTask.taskDate ? new Date(newTask.taskDate) : null}
+              onChange={(date: Date | null) =>
+                setNewTask({ ...newTask, taskDate: date ? date.toISOString().split('T')[0] : '' })
+              }
+              minDate={new Date(plan.planStartDate)}
+              maxDate={new Date(plan.planEndDate)}
+              placeholderText="Select task date"
+              dateFormat="yyyy-MM-dd"
+              className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded"
+              required
+            />
+
+            <input
+              type="number"
+              placeholder="Priority"
+              className="w-full mb-2 px-3 py-2 bg-gray-700 text-white rounded"
+              value={newTask.taskPriority}
+              onChange={(e) => setNewTask({ ...newTask, taskPriority: +e.target.value })}
+            />
+
+            <input
+              type="number"
+              placeholder="Duration (days)"
+              className="w-full mb-4 px-3 py-2 bg-gray-700 text-white rounded"
+              value={newTask.taskDuration}
+              onChange={(e) => setNewTask({ ...newTask, taskDuration: +e.target.value })}
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Add
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </div>

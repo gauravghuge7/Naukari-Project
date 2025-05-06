@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   PieChart,
   Pie,
@@ -55,6 +54,9 @@ const DailyView: React.FC = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`/api/student/task/fetchCurrentDayDetails?date=${date}`);
+
+        console.log("res => ", res)
+
         const fetchedPlans: Plan[] = res.data.data.plans;
         setPlans(fetchedPlans);
 

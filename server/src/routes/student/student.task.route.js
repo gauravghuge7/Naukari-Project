@@ -36,7 +36,7 @@ taskRouter.route('/updateTask/:planId')
 )
 
 
-taskRouter.route('/deleteTask/:taskId')
+taskRouter.route('/deleteTask/:planId')
 .delete(
     isStudentLogin,
     upload.none(),

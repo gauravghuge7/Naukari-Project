@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
+import FullCalendar, {
+  DateClickArg,
+  EventClickArg,
+  EventInput,
+} from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import "./MyCalendar.css"; // Optional custom styles
+
+interface Task {
+  _id?: string;
+  taskTitle: string;
+  taskDate: string;
+  taskDescription: string;
+  taskStatus: "To Do" | "In Progress" | "Completed";
+  taskDuration: number;
+  taskPriority: number;
+}
+
+interface Params {
+  planId: string;
+}
 
 function MyCalendar() {
-  const { planId } = useParams<{ planId: string }>();
-
-  const [events, setEvents] = useState([]);
+  const { planId } = useParams<Params>();
+  const [events, setEvents] = useState<Task[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [newEvent, setNewEvent] = useState({
+  const [selectedEvent, setSelectedEvent] = useState<Task | null>(null);
+  const [newEvent, setNewEvent] = useState<Task>({
     taskTitle: "",
     taskDate: "",
     taskDescription: "",
@@ -30,7 +48,7 @@ function MyCalendar() {
       if (res.status === 200) {
         setEvents(res.data || []);
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to fetch tasks");
     }
   };
@@ -52,13 +70,13 @@ function MyCalendar() {
     setSelectedEvent(null);
   };
 
-  const handleDateClick = (info) => {
+  const handleDateClick = (info: DateClickArg) => {
     resetForm();
-    setNewEvent({ ...newEvent, taskDate: info.dateStr });
+    setNewEvent((prev) => ({ ...prev, taskDate: info.dateStr }));
     setShowModal(true);
   };
 
-  const handleEventClick = (info) => {
+  const handleEventClick = (info: EventClickArg) => {
     const clickedEvent = events.find(
       (event) =>
         event.taskDate === info.event.startStr &&
@@ -66,14 +84,7 @@ function MyCalendar() {
     );
     if (clickedEvent) {
       setSelectedEvent(clickedEvent);
-      setNewEvent({
-        taskTitle: clickedEvent.taskTitle,
-        taskDate: clickedEvent.taskDate,
-        taskDescription: clickedEvent.taskDescription,
-        taskStatus: clickedEvent.taskStatus,
-        taskDuration: clickedEvent.taskDuration,
-        taskPriority: clickedEvent.taskPriority,
-      });
+      setNewEvent({ ...clickedEvent });
       setEditMode(true);
       setShowModal(true);
     }
@@ -107,12 +118,13 @@ function MyCalendar() {
       }
       setShowModal(false);
       resetForm();
-    } catch (err) {
+    } catch {
       toast.error("Action failed");
     }
   };
 
   const handleEventDelete = async () => {
+    if (!selectedEvent?._id) return;
     try {
       const res = await axios.delete(
         `/api/student/task/deleteTask/${selectedEvent._id}`
@@ -143,35 +155,40 @@ function MyCalendar() {
           title: event.taskTitle,
           start: event.taskDate,
           extendedProps: { ...event },
-        }))}
+        } satisfies EventInput))}
         dateClick={handleDateClick}
         eventClick={handleEventClick}
       />
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+        className="classic-modal"
+      >
         <Modal.Header closeButton>
-          <Modal.Title>{editMode ? "Edit Task" : "Add Task"}</Modal.Title>
+          <Modal.Title>{editMode ? "Edit Task" : "Add New Task"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Title</Form.Label>
+              <Form.Label className="fw-bold">Task Title</Form.Label>
               <Form.Control
                 type="text"
-                name="taskTitle"
+                placeholder="Enter task name"
                 value={newEvent.taskTitle}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, taskTitle: e.target.value })
                 }
-                required
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label className="fw-bold">Description</Form.Label>
               <Form.Control
                 as="textarea"
-                name="taskDescription"
+                rows={3}
+                placeholder="Details or notes"
                 value={newEvent.taskDescription}
                 onChange={(e) =>
                   setNewEvent({ ...newEvent, taskDescription: e.target.value })
@@ -179,51 +196,66 @@ function MyCalendar() {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                name="taskStatus"
-                value={newEvent.taskStatus}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, taskStatus: e.target.value })
-                }
-              >
-                <option value="To Do">To Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-              </Form.Select>
-            </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">Status</Form.Label>
+                  <Form.Select
+                    value={newEvent.taskStatus}
+                    onChange={(e) =>
+                      setNewEvent({
+                        ...newEvent,
+                        taskStatus: e.target.value as Task["taskStatus"],
+                      })
+                    }
+                  >
+                    <option value="To Do">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">Priority</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={1}
+                    max={5}
+                    value={newEvent.taskPriority}
+                    onChange={(e) =>
+                      setNewEvent({
+                        ...newEvent,
+                        taskPriority: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <Form.Text muted>1 = High, 5 = Low</Form.Text>
+                </Form.Group>
+              </Col>
+            </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>Duration (minutes)</Form.Label>
+              <Form.Label className="fw-bold">Duration (minutes)</Form.Label>
               <Form.Control
                 type="number"
-                name="taskDuration"
                 value={newEvent.taskDuration}
+                min={0}
                 onChange={(e) =>
-                  setNewEvent({ ...newEvent, taskDuration: e.target.value })
+                  setNewEvent({
+                    ...newEvent,
+                    taskDuration: Number(e.target.value),
+                  })
                 }
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Priority</Form.Label>
-              <Form.Control
-                type="number"
-                name="taskPriority"
-                value={newEvent.taskPriority}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, taskPriority: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between pt-2">
               <Button variant="primary" onClick={handleEventSave}>
-                {editMode ? "Save Changes" : "Add Task"}
+                {editMode ? "Update Task" : "Add Task"}
               </Button>
               {editMode && (
-                <Button variant="danger" onClick={handleEventDelete}>
+                <Button variant="outline-danger" onClick={handleEventDelete}>
                   Delete
                 </Button>
               )}

@@ -9,10 +9,10 @@ import {
   isToday,
   differenceInDays,
 } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import AddTask from "./../freeStyle/AddTask"
 
 const MonthlyPlanner = () => {
   const today = new Date();
@@ -22,9 +22,10 @@ const MonthlyPlanner = () => {
   const planEndDate = endOfMonth(today);
   const duration = differenceInDays(planEndDate, planStartDate) + 1;
 
-  const navigate = useNavigate();
   const [planId, setPlanId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
   const [formData, setFormData] = useState({
     planTitle: '',
@@ -61,7 +62,6 @@ const MonthlyPlanner = () => {
         setPlanId(res.data.data._id);
         toast.success('Monthly plan created!');
         setShowModal(false);
-        navigate(`/user/createMonthlyPlan/${res.data.data._id}`);
       }
     } catch (err) {
       toast.error('Failed to create plan.');
@@ -81,6 +81,15 @@ const MonthlyPlanner = () => {
         >
           Create Monthly Plan
         </button>
+
+        {planId && (
+          <a
+            href={`/user/viewPlantasks/${planId}`}
+            className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+          >
+            View Plan Tasks
+          </a>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -92,7 +101,10 @@ const MonthlyPlanner = () => {
             <button
               key={idx}
               disabled={!planId}
-              onClick={() => navigate(`/user/monthlyPlan/${planId}/${day.toISOString()}`)}
+              onClick={() => {
+                setSelectedDay(day);
+                setShowTaskModal(true);
+              }}
               className={`p-2 sm:p-3 rounded-xl text-sm sm:text-base ${
                 isToday(day) ? 'bg-purple-600 text-white' : 'bg-gray-900 text-gray-300'
               } ${!isSameMonth(day, today) ? 'opacity-50' : 'hover:bg-gray-700'} transition`}
@@ -103,6 +115,7 @@ const MonthlyPlanner = () => {
         </div>
       </div>
 
+      {/* Plan Creation Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 px-4">
           <div className="relative bg-gray-900 p-6 rounded-xl w-full max-w-2xl border border-gray-700 overflow-y-auto max-h-[90vh]">
@@ -194,9 +207,24 @@ const MonthlyPlanner = () => {
           </div>
         </div>
       )}
+
+      {/* Add Task Modal */}
+      {showTaskModal && selectedDay && planId && (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-xl border border-gray-700 relative">
+            <button
+              onClick={() => setShowTaskModal(false)}
+              className="absolute top-4 right-4 text-white text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-4 text-center">Add Task for {format(selectedDay, 'PPP')}</h2>
+            <AddTask planId={planId} day={selectedDay.toISOString()} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default MonthlyPlanner;
- 

@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { Card, CardContent } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Label } from "../../components/ui/label";
-import { Input } from "../../components/ui/input";
-import { Select } from "../../components/ui/select";
+import { Card, CardContent } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Label } from "../../../components/ui/label";
+import { Input } from "../../../components/ui/input";
+import { Select } from "../../../components/ui/select";
 
 const AddTask = () => {
   const { planId } = useParams<{ planId: string }>();

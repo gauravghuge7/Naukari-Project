@@ -4,14 +4,12 @@ import {
   format,
   isToday,
 } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import AddTask from './AddTask';
 
 const FreestylePlanner = () => {
-  const navigate = useNavigate();
 
   const [planId, setPlanId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -86,12 +84,14 @@ const FreestylePlanner = () => {
           Create Freestyle Plan
         </button>
 
-        <button
-          onClick={() => navigate(`/`)}
-          className="px-4 py-2 m-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
-        >
-          View Plan Dashboard  
-        </button>
+        {planId && (
+          <a
+            href={`/user/viewPlantasks/${planId}`}
+            className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+          >
+            View Plan Tasks
+          </a>
+        )}
       </div>
 
       <div className="grid grid-cols-7 gap-4 text-center">

@@ -120,7 +120,7 @@ const addTasksToPlan = asyncHandler(async (req, res, next) => {
 
         const { planId } = req.params;
 
-        if(!planId || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority || !taskDate) {
+        if(!planId || !taskTitle || !taskStatus || !taskDuration || !taskPriority || !taskDate) {
             throw new ApiError(400, "Please provide all the required fields");
         }
 
@@ -199,6 +199,8 @@ const deleteTask = asyncHandler(async (req, res, next) => {
 
         const { taskId } = req.body;
         const { planId } = req.params;
+
+        console.log(req.body)
 
         console.log("taskId => ", taskId)
         console.log("planId => ", planId)
@@ -519,16 +521,7 @@ export {
    getTasksByPlan, 
    updateTask, 
    updateTaskStatus, 
-<<<<<<< HEAD
    deleteTask,
    fetchCurrentDayDetails
    
-=======
-   deleteTask, 
-   getDailyTasks, 
-   getDailyDashboard,   
-   getPlanDashboard
-
-
->>>>>>> 321035d98afec2290c1d55bff7603355e6f9885c
 }

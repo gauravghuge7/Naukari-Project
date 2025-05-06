@@ -20,10 +20,10 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ isOpen, setIsOpen }) => {
 
   const menuItems: MenuItem[] = [
     { to: "/user/profile", label: "Profile" },
-    { to: "/user/myTest", label: "My Tests" },
+    { to: "/user/myTest", label: "Tests" },
     { to: "/user/myPlans", label: "My Plans" },
-    { to: `/user/dailyTarget/${new Date()}`, label: "My Daily Target" },
-    { to: "/user/myCalendar", label: "My Calendar" },
+    { to: `/user/dailyTarget/${new Date()}`, label: "Daily Target" },
+    { to: "/user/myCalendar", label: "Calendar" },
     { to: "/user/createStudyPlan", label: "Create Preparation Plan" },
 
   ];
