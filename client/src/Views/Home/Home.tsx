@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import LoginCards from '../LoginCards/LoginCards';
 import PlansFeature from './PlansFreature';
 import Footer from '../Footer/Footer';
+import TestPortalRedirect from '../TestPortal/TestPortalRedirect';
 
 const Home: React.FC = () => {
   // Animations on load (using slide-in and fade-in effect)
@@ -14,6 +15,7 @@ const Home: React.FC = () => {
 
       <LoginCards />
       <PlansFeature />
+      <TestPortalRedirect />
 
       <Footer />  
     </div>

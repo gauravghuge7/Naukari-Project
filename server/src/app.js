@@ -13,7 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
-const allowedOrigins = process.env.CLIENT_URL;
+
+
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+]
+
+console.log("process.env.CLIENT_URL => ", process.env.CLIENT_URL)
 
 
 app.use(cors({
@@ -52,10 +58,12 @@ app.use(cors({
   optionsSuccessStatus: 204
 }));
 
- 
+
 
 // Handle preflight requests for all routes
 app.options('*', cors()); // Automatically handles preflight requests
+
+
 
 
 app.use("/api", connectRouter);
