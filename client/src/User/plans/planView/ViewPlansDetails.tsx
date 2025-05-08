@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TaskLists from "./TaskLists";
+import PlanProgress from "./PlanProgress";
 
 interface Plan {
   _id: string;
@@ -159,10 +160,7 @@ const ViewPlansDetails: React.FC = () => {
         )}
 
         {activeTab === "progress" && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">Progress</h2>
-            <p className="text-gray-400">Tracking progress of the plan.</p>
-          </div>
+          <PlanProgress plan={plan} />
         )}
 
         {activeTab === "dashboard" && (

@@ -49,7 +49,7 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
 
       const { adminName, adminEmail, adminPassword } = req.body;
 
-      console.log("req.body => ", req.body);
+      ("req.body => ", req.body);
 
       if(
          [adminName, adminEmail, adminPassword].some((field) => field.trim() === "")
@@ -76,7 +76,7 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
          adminEmail,
          adminPassword
       })
-      console.log(" after existing the admin");
+      (" after existing the admin");
 
       return res 
       .status(201)
@@ -86,7 +86,7 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
 
    } 
    catch (error) {
-      console.log(error.message);
+      (error.message);
       throw new ApiError(400, error.message, error);
    }
 
@@ -127,7 +127,7 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
       )
    }
    catch (error) {
-      console.log(error.message);
+      (error.message);
       throw new ApiError(400, error.message, error);
    }
 })

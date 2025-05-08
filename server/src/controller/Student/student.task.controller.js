@@ -160,12 +160,7 @@ const updateTask = asyncHandler(async (req, res, next) => {
         const { taskTitle, taskDescription, taskStatus, taskDuration, taskPriority, _id, taskDate } = req.body;
         const { planId } = req.params;
 
-        console.log("Req.body => ", req.body)
-
-
-        if(!planId || !_id || !taskTitle || !taskDescription || !taskStatus || !taskDuration || !taskPriority || !taskDate) {
-            throw new ApiError(400, "Please provide all the required fields");
-        }
+   
 
         const isplan = await Plan.findById(planId);
 
