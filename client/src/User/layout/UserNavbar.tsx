@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes, FaPlus } from "react-icons/fa";
 import UserSidebar from "./UserSidebar";
+import { FiPlay } from "react-icons/fi";
 
 const UserNavbar: React.FC = () => {
    const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -31,7 +32,13 @@ const UserNavbar: React.FC = () => {
          label: "Goal",
          to: "/user/createStudyPlan",
          icon: <FaPlus size={12} />,
-         className: "bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg shadow",
+         className: "bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg shadow",
+      },
+      {
+         label: "Daily View",
+         to: `/user/dailyTarget/${new Date()}`,
+         icon: <FiPlay size={12} />,
+         className: "bg-green-600 hover:bg-green-700 px-3 py-1 rounded-lg shadow",
       },
    ];
 
@@ -65,23 +72,26 @@ const UserNavbar: React.FC = () => {
             >
                Goal Tracker
             </Link>
+            
 
             {/* Navigation Links (Right) */}
             <div
-               className={`${
-                  isLoggedIn ? "flex" : "hidden"
-               } flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-white text-sm font-medium`}
-            >
-               {navLinks.map((link, index) => (
-                  <Link
-                     key={index}
-                     to={link.to}
-                     className={`flex items-center gap-1 ${link.className}`}
-                  >
-                     {link.icon} {link.label}
-                  </Link>
-               ))}
-            </div>
+   className={`${
+      isLoggedIn ? "hidden md:flex" : "hidden"
+   } flex-row items-center space-x-6 text-white text-sm font-medium`}
+>
+ 
+
+   {navLinks.map((link, index) => (
+      <Link
+         key={index}
+         to={link.to}
+         className={`flex items-center gap-1 ${link.className}`}
+      >
+         {link.icon} {link.label}
+      </Link>
+   ))}
+</div>
 
             {/* Logout (Far Right) */}
             {isLoggedIn && (

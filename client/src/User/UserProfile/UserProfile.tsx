@@ -63,9 +63,20 @@ const UserProfile = () => {
       setWhatsappNumber(response.data.data.studentWhatsapp);
       setBio(response.data.data.studentBio);
       setProfilePicture(response.data.data.studentProfilePicture);
-    } catch (error) {
+    } 
+    catch (error) {
       const message = extractErrorMessage((error as AxiosError)?.response?.data as string);
       toast.error(message);
+
+      const axiosError = error as AxiosError<{ message: string }>;
+      const data = axiosError?.response?.data;
+
+      console.log("data => ", data);
+
+      if (data && data.message === "student access token not found") {
+        localStorage.removeItem("NaukariUser");
+        window.location.href = "/";
+      }
     }
   };
 

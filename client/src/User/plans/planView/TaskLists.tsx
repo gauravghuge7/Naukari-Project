@@ -66,7 +66,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ plan }) => {
 
   const updateTaskStatus = async (taskId: string, newStatus: Task["taskStatus"]) => {
     try {
-      await axios.put(`/api/student/task/updateTaskStatus/${plan._id}`, {
+      await axios.put(`/api/student/task/updateTaskStatus`, {
         taskId,
         taskStatus: newStatus,
       });
@@ -171,7 +171,7 @@ const TaskLists: React.FC<TaskListsProps> = ({ plan }) => {
       </div>
 
       {Object.entries(groupedTasks).map(([date, tasksOnDate]) => (
-        <div key={date} className="bg-gray-800 rounded-lg p-4 shadow-md">
+        <div key={date} className=" rounded-lg p-4 shadow-md">
           <h3 className="text-xl font-semibold text-purple-400 mb-3">
             {format(new Date(date), "eeee")} - {format(new Date(date), "MMMM d, yyyy")}
           </h3>

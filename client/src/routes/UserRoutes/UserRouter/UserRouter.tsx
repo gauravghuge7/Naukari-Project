@@ -1,92 +1,81 @@
-import React from 'react';
-import { Route, Routes } from 'react-router';
-import UserLayout from '../UserLayout/UserLayout';
-import UserProfile from '../../../user/UserProfile/UserProfile';
-import UserDashboard from '../../../user/UserDashBoard/UserDashBoard';
-import UserProtection from './UserProtection';
-import Home from '../../../views/Home/Home';
-import AdminLogin from '../../../admin/AdminLogin/AdminLogin';
-import AdminSignUp from '../../../admin/AdminSignUp/AdminSignUp';
-import StudentLogin from '../../../user/UserLogin/StudentLogin';
-import StudentSignUp from '../../../user/UserLogin/StudentSignUp';
-import About from '../../../components/About/About';
-import NotFound from '../../../components/NotFound/NotFound';
-import CreateStudyPlanView from '../../../user/plans/createPlans/CreatePlanView';
-import AddTask from '../../../user/plans/createPlans/AddTask';
-import MyPlans from '../../../user/plans/planView/MyPlans';
-import MyCalendar from '../../../user/plans/MyCalendar';
-import WeekViewSelector from '../../../user/plans/weekly/WeekViewSelector';
-import CreateWeeklyPlan from './../../../user/plans/weekly/CreateWeeklyPlan';
-import MonthlyPlanner from './../../../user/plans/monthly/MonthlyPlanner';
-import FreestylePlanner from '../../../user/plans/freeStyle/FreestylePlanner';
-import ViewPlansDetails from '../../../user/plans/planView/ViewPlansDetails';
-import DailyView from '../../../user/plans/dailyView/DailyView';
-import TestPortalRedirect from '../../../views/TestPortal/TestPortalRedirect';
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router';
 
+// Layout and protection
+const UserLayout = lazy(() => import('../UserLayout/UserLayout'));
+const UserProtection = lazy(() => import('./UserProtection'));
 
+// Auth & Entry
+const StudentLogin = lazy(() => import('../../../user/UserLogin/StudentLogin'));
+const StudentSignUp = lazy(() => import('../../../user/UserLogin/StudentSignUp'));
+const AdminLogin = lazy(() => import('../../../admin/AdminLogin/AdminLogin'));
+const AdminSignUp = lazy(() => import('../../../admin/AdminSignUp/AdminSignUp'));
+
+// General Pages
+const Home = lazy(() => import('../../../views/Home/Home'));
+const About = lazy(() => import('../../../components/About/About'));
+const NotFound = lazy(() => import('../../../components/NotFound/NotFound'));
+
+// User Profile & Dashboard
+const UserProfile = lazy(() => import('../../../user/UserProfile/UserProfile'));
+const UserDashboard = lazy(() => import('../../../user/UserDashBoard/UserDashBoard'));
+const TestPortalRedirect = lazy(() => import('../../../views/TestPortal/TestPortalRedirect'));
+
+// Study Plan Features
+const CreateStudyPlanView = lazy(() => import('../../../user/plans/createPlans/CreatePlanView'));
+const AddTask = lazy(() => import('../../../user/plans/createPlans/AddTask'));
+const MyPlans = lazy(() => import('../../../user/plans/planView/MyPlans'));
+const MyCalendar = lazy(() => import('../../../user/plans/calendar/MyCalendar'));
+const WeekViewSelector = lazy(() => import('../../../user/plans/weekly/WeekViewSelector'));
+const CreateWeeklyPlan = lazy(() => import('../../../user/plans/weekly/CreateWeeklyPlan'));
+const MonthlyPlanner = lazy(() => import('../../../user/plans/monthly/MonthlyPlanner'));
+const FreestylePlanner = lazy(() => import('../../../user/plans/freeStyle/FreestylePlanner'));
+const ViewPlansDetails = lazy(() => import('../../../user/plans/planView/ViewPlansDetails'));
+const DailyView = lazy(() => import('../../../user/plans/dailyView/DailyView'));
 
 const UserRouter: React.FC = () => {
-   return (
-            <Routes>
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/student-login" element={<StudentLogin />} />
+        <Route path="/student-register" element={<StudentSignUp />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin-signup" element={<AdminSignUp />} />
 
+        {/* Layout with nested routes */}
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="user/createStudyPlanView" element={<CreateStudyPlanView />} />
 
-               <Route path='/student-login' element={<StudentLogin />} />
-               <Route path='/student-register' element={<StudentSignUp />} />
+          {/* Protected routes */}
+          <Route path="user" element={<UserProtection />}>
+            <Route index element={<UserProfile />} />
+            <Route path="profile" element={<UserProfile />} />
+            <Route path="dashboard" element={<UserDashboard />} />
+            <Route path="myCalendar" element={<MyCalendar />} />
+            <Route path="myTest" element={<TestPortalRedirect />} />
 
-               <Route path='/admin-login' element={<AdminLogin />} />
-               <Route path='/admin-signup' element={<AdminSignUp />} />
+            {/* Plans */}
+            <Route path="createStudyPlan" element={<CreateStudyPlanView />} />
+            <Route path="weekview" element={<WeekViewSelector />} />
+            <Route path="createWeeklyPlan/:planId" element={<CreateWeeklyPlan />} />
+            <Route path="monthly" element={<MonthlyPlanner />} />
+            <Route path="monthlyPlan/:date" element={<CreateWeeklyPlan />} />
+            <Route path="freestyle" element={<FreestylePlanner />} />
+            <Route path="viewPlantasks/:planId" element={<ViewPlansDetails />} />
+            <Route path="addTasks/:planId" element={<AddTask />} />
+            <Route path="myPlans" element={<MyPlans />} />
+            <Route path="dailyTarget/:date" element={<DailyView />} />
+          </Route>
 
-
-
-               {/* Main layout route with nested child routes */}
-               <Route path='/' element={<UserLayout />}>
-
-               
-                  <Route path='/' element={<Home />} />
-                  <Route path='/about' element={<About />} />
-                  <Route path='/user/createStudyPlanView' element={<CreateStudyPlanView />} />
-
-
-                  {/* Add the user Protected Routes here  */}
-                  <Route path='/user' element={<UserProtection />} >
-
-                     {/* Profile anbd Overall Dashboard  */}
-                     <Route path='profile' element={<UserProfile />} /> 
-                     <Route path='dashboard' element={<UserDashboard />} /> 
-                     <Route path='myCalendar' element={<MyCalendar />} /> 
-                     <Route path='myTest' element={<TestPortalRedirect />} /> 
-                     
-
-
-                     {/*  Goal Plans Routes  */}
-                     <Route path='createStudyPlan' element={<CreateStudyPlanView />} /> 
-
-
-                     <Route path="weekview" element={<WeekViewSelector />} />
-                     <Route path="createWeeklyPlan/:planId" element={<CreateWeeklyPlan />} />
-
-                     <Route path="monthly" element={<MonthlyPlanner />} />
-                     <Route path="monthlyPlan/:date" element={<CreateWeeklyPlan />} />
-
-                     {/* Create A Free Plan */}
-                     <Route path='freestyle' element={<FreestylePlanner />} /> 
-                     <Route path='viewPlantasks/:planId' element={<ViewPlansDetails />} /> 
-                     <Route path='addTasks/:planId' element={<AddTask />} /> 
-
-
-                     <Route path='myPlans' element={<MyPlans />} /> 
-                     <Route path='dailyTarget/:date' element={<DailyView />} /> 
-                     {/* Socket connections  */}
-
-                  </Route>
-
-
-
-                  <Route path='*' element={<NotFound />} />
-
-               </Route>
-            </Routes>
-   );
+          {/* Catch-all not found route */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  );
 };
 
 export default UserRouter;

@@ -20,11 +20,11 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ isOpen, setIsOpen }) => {
 
   const menuItems: MenuItem[] = [
     { to: "/user/profile", label: "Profile" },
-    { to: "/user/myTest", label: "Tests" },
     { to: "/user/myPlans", label: "My Plans" },
     { to: `/user/dailyTarget/${new Date()}`, label: "Daily Target" },
     { to: "/user/myCalendar", label: "Calendar" },
-    { to: "/user/createStudyPlan", label: "Create Preparation Plan" },
+    { to: "/user/createStudyPlan", label: "Create  Plan" },
+    { to: "/user/myTest", label: "Tests" },
 
   ];
 
@@ -62,7 +62,7 @@ const UserSidebar: React.FC<UserSidebarProps> = ({ isOpen, setIsOpen }) => {
                 <Link
                   to={item.to}
                   className="block py-2.5 px-4 rounded hover:bg-gray-900 text-gray-200 hover:text-white transition-colors duration-200"
-                  onClick={handleCloseSidebar}
+                  // onClick={handleCloseSidebar}
                 >
                   {item.label}
                 </Link>

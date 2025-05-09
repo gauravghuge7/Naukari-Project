@@ -1,31 +1,18 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import AdminDashboard from '../../../admin/AdminDashboard/AdminDashboard';
-import AdminProfile from '../../../admin/AdminProfile/AdminProfile';
-import AdminLayout from '../AdminLayout/AdminLayout';
-import AdminProtection from './AdminProtection';
 
-
-// // Lazy-loaded components for Admin
-// const ViewTests = React.lazy(() => import('../../../Admin/AdminTest/ViewTests/ViewTests'));
-// const AdminLayout = React.lazy(() => import('../AdminLayout/AdminLayout'));
-// const AdminDashboard = React.lazy(() => import('../../../Admin/AdminDashboard/AdminDashboard'));
-// const AdminProfile = React.lazy(() => import('../../../Admin/AdminProfile/AdminProfile'));
-// const TestLayout = React.lazy(() => import('../../../Admin/AdminTest/TestLayout.tsx/TestLayout'));
-
-
-
-
+// Lazy load components
+const AdminDashboard = lazy(() => import('../../../admin/AdminDashboard/AdminDashboard'));
+const AdminProfile = lazy(() => import('../../../admin/AdminProfile/AdminProfile'));
+const AdminLayout = lazy(() => import('../AdminLayout/AdminLayout'));
+const AdminProtection = lazy(() => import('./AdminProtection'));
 
 const AdminRoutes: React.FC = () => {
   return (
-    <div>
-
-
-        <Routes>
-
-          {/* Protected Routes for Admin */}
-          <Route path='/' element={<AdminProtection />}>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        {/* Protected Routes for Admin */}
+        <Route path='/' element={<AdminProtection />}>
           {/* Admin layout with nested routes */}
           <Route path='/' element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
@@ -33,12 +20,9 @@ const AdminRoutes: React.FC = () => {
             <Route path='/settings' element={<h1>Admin Settings</h1>} />
             <Route path='/profile' element={<AdminProfile />} />
           </Route>
-
-          </Route>
-
-        </Routes>
-
-    </div>
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 

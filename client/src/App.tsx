@@ -1,34 +1,22 @@
+import { Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import './App.css';
 
-import { Route, Routes } from 'react-router-dom'
-import './App.css'
-
-import AdminRoutes from './routes/AdminRoutes/AdminRoute/AdminRoutes'
-import UserRouter from './routes/UserRoutes/UserRouter/UserRouter'
-import NotFound from './components/NotFound/NotFound'
-
-
-
-
+// Lazy-loaded route components
+const AdminRoutes = lazy(() => import('./routes/AdminRoutes/AdminRoute/AdminRoutes'));
+const UserRouter = lazy(() => import('./routes/UserRoutes/UserRouter/UserRouter'));
+const NotFound = lazy(() => import('./components/NotFound/NotFound'));
 
 function App() {
-
-
-
-
   return (
-    <>
-      {/**  Main Routes Imports All Routes Here  */}
-      <Routes> 
-
-        <Route path='/admin/*' element={<AdminRoutes />} />
-        <Route path='/*' element={<UserRouter />} />
-        
-        
-        <Route path='*' element={<NotFound />} />
-        
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="/*" element={<UserRouter />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
-  )
+    </Suspense>
+  );
 }
 
-export default App
+export default App;

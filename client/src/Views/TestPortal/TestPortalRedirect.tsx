@@ -13,9 +13,17 @@ const TestPortalRedirect: React.FC<TestPortalRedirectProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-2xl shadow-md bg-white">
-      <h2 className="text-xl font-semibold mb-4 text-center">Access Your Test Portal</h2>
-      <Button onClick={handleRedirect} className="px-6 py-2 text-base">
+    <div className="flex flex-col  shadow-xl mt-20 shadow-gray-600 items-center justify-center p-6 sm:p-8 rounded-xl shadow-2xl bg-white text-black w-full max-w-md mx-auto">
+      <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center text-black">
+        Access Your Test Portal
+      </h2>
+      <p className="text-black-300 text-sm sm:text-base text-center mb-6 leading-relaxed">
+        Explore our SmartExam Test Portal, designed to streamline your testing experience. Practice with interactive quizzes, track your progress, and prepare for success with real-time feedback and personalized insights.
+      </p>
+      <Button
+        onClick={handleRedirect}
+        className="px-6 py-3 text-base sm:text-lg bg-gray-800 hover:bg-gray-700 text-white font-medium rounded-lg transition duration-300"
+      >
         Go to Test Portal
       </Button>
     </div>

@@ -56,7 +56,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
   };
 
   return (
-    <form onSubmit={handleTaskAdd} className="space-y-4 text-green">
+    <form onSubmit={handleTaskAdd} className="space-y-4 text-black">
 
       <ToastContainer />
 
@@ -68,7 +68,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
           value={newTask.taskTitle}
           onChange={handleAddChange}
           required
-          className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+          className="w-full p-2 bg-gray-200 border border-gray-600 rounded"
         />
       </div>
 
@@ -78,7 +78,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
           name="taskDescription"
           value={newTask.taskDescription}
           onChange={handleAddChange}
-          className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+          className="w-full p-2 bg-gray-200 border border-gray-600 rounded"
         />
       </div>
 
@@ -89,7 +89,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
             name="taskStatus"
             value={newTask.taskStatus}
             onChange={handleAddChange}
-            className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+            className="w-full p-2 bg-gray-200 border border-gray-600 rounded"
           >
             <option value="To Do">To Do</option>
             <option value="In Progress">In Progress</option>
@@ -104,7 +104,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
             name="taskDuration"
             value={newTask.taskDuration}
             onChange={handleAddChange}
-            className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+            className="w-full p-2 bg-gray-200 border border-gray-600 rounded"
           />
         </div>
       </div>
@@ -118,7 +118,7 @@ const AddTask: React.FC<AddTaskProps> = ({ planId, day, fetchTasks, setShowAddMo
           min={1}
           max={10}
           onChange={handleAddChange}
-          className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+          className="w-full p-2 bg-gray-200 border border-gray-600 rounded"
         />
       </div>
 

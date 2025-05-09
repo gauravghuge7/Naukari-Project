@@ -8,7 +8,6 @@ import { Task } from './../../models/Task/task.model.js';
 
 
 
-
 const createPlan = asyncHandler(async (req, res, next) => {
 
    try {
@@ -230,16 +229,8 @@ const updateTaskStatus = asyncHandler(async (req, res, next) => {
 
         const { taskId, taskStatus } = req.body;
 
-        const { planId } = req.params;
-
-        if(!planId || !taskId || !taskStatus) {
+        if( !taskId || !taskStatus) {
             throw new ApiError(400, "Please provide all the required fields");
-        }
-
-        const plan = await Plan.findById(planId);
-
-        if(!plan) {
-            throw new ApiError(400, "Plan Not Found");
         }
 
         const task = await Task.findByIdAndUpdate(taskId, {
@@ -431,6 +422,90 @@ const getPlanDashboard = asyncHandler(async (req, res, next) => {
     }
 })
 
+const getMonthlyDashboard = asyncHandler(async (req, res) => {
+    try {
+        const month = req.params.month;  // The month will be in YYYY-MM format
+        const studentId = req.user._id;  // Assuming user is logged in and student ID is available
+
+        // Get the start and end date of the month
+        const startDate = new Date(`${month}-01T00:00:00.000Z`);
+        const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1)); // First day of next month
+        endDate.setHours(23, 59, 59, 999);  // End of the current month
+
+        // Generate the list of dates for the entire month
+        const daysInMonth = [];
+        const currentDay = new Date(startDate);
+        while (currentDay <= endDate) {
+            daysInMonth.push(currentDay.toISOString().split("T")[0]);  // Add each day in YYYY-MM-DD format
+            currentDay.setDate(currentDay.getDate() + 1);
+        }
+
+        // Fetch all plans and tasks for the given student within the month
+        const plans = await Plan.aggregate([
+            {
+                $match: {
+                    student: studentId,  // Match the student ID
+                    planStartDate: { $lte: endDate },
+                    planEndDate: { $gte: startDate }
+                }
+            },
+            {
+                $lookup: {
+                    from: "tasks",
+                    localField: "_id",
+                    foreignField: "plan",
+                    as: "tasks",
+                    pipeline: [
+                        {
+                            $match: {
+                                taskDate: { $gte: startDate, $lte: endDate }  // Match tasks within the month range
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: { path: "$tasks", preserveNullAndEmptyArrays: true } },  // Unwind tasks to get each task separately
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$tasks.taskDate" } },  // Group by date
+                    tasks: { $push: "$tasks" }  // Push tasks for each date
+                }
+            },
+            {
+                $project: {
+                    date: "$_id",  // Date in YYYY-MM-DD format
+                    tasks: 1,  // List of tasks for that date
+                    _id: 0
+                }
+            },
+            { $sort: { date: 1 } }  // Sort by date
+        ]);
+
+        // Merge the array of all days in the month with the tasks data
+        const monthlyData = daysInMonth.map(day => {
+            const tasksForDay = plans.find(plan => plan.date === day);
+            return {
+                date: day,
+                tasks: tasksForDay ? tasksForDay.tasks : []  // If no tasks for that day, return an empty array
+            };
+        });
+
+        // Sort the monthlyData array by date in ascending order (to ensure it's properly sorted)
+        monthlyData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        console.log("monthlyData => ", monthlyData);
+
+        return res.status(200).json(
+            new ApiResponse(200, "Monthly Dashboard Data Fetched Successfully", {
+                monthlyData  // Return the structured array of days with tasks
+            })
+        );
+    } catch (error) {
+        console.error("Error => ", error);
+        throw new ApiError(500, error.message);
+    }
+});
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
 /***
  * 
@@ -491,6 +566,8 @@ const fetchCurrentDayDetails = asyncHandler(async (req, res) => {
           },
         },
       ]);
+
+      console.log("plans => ", plans)
   
       return res.status(200).json(
         new ApiResponse(200, "Today's detailed fetched successfully", {
@@ -517,6 +594,7 @@ export {
    updateTask, 
    updateTaskStatus, 
    deleteTask,
-   fetchCurrentDayDetails
+   fetchCurrentDayDetails,
+   getMonthlyDashboard
    
 }

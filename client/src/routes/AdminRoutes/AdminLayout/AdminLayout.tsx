@@ -1,7 +1,9 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import Footer from '../../../views/Footer/Footer'
-import AdminNavbar from '../../../admin/AdminNavbar/AdminNavbar'
+
+//  lazy loading 
+const AdminNavbar = React.lazy(() => import('../../../admin/AdminNavbar/AdminNavbar'))
+const Footer = React.lazy(() => import('../../../views/Footer/Footer'))
 
 
 
