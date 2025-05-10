@@ -111,6 +111,40 @@ const getPlanDetails = asyncHandler(async (req, res, next) => {
     }
 })
 
+const updatePlan = asyncHandler(async (req, res, next) => {
+    try {
+
+        const { planTitle, planDescription, planStatus, planDuration, planPriority, planEffort, planType, planStartDate, planEndDate } = req.body;
+
+        const { planId } = req.params;
+
+      
+
+        const plan = await Plan.findByIdAndUpdate(planId, {
+            planTitle: planTitle.trim(),
+            planDescription: planDescription.trim(),
+            planStatus: planStatus.trim(),
+            planDuration: planDuration,
+            planPriority: planPriority,
+            planType: planType.trim(),
+            planEffort: planEffort.trim(),
+            planStartDate,
+            planEndDate
+        });
+
+        return res 
+            .status(200)
+            .json(
+                new ApiResponse(200, "Plan Updated Successfully", plan)
+            )
+
+    } 
+    catch (error) {
+        console.log(error.message);
+        throw new ApiError(400, error.message, error);
+    }
+})
+
 const addTasksToPlan = asyncHandler(async (req, res, next) => {
     try {
 
@@ -578,7 +612,7 @@ const fetchCurrentDayDetails = asyncHandler(async (req, res) => {
       console.error("Error fetching day details:", error.message);
       throw new ApiError(500, error.message);
     }
-  });
+});
   
 
 
@@ -595,6 +629,7 @@ export {
    updateTaskStatus, 
    deleteTask,
    fetchCurrentDayDetails,
-   getMonthlyDashboard
+   getMonthlyDashboard, 
+   updatePlan
    
 }

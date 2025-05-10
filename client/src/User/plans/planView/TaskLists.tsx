@@ -156,7 +156,6 @@ const TaskLists: React.FC<TaskListsProps> = ({ plan }) => {
 
   if (loading) return <div className="text-white text-center">Loading tasks...</div>;
   if (error) return <div className="text-red-500 text-center">{error}</div>;
-  if (!tasks.length) return <div className="text-white text-center">No tasks found.</div>;
 
   return (
     <div className="bg-gray-900 p-6 rounded-xl shadow-lg text-white space-y-6">

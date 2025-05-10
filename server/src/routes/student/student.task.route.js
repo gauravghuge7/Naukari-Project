@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import { upload } from './../../middleware/multer.middleware.js';
 import { isStudentLogin } from '../../middleware/student.auth.js';
-import { addTasksToPlan, getMonthlyDashboard , fetchCurrentDayDetails, createPlan, deleteTask, getAllPlans, getPlanDetails, getTasksByPlan, updateTask, updateTaskStatus } from '../../controller/Student/student.task.controller.js';
+import { addTasksToPlan, updatePlan,  getMonthlyDashboard , fetchCurrentDayDetails, createPlan, deleteTask, getAllPlans, getPlanDetails, getTasksByPlan, updateTask, updateTaskStatus } from '../../controller/Student/student.task.controller.js';
 
 const taskRouter = Router();
 
@@ -11,6 +11,13 @@ taskRouter.route('/createPlan')
     isStudentLogin,
     upload.none(),
     createPlan
+)
+
+taskRouter.route('/updatePlan/:planId')
+.post(
+    isStudentLogin,
+    upload.none(),
+    updatePlan
 )
 
 taskRouter.route('/getMyPlans')
