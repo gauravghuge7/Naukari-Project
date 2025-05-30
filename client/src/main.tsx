@@ -4,14 +4,13 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import { Provider } from 'react-redux';
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import { Suspense, lazy } from 'react';
 
 import { store } from './redux/Store/Store.ts';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Lazy load App
-const App = lazy(() => import('./App.tsx'));
+import App  from "./App.tsx"
 
 // Initialize socket and axios
 const url = import.meta.env.VITE_SERVER_URL;
@@ -32,9 +31,7 @@ createRoot(document.getElementById('root')!).render(
           redirect_uri: window.location.origin,
         }}
       >
-        <Suspense fallback={<div>Loading application...</div>}>
           <App />
-        </Suspense>
       </Auth0Provider>
     </BrowserRouter>
   </Provider>
