@@ -22,7 +22,8 @@ const UserNavbar: React.FC = () => {
       try {
          localStorage.removeItem("NaukariUser");
          setIsLoggedIn(false);
-      } catch (error) {
+      } 
+      catch (error) {
          console.log(error);
       }
    };

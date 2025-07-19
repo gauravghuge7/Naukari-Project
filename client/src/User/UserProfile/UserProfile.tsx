@@ -110,73 +110,84 @@ const UserProfile = () => {
             className="w-32 h-32 rounded-full mb-6 border-2 border-gray-500 shadow-md"
           />
           {isEditing ? (
-            <form onSubmit={handleUpdateProfile} className="w-full">
-              <div className="mb-4">
-                <input
-                  type="file"
-                  className="w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                  onChange={handleProfilePictureChange}
-                />
-              </div>
+            <form onSubmit={handleUpdateProfile} className="w-full space-y-4">
+    <div>
+      <label className="block text-sm font-semibold mb-1">Profile Picture</label>
+      <input
+        type="file"
+        className="w-full p-2 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        onChange={handleProfilePictureChange}
+      />
+    </div>
 
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+    <div>
+      <label className="block text-sm font-semibold mb-1">Name</label>
+      <input
+        type="text"
+        placeholder="Name"
+        className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+    </div>
 
-              <div className="mb-4 flex items-center gap-2">
-                <FaEnvelope />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+    <div>
+      <label className="block text-sm font-semibold mb-1 flex items-center gap-2">
+        <FaEnvelope /> Email
+      </label>
+      <input
+        type="email"
+        placeholder="Email"
+        className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+    </div>
 
-              <div className="mb-4 flex items-center gap-2">
-                <FaMobileAlt />
-                <input
-                  type="text"
-                  placeholder="Mobile Number"
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                />
-              </div>
+    <div>
+      <label className="block text-sm font-semibold mb-1 flex items-center gap-2">
+        <FaMobileAlt /> Mobile Number
+      </label>
+      <input
+        type="text"
+        placeholder="Mobile Number"
+        className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        value={mobileNumber}
+        onChange={(e) => setMobileNumber(e.target.value)}
+      />
+    </div>
 
-              <div className="mb-4 flex items-center gap-2">
-                <FaWhatsapp />
-                <input
-                  type="text"
-                  placeholder="WhatsApp Number"
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                  value={whatsappNumber}
-                  onChange={(e) => setWhatsappNumber(e.target.value)}
-                />
-              </div>
+    <div>
+      <label className="block text-sm font-semibold mb-1 flex items-center gap-2">
+        <FaWhatsapp /> WhatsApp Number
+      </label>
+      <input
+        type="text"
+        placeholder="WhatsApp Number"
+        className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        value={whatsappNumber}
+        onChange={(e) => setWhatsappNumber(e.target.value)}
+      />
+    </div>
 
-              <textarea
-                placeholder="Bio"
-                className="w-full p-3 mb-4 bg-gray-700 border border-gray-600 rounded focus:outline-none"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                rows={3}
-              />
+    <div>
+      <label className="block text-sm font-semibold mb-1">Bio</label>
+      <textarea
+        placeholder="Bio"
+        className="w-full p-3 bg-gray-700 border border-gray-600 rounded focus:outline-none"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+        rows={3}
+      />
+    </div>
 
-              <button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition"
-              >
-                Save Changes
-              </button>
-            </form>
+    <button
+      type="submit"
+      className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition"
+    >
+      Save Changes
+    </button>
+  </form>
           ) : (
             <>
               <p className="text-xl font-semibold mb-2">{name}</p>

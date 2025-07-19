@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import App  from "./App.tsx"
 
 // Initialize socket and axios
-const url = import.meta.env.VITE_SERVER_URL;
+export const url = import.meta.env.VITE_SERVER_URL;
 export const socket = io(url);
 console.log("Socket connection established:", socket);
 

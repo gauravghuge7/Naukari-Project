@@ -32,6 +32,8 @@ const MonthlyPlanner = lazy(() => import('../../../user/plans/monthly/MonthlyPla
 const FreestylePlanner = lazy(() => import('../../../user/plans/freeStyle/FreestylePlanner'));
 const ViewPlansDetails = lazy(() => import('../../../user/plans/planView/ViewPlansDetails'));
 const DailyView = lazy(() => import('../../../user/plans/dailyView/DailyView'));
+const PlansFeature = lazy(() => import('../../../views/Home/PlansFeature'));
+const ContactUs = lazy(() => import("../../../components/About/ContactUs"));
 
 const UserRouter: React.FC = () => {
   return (
@@ -46,7 +48,12 @@ const UserRouter: React.FC = () => {
         {/* Layout with nested routes */}
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
+
+          
           <Route path="about" element={<About />} />
+          <Route path="features" element={<PlansFeature />} />
+          <Route path="contact" element={<ContactUs />} />
+
           <Route path="user/createStudyPlanView" element={<CreateStudyPlanView />} />
 
           {/* Protected routes */}
